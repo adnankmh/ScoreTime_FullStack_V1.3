@@ -1,8 +1,0 @@
-ScoreTime V0.9 checks
-- V0.9 structural validator: PASS
-- PHP syntax lint: PASS (215 PHP files, 0 syntax errors)
-- Dart local imports: PASS (32 Dart files, 0 missing local imports)
-- Dart raw delimiter balance: PASS (0 warnings)
-- No-Code Experience routes/controllers/migration references: PASS
-- Composer runtime tests: NOT RUN locally (Composer not installed in this environment)
-- Flutter analyze/test/build: NOT RUN locally (Flutter SDK not installed); GitHub Actions V0.9 workflow is included.

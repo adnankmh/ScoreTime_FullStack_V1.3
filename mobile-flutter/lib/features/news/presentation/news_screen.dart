@@ -65,9 +65,9 @@ class _FeaturedStory extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         onTap: () { final id = item['id']; if (id is int) repo.articleSignal(id, 'open'); },
         child: Container(
-          minHeight: 270,
+          constraints: const BoxConstraints(minHeight: 270),
           padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(28), gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0C2E61), Color(0xFF071B3B), Color(0xFF061020)]), border: Border.all(color: Colors.white.withOpacity(.08))),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(28), gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0C2E61), Color(0xFF071B3B), Color(0xFF061020)]), border: Border.all(color: Colors.white.withValues(alpha: .08))),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
             Row(children: [Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(borderRadius: BorderRadius.circular(99), color: item['is_breaking'] == true ? const Color(0x22FF4D6D) : const Color(0x220B8CFF)), child: Text('${item['category'] ?? 'Football'}', style: TextStyle(fontWeight: FontWeight.w900, color: item['is_breaking'] == true ? const Color(0xFFFF8096) : const Color(0xFF62C7FF)))), const Spacer(), const Icon(Icons.arrow_outward_rounded)]),
             const SizedBox(height: 22),
@@ -86,7 +86,7 @@ class _StoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withOpacity(.24))),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .24))),
         child: ListTile(
           contentPadding: const EdgeInsets.all(14),
           leading: Container(width: 54, height: 54, decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), gradient: const LinearGradient(colors: [Color(0xFF0B8CFF), Color(0xFF18D7FF)])), child: Icon(item['is_breaking'] == true ? Icons.bolt_rounded : Icons.article_rounded, color: Colors.white)),

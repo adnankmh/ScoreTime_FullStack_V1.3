@@ -1,7 +1,0 @@
-ScoreTime V1.3 final static validation
-PHP files: 260
-PHP syntax errors: 0
-Structural validator: PASS: ScoreTime V1.3 required release files
-Locales: en, ar, fr, es, de, tr
-Default locale: en
-Runtime release gate: GitHub CI + staging still required before store publication.

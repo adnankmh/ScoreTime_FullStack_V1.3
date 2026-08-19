@@ -46,7 +46,7 @@ class SettingsScreen extends ConsumerWidget {
             Slider(value: s.fontScale, min: .85, max: 1.30, divisions: 9, onChanged: controller.setFont),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: s.locale,
+              initialValue: s.locale,
               decoration: InputDecoration(labelText: t('language'), prefixIcon: const Icon(Icons.language_rounded)),
               items: const [
                 DropdownMenuItem(value: 'en', child: Text('English')),
@@ -84,7 +84,7 @@ class _HubTile extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 9),
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          leading: Container(width: 44, height: 44, decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Theme.of(context).colorScheme.primary.withOpacity(.12)), child: Icon(icon, color: Theme.of(context).colorScheme.secondary)),
+          leading: Container(width: 44, height: 44, decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Theme.of(context).colorScheme.primary.withValues(alpha: .12)), child: Icon(icon, color: Theme.of(context).colorScheme.secondary)),
           title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
           subtitle: Text(subtitle),
           trailing: const Icon(Icons.chevron_right_rounded),

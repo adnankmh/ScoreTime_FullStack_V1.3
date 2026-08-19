@@ -102,7 +102,7 @@ class _MatchCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         color: Theme.of(context).colorScheme.surface,
-        border: Border.all(color: live ? const Color(0x55FF4D6D) : Theme.of(context).colorScheme.outlineVariant.withOpacity(.24)),
+        border: Border.all(color: live ? const Color(0x55FF4D6D) : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .24)),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(24),
@@ -114,7 +114,7 @@ class _MatchCard extends StatelessWidget {
             const SizedBox(height: 18),
             Row(children: [
               Expanded(child: _Team(name: '${home['name_en'] ?? home['name_ar'] ?? 'Home'}', align: CrossAxisAlignment.start)),
-              Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9), decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Theme.of(context).colorScheme.primary.withOpacity(.10)), child: Text('${match['home_score'] ?? 0}  —  ${match['away_score'] ?? 0}', style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w900))),
+              Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9), decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Theme.of(context).colorScheme.primary.withValues(alpha: .10)), child: Text('${match['home_score'] ?? 0}  —  ${match['away_score'] ?? 0}', style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w900))),
               Expanded(child: _Team(name: '${away['name_en'] ?? away['name_ar'] ?? 'Away'}', align: CrossAxisAlignment.end)),
             ]),
             const SizedBox(height: 15),

@@ -1,2 +1,0 @@
- <?php $__env->startSection('title','Offline'); ?> <?php $__env->startSection('content'); ?><div class="hero"><span class="eyebrow">OFFLINE MODE</span><h1>You are offline</h1><p>Previously cached pages may still be available. Reconnect to refresh live scores.</p></div><?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\ScoreTime_FullStack_V1.3\backend-laravel\resources\views/offline.blade.php ENDPATH**/ ?>

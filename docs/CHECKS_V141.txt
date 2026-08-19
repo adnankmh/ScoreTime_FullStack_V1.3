@@ -1,0 +1,16 @@
+ScoreTime V1.4.1 Clean Build checks
+PHP files checked: 267
+PHP syntax errors: 0
+Active workflows: 2
+Workflow YAML errors: 0
+Dart files checked: 35
+Missing local Dart imports: 0
+Dart delimiter warnings: 0
+Remaining withOpacity occurrences: 0
+Lottie asset present: True
+Composer license: proprietary
+Release validator: ScoreTime V1.4.1 Clean Build validator
+PASS
+Active workflows: 01-quality-gate.yml, 02-android-release.yml
+Dart files: 35
+Runtime note: flutter analyze/test/build and Composer dependency resolution execute in GitHub Actions.

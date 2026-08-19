@@ -1,0 +1,208 @@
+name: "ScoreTime • Verify & Android"
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: "Laravel API URL ending in /api/v1"
+        required: true
+        default: "https://example.com/api/v1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scoretime-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Laravel • Verify
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: scoretime_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    defaults:
+      run:
+        working-directory: backend-laravel
+
+    env:
+      APP_ENV: testing
+      APP_DEBUG: "false"
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: scoretime_test
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      CACHE_STORE: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo_mysql, mysql
+          coverage: none
+
+      - name: Validate Composer metadata
+        run: composer validate --no-check-publish --no-check-lock
+
+      - name: Resolve Composer dependencies
+        shell: bash
+        run: |
+          if [ -f composer.lock ]; then
+            composer install --no-interaction --prefer-dist --no-progress
+          else
+            composer update --no-interaction --prefer-dist --no-progress
+          fi
+
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: PHP syntax scan
+        shell: bash
+        run: |
+          find app bootstrap config database routes tests -name '*.php' -print0 \
+            | xargs -0 -n1 php -l
+
+      - name: Migrate and seed MySQL
+        run: |
+          php artisan migrate:fresh --force
+          php artisan db:seed --force
+
+      - name: Laravel boot and routes
+        run: |
+          php artisan about
+          php artisan route:list
+
+      - name: PHPUnit
+        run: vendor/bin/phpunit
+
+  flutter:
+    name: Flutter • Verify
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: mobile-flutter
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Flutter 3.47.0
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.0"
+          cache: true
+
+      - name: Guard known regressions
+        shell: bash
+        run: |
+          grep -q "name: scoretime" pubspec.yaml
+          grep -q "intl: ^0.20.3" pubspec.yaml
+          test -f assets/lottie/scoretime_pulse.json
+          test -f assets/icons/scoretime_icon.png
+          ! grep -R "withOpacity(" -n lib
+          ! grep -R "DropdownButtonFormField<String>(.*value:" -n lib || true
+
+      - name: Resolve Flutter dependencies
+        run: flutter pub get
+
+      - name: Flutter analyze
+        run: flutter analyze
+
+      - name: Flutter tests
+        run: flutter test
+
+  android:
+    name: Android • APK + AAB
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: [backend, flutter]
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: mobile-flutter
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Flutter 3.47.0
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.0"
+          cache: true
+
+      - name: Generate Android platform when missing
+        shell: bash
+        run: |
+          if [ ! -d android ]; then
+            flutter create . \
+              --platforms=android \
+              --org com.scoretime \
+              --project-name scoretime \
+              --no-pub
+          fi
+
+      - name: Apply ScoreTime Android identity
+        shell: bash
+        run: |
+          for density in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            mkdir -p "android/app/src/main/res/mipmap-$density"
+            cp "../tooling/android-icons/$density/ic_launcher.png" \
+               "android/app/src/main/res/mipmap-$density/ic_launcher.png"
+          done
+          sed -i 's/android:label="scoretime"/android:label="ScoreTime"/g' \
+            android/app/src/main/AndroidManifest.xml
+
+      - name: Resolve Flutter dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release --dart-define=API_BASE_URL="${{ inputs.api_base_url }}"
+
+      - name: Build release AAB
+        run: flutter build appbundle --release --dart-define=API_BASE_URL="${{ inputs.api_base_url }}"
+
+      - name: Upload ScoreTime Android
+        uses: actions/upload-artifact@v4
+        with:
+          name: ScoreTime-V1.4.2-Android
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            mobile-flutter/build/app/outputs/flutter-apk/app-release.apk
+            mobile-flutter/build/app/outputs/bundle/release/app-release.aab

@@ -1,7 +1,0 @@
-ScoreTime V0.5 validation
-===============================
-Structural validator: PASS
-PHP syntax lint: PASS (142 PHP files)
-Dart local import check: PASS (21 Dart files, 0 missing local imports)
-Migration guard: PASS (no duplicate device_sessions columns in V0.5 migration)
-Known environment limitation: Composer and Flutter SDK are not installed in the generation runtime, so dependency-resolved Laravel tests and flutter analyze/build were not executed locally. GitHub Actions workflows are included to perform those checks in their proper runtime.

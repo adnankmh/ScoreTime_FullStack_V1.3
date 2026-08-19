@@ -1,8 +1,0 @@
-ScoreTime V1.2 checks
-PHP files: 249
-PHP syntax errors: 0
-Dart files: 34
-Missing local Dart imports: 0
-Default locale: en
-Supported locales: en, ar, fr, es, de, tr
-Editorial auto-publish: disabled by design

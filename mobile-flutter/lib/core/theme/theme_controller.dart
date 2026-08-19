@@ -96,10 +96,10 @@ class AppThemeFactory {
       textTheme: text,
       cardTheme: CardThemeData(
         elevation: 0,
-        color: scheme.surface.withOpacity(isLight ? 1 : .9),
+        color: scheme.surface.withValues(alpha: isLight ? 1 : .9),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: BorderSide(color: scheme.outlineVariant.withOpacity(.22)),
+          side: BorderSide(color: scheme.outlineVariant.withValues(alpha: .22)),
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -112,16 +112,16 @@ class AppThemeFactory {
       navigationBarTheme: NavigationBarThemeData(
         height: 72,
         backgroundColor: isLight ? Colors.white : const Color(0xFF061127),
-        indicatorColor: primary.withOpacity(.17),
+        indicatorColor: primary.withValues(alpha: .17),
         indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         labelTextStyle: WidgetStatePropertyAll(text.labelSmall?.copyWith(fontWeight: FontWeight.w800)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: scheme.surfaceContainerHighest.withOpacity(.42),
+        fillColor: scheme.surfaceContainerHighest.withValues(alpha: .42),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide.none),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outlineVariant.withOpacity(.28))),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: primary.withOpacity(.75), width: 1.4)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outlineVariant.withValues(alpha: .28))),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: primary.withValues(alpha: .75), width: 1.4)),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16)),

@@ -109,8 +109,8 @@ class _HeroCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0A234B), Color(0xFF061329), Color(0xFF07101F)]),
-        border: Border.all(color: Colors.white.withOpacity(.08)),
-        boxShadow: [BoxShadow(color: scheme.primary.withOpacity(.12), blurRadius: 45, offset: const Offset(0, 18))],
+        border: Border.all(color: Colors.white.withValues(alpha: .08)),
+        boxShadow: [BoxShadow(color: scheme.primary.withValues(alpha: .12), blurRadius: 45, offset: const Offset(0, 18))],
       ),
       child: Stack(children: [
         Positioned(right: -22, bottom: -34, child: Opacity(opacity: .16, child: Image.asset('assets/icons/scoretime_icon.png', width: 170))),
@@ -149,7 +149,7 @@ class _QuickAccess extends StatelessWidget {
         itemBuilder: (context, i) => InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: items[i].$3,
-          child: Container(width: 132, padding: const EdgeInsets.all(14), decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withOpacity(.22))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Icon(items[i].$1, color: Theme.of(context).colorScheme.secondary), const SizedBox(height: 8), Text(items[i].$2, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800))])),
+          child: Container(width: 132, padding: const EdgeInsets.all(14), decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .22))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Icon(items[i].$1, color: Theme.of(context).colorScheme.secondary), const SizedBox(height: 8), Text(items[i].$2, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800))])),
         ),
       ),
     );
@@ -184,7 +184,7 @@ class _MatchRail extends StatelessWidget {
           return Container(
             width: 286,
             padding: const EdgeInsets.all(17),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: Theme.of(context).colorScheme.surface, border: Border.all(color: live ? const Color(0x44FF4D6D) : Theme.of(context).colorScheme.outlineVariant.withOpacity(.22))),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: Theme.of(context).colorScheme.surface, border: Border.all(color: live ? const Color(0x44FF4D6D) : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .22))),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [Expanded(child: Text('${m['competition']?['name_en'] ?? m['competition']?['name_ar'] ?? 'Football'}', maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.labelSmall)), if (live) const Text('● LIVE', style: TextStyle(color: Color(0xFFFF6B84), fontWeight: FontWeight.w900, fontSize: 11))]),
               const Spacer(),
@@ -212,7 +212,7 @@ class _NewsFeed extends StatelessWidget {
         return Container(
           margin: const EdgeInsets.only(bottom: 10),
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withOpacity(.22))),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .22))),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(width: 54, height: 54, decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), gradient: const LinearGradient(colors: [Color(0xFF0B8CFF), Color(0xFF18D7FF)])), child: Icon(n['is_breaking'] == true ? Icons.bolt_rounded : Icons.article_rounded, color: Colors.white)),
             const SizedBox(width: 13),

@@ -1,0 +1,21 @@
+ScoreTime Global V1.4.2 static checks
+PHP files checked: 267
+PHP syntax errors: 0
+Active GitHub workflows: 1
+Workflow YAML errors: 0
+Legacy workflow YAML files in archive: 0
+Dart files checked: 35
+Missing local Dart imports: 0
+Dart delimiter warnings: 0
+Approved Android icon densities: 5
+Release validator:
+ScoreTime V1.4.2 validator
+PASS
+Active workflows: 1
+Workflow: ScoreTime • Verify & Android
+Dart files: 35
+
+Runtime gate:
+Flutter SDK and Composer are not installed in this artifact build environment.
+The single GitHub workflow performs Composer resolution, MySQL migrations/seeding,
+PHPUnit, flutter pub get, flutter analyze, flutter test, and manual APK/AAB builds.
