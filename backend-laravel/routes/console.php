@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\{Artisan,Schedule};
-Artisan::command('koraone:sync', function(){ $this->call('football:sync-live',['--events'=>true]); })->purpose('Synchronize live data from the configured licensed football provider');
+Artisan::command('scoretime:sync', function(){ $this->call('football:sync-live',['--events'=>true]); })->purpose('Synchronize live data from the configured licensed football provider');
 if (env('FOOTBALL_LIVE_SCHEDULER', false)) {
     Schedule::command('football:sync-live --events')->everyMinute()->withoutOverlapping()->onOneServer();
 }

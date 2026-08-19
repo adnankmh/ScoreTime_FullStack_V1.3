@@ -1,0 +1,7 @@
+V0.4 static checks
+PHP files linted: 126
+PHP syntax failures: 0
+Dart local imports checked: 19 files
+Missing local imports: 0
+Composer install: NOT RUN (Composer unavailable in build environment)
+Flutter analyze/test/build: NOT RUN locally (Flutter SDK unavailable); GitHub workflow included.

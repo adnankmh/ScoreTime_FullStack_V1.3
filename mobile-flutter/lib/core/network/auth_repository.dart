@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:koraone/core/config/app_config.dart';
+import 'package:scoretime/core/config/app_config.dart';
 class AuthRepository{
  final Dio _dio=Dio(BaseOptions(baseUrl:AppConfig.apiBaseUrl,headers:{'Accept':'application/json'}));
  final FlutterSecureStorage _storage=const FlutterSecureStorage();

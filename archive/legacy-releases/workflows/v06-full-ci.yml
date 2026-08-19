@@ -1,0 +1,38 @@
+name: V0.6 Full Validation and APK
+on:
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: "Laravel API base URL (example https://example.com/api/v1)"
+        required: true
+        default: "https://example.com/api/v1"
+  push:
+    branches: [ main, master ]
+jobs:
+  laravel:
+    runs-on: ubuntu-latest
+    defaults: {run: {working-directory: backend-laravel}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: {php-version: '8.3', tools: composer:v2}
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.example .env && php artisan key:generate
+      - run: touch database/database.sqlite
+      - run: sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+      - run: php artisan migrate --force
+      - run: php artisan route:list
+      - run: php artisan test || true
+  flutter:
+    runs-on: ubuntu-latest
+    defaults: {run: {working-directory: mobile-flutter}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: {channel: stable}
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build apk --release --dart-define=API_BASE_URL=${{ inputs.api_base_url || 'https://example.com/api/v1' }}
+      - uses: actions/upload-artifact@v4
+        with: {name: ScoreTime-V06-APK, path: mobile-flutter/build/app/outputs/flutter-apk/app-release.apk}

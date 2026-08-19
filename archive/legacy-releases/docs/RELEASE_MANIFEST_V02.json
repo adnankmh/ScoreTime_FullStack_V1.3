@@ -1,0 +1,575 @@
+{
+  "release": "KoraOne Next V0.2",
+  "generated": "2026-08-19",
+  "file_count": 113,
+  "php_lint": "PASS: 83 PHP files",
+  "flutter_build": "NOT RUN: Flutter SDK unavailable in build environment",
+  "composer_test": "NOT RUN: Composer unavailable in build environment",
+  "files": [
+    {
+      "path": ".github/workflows/backend.yml",
+      "size": 430,
+      "sha256": "cbdbccf3ac4168c506a7383bd1bc7c939a1cd623d4309ebdef6b63f4af6df967"
+    },
+    {
+      "path": ".github/workflows/flutter.yml",
+      "size": 436,
+      "sha256": "c484140eda65bb5815bdec10e0700bee8be51bd1af7440b5034b482803488116"
+    },
+    {
+      "path": "README_AR.md",
+      "size": 1351,
+      "sha256": "990dda1988a6b31410832b0531cccb9130efd60fe0d762562dfe1975a90f1832"
+    },
+    {
+      "path": "backend-laravel/.env.example",
+      "size": 579,
+      "sha256": "b1792eb385311cdea5158129d4824f14810f19ad8b131f8265ebaa495bc6c315"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Admin/AdminAccountController.php",
+      "size": 892,
+      "sha256": "46b425657cd2db2bd114a37445aa0738a7d53767b9d04a3643bd32479e66532c"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Admin/ArticleAdminController.php",
+      "size": 1927,
+      "sha256": "307ff15b78806f1d57e91550a9e51e59528fb705d230465e18c92337fd6fdca2"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Admin/DashboardController.php",
+      "size": 447,
+      "sha256": "e819c5d1bf2f37f5ca99bacb48bd7279ff6263d2be3f6e49f532b183ea71805c"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Admin/DataAdminController.php",
+      "size": 1016,
+      "sha256": "c48d1ea58694870b52c0e344106bc744818f6c7266dfe6d65083373a01e6f5fd"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Admin/SecurityController.php",
+      "size": 271,
+      "sha256": "80853a96d949ca833662dc42515b0435a23c97fedaaa88efc7e4fffce121b786"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Admin/UserAdminController.php",
+      "size": 632,
+      "sha256": "a58e1fe3aa8070f9ef86981762dddb7a79eff025f3b74f86418fb8c265be8e0e"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Api/V1/AuthController.php",
+      "size": 1276,
+      "sha256": "13d2d7a9c05709652c67fd5588c570f5ae4b50522f4ef964bd449a3635e1bf94"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Api/V1/CompetitionController.php",
+      "size": 597,
+      "sha256": "28fc985df585ec339822b51fc7f6049b9cd33d4f4a37226bd744785582310527"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Api/V1/FeedController.php",
+      "size": 654,
+      "sha256": "ea653c466b714f61a0ad3f82b928c9fb3b9b7e5cc5956f51ad8643c874238be9"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Api/V1/MatchController.php",
+      "size": 502,
+      "sha256": "4b7f778d6ec6c146dcacb04265a961e20c0ad023eec048ff34a64f17adc5060e"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Api/V1/NewsController.php",
+      "size": 329,
+      "sha256": "fd08c3dccd5c362456ad5809eb029f524aca453c0c5b09016361a23620b6e018"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Api/V1/TeamController.php",
+      "size": 512,
+      "sha256": "1db46565ff267dc439999d3d38d40192699d4bb6684800d97eac865a6a8a723d"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/AuthController.php",
+      "size": 1447,
+      "sha256": "c1495c22ad92b28cdea6ae77c3d6c1f64b4da5cef13051924716b30876b3a847"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/Controller.php",
+      "size": 67,
+      "sha256": "50c69a51484453a057e0349262b108515df469c70404c01816bf8a26c8b16756"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/PreferenceController.php",
+      "size": 561,
+      "sha256": "396c6e6c607bba34caf09642bd3714fc8904410cb38f96aab63dfb26baad4db5"
+    },
+    {
+      "path": "backend-laravel/app/Http/Controllers/WebController.php",
+      "size": 1203,
+      "sha256": "f2a4af84d9be8e3a5c180d0f08ba9d72b1e19851950c23cfee83cc8846115c35"
+    },
+    {
+      "path": "backend-laravel/app/Http/Middleware/AdminOnly.php",
+      "size": 312,
+      "sha256": "ea8ef93f8ce9734112347de5143ca8899100fc33560e0209083b91bd6dd7e67d"
+    },
+    {
+      "path": "backend-laravel/app/Http/Middleware/SetLocale.php",
+      "size": 455,
+      "sha256": "0e7634a886d0bb10484d079cbd647f7a4c06230cb2259f65a0597cfa071c1a68"
+    },
+    {
+      "path": "backend-laravel/app/Models/Article.php",
+      "size": 497,
+      "sha256": "b8de67e0cbaf181feff1d4a2fbbf6679e90f4e43e660826c069fdce6ad1b12a5"
+    },
+    {
+      "path": "backend-laravel/app/Models/AuditLog.php",
+      "size": 324,
+      "sha256": "f0376dbb5402e6691af7141b19471b426752b25b869da72525f346ea1a6dbf12"
+    },
+    {
+      "path": "backend-laravel/app/Models/Competition.php",
+      "size": 400,
+      "sha256": "7ef23ed35798f7a8fb74dabfbd4ece1bc015f85a1b53cdbb095f08af9f113aa5"
+    },
+    {
+      "path": "backend-laravel/app/Models/Favorite.php",
+      "size": 226,
+      "sha256": "21b16b2ff19aa2f4adec670c575e420654ee1689b43e68a52018652670fc3082"
+    },
+    {
+      "path": "backend-laravel/app/Models/FootballMatch.php",
+      "size": 707,
+      "sha256": "923a02061f365c508a17713be959dd6c628c5b12346cf3953963cb405ad7b13b"
+    },
+    {
+      "path": "backend-laravel/app/Models/MatchEvent.php",
+      "size": 366,
+      "sha256": "ebcab93df7c8948d859a9f69ea4ae280aff93da902a9dab2084fe5a9f58f2fbf"
+    },
+    {
+      "path": "backend-laravel/app/Models/NotificationPreference.php",
+      "size": 414,
+      "sha256": "166f3d05477afb751e245c0f7daf3a9a71fdaddd92aa33537421251282e66716"
+    },
+    {
+      "path": "backend-laravel/app/Models/Player.php",
+      "size": 391,
+      "sha256": "1ed73d94a3de5c02b5cda9750e21c4bd0098331269bdf3feb52f3fe5bf0f4b54"
+    },
+    {
+      "path": "backend-laravel/app/Models/Standing.php",
+      "size": 318,
+      "sha256": "30d661b77fbe60deb022e635072d4fedf233e7a938e98f1c6af6188b33cf8d5b"
+    },
+    {
+      "path": "backend-laravel/app/Models/Team.php",
+      "size": 407,
+      "sha256": "98261217455a602e8cda0b5e01a8a97b7cdf51257ff825aac98cedb767d574ca"
+    },
+    {
+      "path": "backend-laravel/app/Models/User.php",
+      "size": 627,
+      "sha256": "93293d33a9c61f7ab8685d50370609432bcc41891358657b2805c86e9550fd1e"
+    },
+    {
+      "path": "backend-laravel/app/Providers/AppServiceProvider.php",
+      "size": 566,
+      "sha256": "f6f8ab07350255c7736aedda74f4d515aecd14f8b6fd99c243961d0a1ed29b69"
+    },
+    {
+      "path": "backend-laravel/app/Services/FootballDataService.php",
+      "size": 533,
+      "sha256": "ec44cd937c975505abb5964ed0c9fdbe338a76e8d0ebf367abffe55619e53ff8"
+    },
+    {
+      "path": "backend-laravel/artisan",
+      "size": 239,
+      "sha256": "23394a924adac02d12a1a268a2a7636982eb170b9f728abff4dc75edc9d1d260"
+    },
+    {
+      "path": "backend-laravel/bootstrap/app.php",
+      "size": 590,
+      "sha256": "cdfa6e4f2abd16479357447135ea44bc5de929f7064ffa85b10575b2110d5279"
+    },
+    {
+      "path": "backend-laravel/bootstrap/providers.php",
+      "size": 56,
+      "sha256": "c90862112ce4cfa0c182349cb9ae647127023504ecab453a4de63c1560d7b923"
+    },
+    {
+      "path": "backend-laravel/composer.json",
+      "size": 809,
+      "sha256": "27764ba8f2d9ee8049ccf53722b60c2e3231c56e8d4cd1c7699a5b118ca54256"
+    },
+    {
+      "path": "backend-laravel/config/app.php",
+      "size": 318,
+      "sha256": "98af3b017bb77bc20c11892a53977e6ba4ca4154a2dd375910665072406663d5"
+    },
+    {
+      "path": "backend-laravel/config/auth.php",
+      "size": 357,
+      "sha256": "13ea28c82aee50ad4e783261d68f62ea066fe395279cfe1e6c62dc471f7f5510"
+    },
+    {
+      "path": "backend-laravel/config/cache.php",
+      "size": 347,
+      "sha256": "ba0490a112cb0efb59beb45d7d19ad792d46afa9dd1fe55cfe77ab21dd611f84"
+    },
+    {
+      "path": "backend-laravel/config/cors.php",
+      "size": 304,
+      "sha256": "e03aa14a07b3ab7b9b6a6776617f541a1539837e1e2336782cfc52941919c91c"
+    },
+    {
+      "path": "backend-laravel/config/database.php",
+      "size": 1136,
+      "sha256": "cb3f09814bae7911cba74ec7b98cc3091274e80da4af7133374d1418cdc4415a"
+    },
+    {
+      "path": "backend-laravel/config/filesystems.php",
+      "size": 361,
+      "sha256": "80d704a35fcd5401091f374c3e77927e16ed7118d4398ab7ebbc944dcc7531d6"
+    },
+    {
+      "path": "backend-laravel/config/hashing.php",
+      "size": 161,
+      "sha256": "db47d28babff923ae78787544cb77af06cb4287d45da7f9439c89169009bab71"
+    },
+    {
+      "path": "backend-laravel/config/logging.php",
+      "size": 669,
+      "sha256": "8321706211f1d6dd0eeffc7a7935430b55f52af9b2b2664a146282666900a618"
+    },
+    {
+      "path": "backend-laravel/config/queue.php",
+      "size": 458,
+      "sha256": "a7482f1fcf82f15ef2671b177eb00b8e031a5fcf265048cfbf14cba6a3a032f7"
+    },
+    {
+      "path": "backend-laravel/config/services.php",
+      "size": 214,
+      "sha256": "07445fd4f98fc4d8e00752b41ee6ac264a18b4105522bf4d01a211c8387fe37a"
+    },
+    {
+      "path": "backend-laravel/config/session.php",
+      "size": 486,
+      "sha256": "0c3810aae4753a36eb2d71315ca6d8db8c9e632451614dc0126324f937bca696"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000000_create_support_tables.php",
+      "size": 1102,
+      "sha256": "4a891e9bcbbe4c8ec8c6a23861e0055763e30f8324b3ece3c55a2b5cb269ea48"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000001_create_competitions_table.php",
+      "size": 598,
+      "sha256": "6e563e5e6fd689a94ef8d5b93ec6570e4ceffcc90894d9abe319493417bcb175"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000002_create_teams_table.php",
+      "size": 629,
+      "sha256": "10f1dad30e601890e188542af53a48e00c6549cec57006df1dcacd44e9df83ec"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000003_create_football_matches_table.php",
+      "size": 1028,
+      "sha256": "93479399556498c7852b9359f193e213cca2e6bac00542a2b98c97551085e610"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000004_create_articles_table.php",
+      "size": 715,
+      "sha256": "f9cc989fde403f54eb97a29f55f79019a949b05a7978783d9eb61732cd65f8d9"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000005_create_standings_table.php",
+      "size": 941,
+      "sha256": "b7669841931aab34232ed8c1a03e2010ecf5510c46027f9062ee86cb32d2959f"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000006_upgrade_users_and_security.php",
+      "size": 1531,
+      "sha256": "2effc3bc69dfffb3101d42dfc15bbe51b118bf8392f9af394906c4ba5896de5f"
+    },
+    {
+      "path": "backend-laravel/database/migrations/2026_08_19_000007_create_fan_features.php",
+      "size": 2062,
+      "sha256": "7277ce0a66ee644b7fa869817121e81c6cf7d9a4dbc92d27d378749835210b0d"
+    },
+    {
+      "path": "backend-laravel/database/seeders/AdminSeeder.php",
+      "size": 391,
+      "sha256": "5dde870804791b2f3d51d77a1368cf1ad075bb58d47a905e65724dd8abd54fb9"
+    },
+    {
+      "path": "backend-laravel/database/seeders/DatabaseSeeder.php",
+      "size": 2443,
+      "sha256": "ee37b60541d37e283e51d63c7776721e371fa168f93f5a67a76776609a318c00"
+    },
+    {
+      "path": "backend-laravel/lang/ar/ui.php",
+      "size": 1926,
+      "sha256": "1bd8e8082fff881db8e29e429dd24dc761e8c0d9a13fb27cbe23879b379f7460"
+    },
+    {
+      "path": "backend-laravel/lang/en/ui.php",
+      "size": 1441,
+      "sha256": "17cdb5ff6b8ca198af14ddb776f1cd11dca4031bc7c58746d8c96ce12c41f7e1"
+    },
+    {
+      "path": "backend-laravel/lang/es/ui.php",
+      "size": 1539,
+      "sha256": "2f31a2a2529429f630ad44278eede81c407c4d47cbfaa14d8005de98e15a1695"
+    },
+    {
+      "path": "backend-laravel/lang/fr/ui.php",
+      "size": 1583,
+      "sha256": "f14a1647e3a27ea25f63eaa1b23a60598c12426ee005b78e53195cace09818f1"
+    },
+    {
+      "path": "backend-laravel/lang/tr/ui.php",
+      "size": 1549,
+      "sha256": "6ad5b2fa0ecf7e846ba80417947499e29ee2c78ec02b5a4ab328bfb94ada7742"
+    },
+    {
+      "path": "backend-laravel/phpunit.xml",
+      "size": 428,
+      "sha256": "0f4ec8b1f61696a0a63874bf2c27e7c949e6eb41b12d61b148c68c2dff1f8ac1"
+    },
+    {
+      "path": "backend-laravel/public/css/app.css",
+      "size": 6758,
+      "sha256": "68a3bc7fae92a5804f87669d7a748ef08183f443cbd524d5db2cc35cabdb2347"
+    },
+    {
+      "path": "backend-laravel/public/js/app.js",
+      "size": 325,
+      "sha256": "6e7c1316a3e5513da7098d60d32df738efe9d1a295cce8fbdbb9ca19a8ca814f"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/account/edit.blade.php",
+      "size": 798,
+      "sha256": "b84d13728a8e11b6c51330f379cccee487ba5eed91d25f6478a40e3ea7571803"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/articles/form.blade.php",
+      "size": 1292,
+      "sha256": "725163f8305eca019091fa5440d0644308e21090c8494630ec9d2fcec0b45d37"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/articles/index.blade.php",
+      "size": 826,
+      "sha256": "11cd5ae6e2fe7110c88888d535a4354d60b58f6b0053de669e4e2807d546b90c"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/dashboard.blade.php",
+      "size": 1657,
+      "sha256": "1e82e93bb65ea5b84664e4902fca40400bddfa152daa755828df0a5000b13837"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/data/competitions.blade.php",
+      "size": 456,
+      "sha256": "16a9347a6133552bfa09b8e4d2011bf1e63d4576bf4c933e73699b17233dd90a"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/data/matches.blade.php",
+      "size": 1073,
+      "sha256": "63ca355043ec2bdc8818d35b57737417b196a2bf86e19a476bdbcd635ef43488"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/data/teams.blade.php",
+      "size": 452,
+      "sha256": "fd0cfc01baa62d632f60a898eb6edcd2975e531caf2d98f8b91423393889e19f"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/security/index.blade.php",
+      "size": 923,
+      "sha256": "87112755c1948d0771efaf9d2ac2bb7d8a932345f3e92b0fd37a4390e5477eea"
+    },
+    {
+      "path": "backend-laravel/resources/views/admin/users/index.blade.php",
+      "size": 843,
+      "sha256": "2fe4af7c818cba6583b354409454fa18e3426d8f2d34ae4fd87d82498a1b8c88"
+    },
+    {
+      "path": "backend-laravel/resources/views/auth/login.blade.php",
+      "size": 733,
+      "sha256": "0c0ea198448bfc75e850523de7f71672cc8b93bcfc28cf5091f022fc00b0cd1b"
+    },
+    {
+      "path": "backend-laravel/resources/views/auth/register.blade.php",
+      "size": 774,
+      "sha256": "72c404b2c70ad46975a708f241ed69e0b65a10599fc568050b217972635ee290"
+    },
+    {
+      "path": "backend-laravel/resources/views/competitions/show.blade.php",
+      "size": 290,
+      "sha256": "c3229d80ba2566ac50e00049f8f3d688598deed6b846811208610a58bbaadab0"
+    },
+    {
+      "path": "backend-laravel/resources/views/home/index.blade.php",
+      "size": 2918,
+      "sha256": "7181bc36b334d8fb15edaa9b9b88f2a99fc68df3692f7d664c5caf7445fc7255"
+    },
+    {
+      "path": "backend-laravel/resources/views/layouts/app.blade.php",
+      "size": 2970,
+      "sha256": "3937e06fa899927ac8473157cefa1b5210ed2e84924922e18a9de6471c9125b6"
+    },
+    {
+      "path": "backend-laravel/resources/views/matches/index.blade.php",
+      "size": 885,
+      "sha256": "229eeee3abefc63501d1ac2003eb6f7cad95d8a6ec27f9747abec38ad5384ed2"
+    },
+    {
+      "path": "backend-laravel/resources/views/matches/show.blade.php",
+      "size": 1029,
+      "sha256": "2a97c74f69ed437444aff370afe8aaa60afcec435af6c7b10cbf1c2b1b8e4a25"
+    },
+    {
+      "path": "backend-laravel/resources/views/news/index.blade.php",
+      "size": 574,
+      "sha256": "dea59a7dccfe7f3f79c45a6ab0210bc1595010e38a50ce4359cb1d76dce66083"
+    },
+    {
+      "path": "backend-laravel/resources/views/news/show.blade.php",
+      "size": 522,
+      "sha256": "d22316d9bad446b9056c31877ba052b1939bb0cbf9c0422dc760f64537d5545d"
+    },
+    {
+      "path": "backend-laravel/resources/views/teams/show.blade.php",
+      "size": 323,
+      "sha256": "2c1693b43d6c86e5b97058689f3a4186b7a7e6ff767b60b89204d580801c5560"
+    },
+    {
+      "path": "backend-laravel/routes/api.php",
+      "size": 1185,
+      "sha256": "230e854ada3b040e6c3386bd87fcc326c015cd2ae6c1bba01dd084887acbb1d6"
+    },
+    {
+      "path": "backend-laravel/routes/console.php",
+      "size": 243,
+      "sha256": "5fe459b232fffab18dcdaae9e7bef3d818ffadddf25ec6005ecaf03b3496395f"
+    },
+    {
+      "path": "backend-laravel/routes/web.php",
+      "size": 2782,
+      "sha256": "13a9981647b2f204178e9594e304acddc19270b6166b9261bf09bb26538b6508"
+    },
+    {
+      "path": "backend-laravel/tests/Feature/ApiSmokeTest.php",
+      "size": 280,
+      "sha256": "3124b921b863026f495daf8af7f3e977f721b5f9a03ae383acdf73b1bfee7cbd"
+    },
+    {
+      "path": "backend-laravel/tests/TestCase.php",
+      "size": 130,
+      "sha256": "0ebc3d9f4768651e4ddb14611828797b97b54a849dc93d23ebf58a77166191fc"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "size": 591,
+      "sha256": "9f61da60f8bb5f0c4674c7f4f26cb572eee15a3fde26794ddcab81f8823d9e07"
+    },
+    {
+      "path": "docs/BRANDING_OPTIONS_AR.md",
+      "size": 1269,
+      "sha256": "16027939a7835917272634584f58a84c8bfb4a12031669068ab9c4621c98ee4e"
+    },
+    {
+      "path": "docs/PRODUCT_BLUEPRINT_AR.md",
+      "size": 2775,
+      "sha256": "da53802ae79e9331ec208f90db2934a184544773b0c5793abf3ab20b5b3a60cd"
+    },
+    {
+      "path": "docs/RUN_V02_AR.md",
+      "size": 606,
+      "sha256": "fb037f5e8bae696dded60debad5c193d5fbde548e668b7cf891df41e73348297"
+    },
+    {
+      "path": "docs/SECURITY_HARDENING_AR.md",
+      "size": 2525,
+      "sha256": "741f9f50d7dabf873730691f35890a20e74c24a7435afaeed3680666aad5c9f6"
+    },
+    {
+      "path": "docs/V02_FEATURE_MATRIX_AR.md",
+      "size": 1096,
+      "sha256": "e13e592d1353c5a4e84175eaa28a20ee3d9d57487823cf5c5a6309b6ff6655aa"
+    },
+    {
+      "path": "mobile-flutter/lib/core/config/app_config.dart",
+      "size": 124,
+      "sha256": "24a6a4781954a503400161bad3da0a5b3da19fefb22ec6e914688fd7318650fc"
+    },
+    {
+      "path": "mobile-flutter/lib/core/i18n/app_strings.dart",
+      "size": 2709,
+      "sha256": "2b828300ab804a4864fa654cd9a392ffe4b75f00fd4265d21e25a2790c5e9dab"
+    },
+    {
+      "path": "mobile-flutter/lib/core/network/api_client.dart",
+      "size": 565,
+      "sha256": "b19a51d59c1f04cdfc08c8112bc85351f76c58678b02ae24736a61ba1e0ff624"
+    },
+    {
+      "path": "mobile-flutter/lib/core/network/auth_repository.dart",
+      "size": 1184,
+      "sha256": "848172ff74422b4bfc2145226f37229e9342866428a3fd7e962be699f0e9dfd3"
+    },
+    {
+      "path": "mobile-flutter/lib/core/theme/app_theme.dart",
+      "size": 556,
+      "sha256": "06dbb60190833d844375fd844a61c54a781edd55cfb8163c8bd9aad7fc9e67ba"
+    },
+    {
+      "path": "mobile-flutter/lib/core/theme/theme_controller.dart",
+      "size": 2349,
+      "sha256": "77b79ef95b04531745f5d50294bc89bf36fc6b7168d2f21f0be4029598fae510"
+    },
+    {
+      "path": "mobile-flutter/lib/features/auth/presentation/login_screen.dart",
+      "size": 2366,
+      "sha256": "bcff3d1427f6f7899a1af597dcac0fbcda0df638a2a510d42d3b2780b4180152"
+    },
+    {
+      "path": "mobile-flutter/lib/features/favorites/presentation/favorites_screen.dart",
+      "size": 899,
+      "sha256": "87b542e938ae9461f07eb115d243bdc62a2749fd0e8cdc1313dc695a03ce89dd"
+    },
+    {
+      "path": "mobile-flutter/lib/features/home/data/demo_data.dart",
+      "size": 916,
+      "sha256": "2a87664499f5e6b8b702b6f2c8774d20cc3470372ec527eea833c76c1966cdf1"
+    },
+    {
+      "path": "mobile-flutter/lib/features/home/presentation/home_screen.dart",
+      "size": 7712,
+      "sha256": "f56813a29195080023dbb9cf30b7a487030b7370cc9a1469bd681ebf583fb46a"
+    },
+    {
+      "path": "mobile-flutter/lib/features/matches/presentation/matches_screen.dart",
+      "size": 821,
+      "sha256": "f55be69c8e9804b1d72cbfa7ad41fc2245a4194190b9fba600980d29ee704da3"
+    },
+    {
+      "path": "mobile-flutter/lib/features/news/presentation/news_screen.dart",
+      "size": 719,
+      "sha256": "adfc28b3d80b4fe817e8b2f3d0a352d4982381e43813a7736a322e473df2dbd5"
+    },
+    {
+      "path": "mobile-flutter/lib/features/settings/presentation/settings_screen.dart",
+      "size": 2380,
+      "sha256": "1873615008023e938f6c4ab0f32a4530d225f0ebd0ec04dd5999f00701ff9599"
+    },
+    {
+      "path": "mobile-flutter/lib/main.dart",
+      "size": 2536,
+      "sha256": "114b82478a48596df79b3436be7e69152b6d3b96a8ec4731e83d8d006ddb806b"
+    },
+    {
+      "path": "mobile-flutter/pubspec.yaml",
+      "size": 675,
+      "sha256": "7ebd40e81b23e584f7b361e8237ee2bc2fc65514e8820f31b5d98dce8dde9d7b"
+    }
+  ]
+}

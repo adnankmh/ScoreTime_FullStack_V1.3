@@ -1,10 +1,62 @@
 <?php
-namespace Database\Seeders;use Illuminate\Database\Seeder;use App\Models\{Article,Competition,FootballMatch,Standing,Team};
-class DatabaseSeeder extends Seeder{public function run():void{$this->call(AdminSeeder::class);$epl=Competition::create(['name_ar'=>'الدوري الإنجليزي الممتاز','name_en'=>'Premier League','slug'=>'premier-league','country'=>'England','season'=>'2026/27','is_featured'=>true,'sort_order'=>1]);$ucl=Competition::create(['name_ar'=>'دوري أبطال أوروبا','name_en'=>'UEFA Champions League','slug'=>'champions-league','country'=>'Europe','season'=>'2026/27','is_featured'=>true,'sort_order'=>2]);$teams=[['أرسنال','Arsenal','arsenal'],['ليفربول','Liverpool','liverpool'],['مانشستر سيتي','Manchester City','manchester-city'],['تشيلسي','Chelsea','chelsea']];$made=[];foreach($teams as $i=>$x){$made[]=Team::create(['name_ar'=>$x[0],'name_en'=>$x[1],'slug'=>$x[2],'short_name'=>strtoupper(substr($x[1],0,3)),'country'=>'England','primary_color'=>['#B91C1C','#B91C1C','#60A5FA','#2563EB'][$i]]);}FootballMatch::create(['competition_id'=>$epl->id,'home_team_id'=>$made[0]->id,'away_team_id'=>$made[1]->id,'kickoff_at'=>now()->setTime(20,30),'status'=>'scheduled','venue'=>'Demo Arena','round'=>'Round 1','tv_channels'=>['Sports One']]);FootballMatch::create(['competition_id'=>$epl->id,'home_team_id'=>$made[2]->id,'away_team_id'=>$made[3]->id,'kickoff_at'=>now()->subMinutes(34),'status'=>'live','minute'=>34,'home_score'=>1,'away_score'=>0,'venue'=>'City Arena','round'=>'Round 1','stats'=>['possession'=>[61,39],'shots'=>[8,4],'shots_on_target'=>[4,1],'corners'=>[5,2]]]);foreach($made as $i=>$team){Standing::create(['competition_id'=>$epl->id,'team_id'=>$team->id,'position'=>$i+1,'played'=>1,'won'=>$i<2?1:0,'drawn'=>0,'lost'=>$i<2?0:1,'goals_for'=>2-$i%2,'goals_against'=>$i%2,'goal_difference'=>($i<2?1:-1),'points'=>$i<2?3:0,'form'=>$i<2?'W':'L']);}Article::create(['title'=>'انطلاق المنصة بتجربة كروية موحدة','slug'=>'koraone-launch','excerpt'=>'نتائج مباشرة، أخبار وإحصائيات في تجربة واحدة.','body'=>'هذه مادة تجريبية محلية لإظهار تصميم المنصة. استبدلها بمحتوى تحريري مرخص أو أصلي.','category'=>'عام','author_name'=>'فريق التحرير','published_at'=>now(),'is_breaking'=>true,'is_featured'=>true]);$this->call(V04Seeder::class);$this->call(V05EliteSeeder::class);
-  \App\Models\PredictionSeason::firstOrCreate(['slug'=>'global-2026-27'],['name'=>'Global 2026/27','starts_at'=>now()->startOfDay(),'ends_at'=>now()->addYear(),'is_active'=>true,'scoring_rules'=>['exact'=>5,'outcome'=>2]]);
-  \App\Models\AppSetting::updateOrCreate(['key'=>'realtime_mode'],['value'=>'sse','is_public'=>true]);
-  $this->call(V08VisualBuilderSeeder::class);
-  $this->call(V09NoCodeSeeder::class);
-  $this->call(V10GlobalSeeder::class);
-}
+namespace Database\Seeders;
+use Illuminate\Database\Seeder;
+use App\Models\{Article,Competition,FootballMatch,Standing,Team};
+
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $this->call(AdminSeeder::class);
+
+        $epl = Competition::updateOrCreate(
+            ['slug' => 'premier-league'],
+            ['name_ar' => 'الدوري الإنجليزي الممتاز', 'name_en' => 'Premier League', 'country' => 'England', 'season' => '2026/27', 'is_featured' => true, 'sort_order' => 1]
+        );
+        Competition::updateOrCreate(
+            ['slug' => 'champions-league'],
+            ['name_ar' => 'دوري أبطال أوروبا', 'name_en' => 'UEFA Champions League', 'country' => 'Europe', 'season' => '2026/27', 'is_featured' => true, 'sort_order' => 2]
+        );
+
+        $teams = [
+            ['أرسنال','Arsenal','arsenal','ARS','#E91A2B'],
+            ['ليفربول','Liverpool','liverpool','LIV','#C8102E'],
+            ['مانشستر سيتي','Manchester City','manchester-city','MCI','#6CABDD'],
+            ['تشيلسي','Chelsea','chelsea','CHE','#034694'],
+        ];
+        $made = [];
+        foreach ($teams as $x) {
+            $made[] = Team::updateOrCreate(
+                ['slug' => $x[2]],
+                ['name_ar' => $x[0], 'name_en' => $x[1], 'short_name' => $x[3], 'country' => 'England', 'primary_color' => $x[4]]
+            );
+        }
+
+        $scheduled = FootballMatch::updateOrCreate(
+            ['provider_id' => 'scoretime-demo-scheduled'],
+            ['competition_id' => $epl->id, 'home_team_id' => $made[0]->id, 'away_team_id' => $made[1]->id, 'kickoff_at' => now()->startOfDay()->setTime(20,30), 'status' => 'scheduled', 'venue' => 'ScoreTime Arena', 'round' => 'Round 1', 'tv_channels' => ['Sports One']]
+        );
+        $live = FootballMatch::updateOrCreate(
+            ['provider_id' => 'scoretime-demo-live'],
+            ['competition_id' => $epl->id, 'home_team_id' => $made[2]->id, 'away_team_id' => $made[3]->id, 'kickoff_at' => now()->startOfDay()->setTime(18,30), 'status' => 'live', 'minute' => 34, 'home_score' => 1, 'away_score' => 0, 'venue' => 'ScoreTime City', 'round' => 'Round 1', 'stats' => ['possession'=>[61,39],'shots'=>[8,4],'shots_on_target'=>[4,1],'corners'=>[5,2]]]
+        );
+
+        foreach ($made as $i => $team) {
+            Standing::updateOrCreate(
+                ['competition_id' => $epl->id, 'team_id' => $team->id],
+                ['position' => $i+1, 'played' => 1, 'won' => $i<2?1:0, 'drawn' => 0, 'lost' => $i<2?0:1, 'goals_for' => 2-$i%2, 'goals_against' => $i%2, 'goal_difference' => $i<2?1:-1, 'points' => $i<2?3:0, 'form' => $i<2?'W':'L']
+            );
+        }
+
+        Article::updateOrCreate(
+            ['slug' => 'scoretime-launch'],
+            ['title' => 'ScoreTime is ready for the next football moment', 'excerpt' => 'Live scores, trusted editorial coverage and advanced match intelligence in one premium experience.', 'body' => 'This is local development content. Replace it with original or licensed editorial coverage before publishing.', 'category' => 'ScoreTime', 'author_name' => 'ScoreTime Editorial', 'published_at' => now(), 'is_breaking' => true, 'is_featured' => true]
+        );
+
+        $this->call(V04Seeder::class);
+        $this->call(V05EliteSeeder::class);
+        $this->call(V08VisualBuilderSeeder::class);
+        $this->call(V09NoCodeSeeder::class);
+        $this->call(V10GlobalSeeder::class);
+    }
 }

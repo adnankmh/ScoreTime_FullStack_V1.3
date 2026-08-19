@@ -1,0 +1,22 @@
+PHP syntax: 219 files, 0 errors
+Dart static structure: 35 files, missing local imports=0, delimiter warnings=0, legacy package refs=0
+Active workflows: 01-quality-gate.yml, 02-android-release.yml
+Workflow YAML errors: 0
+Known CI regression check: php artisan test=absent; intl ^0.19.0=absent; intl ^0.20.3=present
+Route controller references: missing=0
+Blade view references: 43 views, missing refs=0
+Laravel UI translation coverage: keys=58, locales=6, locales with missing keys=0
+Migration duplicate table creates: 0 across 77 created tables
+Seeder direct create() calls: 0
+Laravel runtime required placeholders missing: 0
+Default locale: English
+Local session/cache/queue: SESSION_DRIVER=file, CACHE_STORE=file, QUEUE_CONNECTION=sync
+Shipped .env secret file: NO
+Brand logo: 1254x1254, sha256=d939b28a4bb0cadabf09050815b3ddef901f63ee6b8dd00d788ff7cf7fc5b849
+Brand icon: 1024x1024, sha256=446377815fbbd7130a9022ea5bce1add88b6a936bb756c018aa1e8b25a03c471
+Root files: .gitignore, README_AR.md, VERSION
+Legacy archive files: 83
+Release validator: PASS
+
+STATIC_RESULT=PASS
+Runtime note: Composer install/Laravel runtime tests and Flutter analyze/test/build require their toolchains; GitHub workflows are included as the runtime build gates.

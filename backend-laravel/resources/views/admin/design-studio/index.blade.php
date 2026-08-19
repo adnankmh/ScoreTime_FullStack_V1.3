@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('title','Visual Design Studio')
+@section('title','Experience Design Studio')
 @section('content')
-<div class="admin-head"><div><div class="eyebrow">ADNAN CONTROL ROOM · V0.8</div><h1>Visual Design Studio</h1><p class="muted">غيّر هوية الموقع والتطبيق وترتيب الأقسام بدون تعديل الكود.</p></div><a class="btn ghost" href="{{route('admin.dashboard')}}">← Dashboard</a></div>
+<div class="admin-head"><div><div class="eyebrow">SCORETIME CONTROL ROOM · DESIGN</div><h1>Experience Design Studio</h1><p class="muted">غيّر هوية الموقع والتطبيق وترتيب الأقسام بدون تعديل الكود.</p></div><a class="btn ghost" href="{{route('admin.dashboard')}}">← Dashboard</a></div>
 <div class="builder-grid">
  <section class="panel builder-form">
   <h2>Brand & Design Tokens</h2>

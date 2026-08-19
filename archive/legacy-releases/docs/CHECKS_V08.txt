@@ -1,0 +1,9 @@
+ScoreTime V0.8 validation
+- PHP files checked: 200
+- PHP syntax errors: 0
+- V0.8 structural validator: PASS
+- Required Visual Builder controllers/service/migration/view: PASS
+- Flutter local imports: PASS
+- Flutter raw delimiter check: PASS (see packaging log)
+- Composer/Laravel runtime tests: delegated to .github/workflows/v08-full-ci.yml
+- Flutter analyze/test/APK: delegated to .github/workflows/v08-full-ci.yml because Flutter SDK is not installed in this runtime.

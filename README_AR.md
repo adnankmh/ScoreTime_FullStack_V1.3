@@ -1,10 +1,30 @@
-# ScoreTime Platform V0.3
+# ScoreTime Global V1.4
 
-منصة كرة قدم Full Stack: Laravel 12 للموقع/الإدارة/API + Flutter للتطبيق. الهوية الحالية داخل الشفرة مؤقتة حتى اختيار العلامة التجارية النهائية.
+نسخة موحدة جديدة للموقع والتطبيق بهوية **ScoreTime** المعتمدة وشعار **Every Moment Counts**.
 
-## ما الجديد
-Live-data-ready Match Center، بحث شامل، Players، Transfer Center، Predictions، Fan League، Fan Room، Favorites، إدارة ومراقبة، 5 لغات، 3 ثيمات، font scaling، وAPK عبر GitHub Actions بدون Android Studio.
+## المجلدات الرئيسية
+- `backend-laravel/` — الموقع + REST API + Adnan Control Room.
+- `mobile-flutter/` — تطبيق Flutter.
+- `branding/` — الشعار والأيقونة المعتمدان.
+- `docs/` — وثائق الإصدار الحالي فقط.
+- `archive/legacy-releases/` — كل ملفات وWorkflows ووثائق الإصدارات القديمة في مكان واحد.
+- `.github/workflows/` — Workflowان فقط للإصدار الحالي.
 
-ابدأ من `BUILD_APK_WITH_GITHUB_AR.md` للطريقة الأسهل، ثم `docs/V03_FEATURE_MATRIX_AR.md` و`docs/V03_ARCHITECTURE_AR.md` للتفاصيل.
+## أهم الإصلاحات في هذا الإصدار
+- `intl ^0.20.3` متوافق مع Flutter localization الحالي.
+- إلغاء الاعتماد على `php artisan test` في CI واستخدام `vendor/bin/phpunit`.
+- Workflow واحد للجودة وWorkflow واحد لبناء Android APK/AAB.
+- إذا كان `android/` غير موجود، GitHub Actions ينشئه تلقائيًا ثم يطبق أيقونة ScoreTime.
+- إضافة `public/index.php` وملفات Laravel runtime المطلوبة.
+- Local `.env.example`: English افتراضيًا + file sessions/cache + sync queue لتشغيل أسهل.
+- Migrations الزمنية الحساسة معدلة لتوافق MariaDB/XAMPP.
+- Seeders أصبحت idempotent لتقليل أخطاء Duplicate key.
+- ترجمة الواجهة للموقع والتطبيق: English / العربية / Français / Español / Deutsch / Türkçe.
 
-> حساب Adnan/Adnan123 حساب bootstrap للتطوير فقط. غيّر كلمة المرور قبل النشر.
+## التشغيل
+راجع:
+- `docs/LOCAL_RUN_AR.md`
+- `docs/GITHUB_DESKTOP_APK_AR.md`
+
+## ملاحظة الأمان
+حساب Bootstrap للإدارة `Adnan / Adnan123` مخصص لأول تشغيل فقط. غيّر كلمة المرور وفعّل 2FA قبل النشر الحقيقي.

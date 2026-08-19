@@ -1,5 +1,5 @@
-@extends('layouts.app') @section('title','Elite Operations V0.5') @section('content')
-<div class="hero"><div><span class="eyebrow">V0.5 • CONTROL PLANE</span><h1>Elite Football Operations</h1><p>متابعة الصحة التشغيلية، التفاعل، الإشعارات، المحتوى التجاري، والخصائص الجماهيرية من مكان واحد.</p></div></div>
+@extends('layouts.app') @section('title','Elite Operations') @section('content')
+<div class="hero"><div><span class="eyebrow">SCORETIME • CONTROL PLANE</span><h1>Elite Football Operations</h1><p>متابعة الصحة التشغيلية، التفاعل، الإشعارات، المحتوى التجاري، والخصائص الجماهيرية من مكان واحد.</p></div></div>
 <div class="stat-grid">@foreach($stats as $k=>$v)<div class="stat-card"><span>{{str_replace('_',' ',strtoupper($k))}}</span><b>{{$v}}</b></div>@endforeach</div>
 <section class="panel"><div class="section-head"><div><span class="eyebrow">GAMIFICATION</span><h2>Achievements</h2></div></div><div class="table-wrap"><table><thead><tr><th>Key</th><th>Arabic</th><th>English</th><th>Tier</th><th>Points</th></tr></thead><tbody>@forelse($achievements as $a)<tr><td>{{$a->key}}</td><td>{{$a->name_ar}}</td><td>{{$a->name_en}}</td><td>{{$a->tier}}</td><td>{{$a->points}}</td></tr>@empty<tr><td colspan="5">No achievements seeded yet.</td></tr>@endforelse</tbody></table></div></section>
 @endsection

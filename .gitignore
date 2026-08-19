@@ -1,0 +1,37 @@
+# Secrets
+.env
+*.key
+*.pem
+firebase-service-account*.json
+
+# Laravel generated / local
+backend-laravel/.env
+backend-laravel/vendor/
+backend-laravel/storage/logs/*
+!backend-laravel/storage/logs/.gitkeep
+backend-laravel/storage/framework/cache/data/*
+!backend-laravel/storage/framework/cache/data/.gitkeep
+backend-laravel/storage/framework/sessions/*
+!backend-laravel/storage/framework/sessions/.gitkeep
+backend-laravel/storage/framework/views/*
+!backend-laravel/storage/framework/views/.gitkeep
+backend-laravel/bootstrap/cache/*.php
+backend-laravel/database/*.sqlite
+
+# Flutter generated
+mobile-flutter/.dart_tool/
+mobile-flutter/build/
+mobile-flutter/.flutter-plugins
+mobile-flutter/.flutter-plugins-dependencies
+mobile-flutter/android/
+mobile-flutter/ios/
+mobile-flutter/macos/
+mobile-flutter/linux/
+mobile-flutter/windows/
+mobile-flutter/web/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,8 +1,8 @@
 {
   "$schema": "https://getcomposer.org/schema.json",
-  "name": "koraone/platform",
+  "name": "scoretime/platform",
   "type": "project",
-  "description": "KoraOne football media, live scores and statistics platform.",
+  "description": "ScoreTime global football live scores, news, analytics and fan platform.",
   "require": {
     "php": "^8.2",
     "laravel/framework": "^12.0",
@@ -14,7 +14,22 @@
     "laravel/pint": "^1.24",
     "phpunit/phpunit": "^11.5"
   },
-  "autoload": {"psr-4": {"App\\": "app/", "Database\\Factories\\": "database/factories/", "Database\\Seeders\\": "database/seeders/"}},
-  "scripts": {"post-autoload-dump": ["Illuminate\\Foundation\\ComposerScripts::postAutoloadDump", "@php artisan package:discover --ansi"]},
-  "config": {"optimize-autoloader": true, "preferred-install": "dist", "sort-packages": true}
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
 }
