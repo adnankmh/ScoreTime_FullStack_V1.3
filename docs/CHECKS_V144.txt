@@ -1,0 +1,25 @@
+ScoreTime Global V1.4.4 static checks
+PHP files checked: 267
+PHP syntax errors: 0
+Active workflows: 3
+Workflow YAML errors: 0
+Legacy workflow YAML files: 0
+Dart files checked: 35
+Missing local Dart imports: 0
+Dart delimiter warnings: 0
+Android APK+AAB merged: YES
+setup-java cache: disabled
+checkout generation: v6
+setup-java generation: v5
+upload-artifact generation: v6
+
+Release validator:
+ScoreTime V1.4.4 validator
+PASS
+Active workflows: 3
+Android workflow: APK + AAB merged
+setup-java Gradle cache: disabled
+Node-24 generation actions: enabled
+
+Runtime note:
+Actual Flutter/Gradle/Xcode/Composer builds execute in GitHub-hosted runners.

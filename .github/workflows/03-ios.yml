@@ -26,19 +26,24 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Flutter 3.47.0
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: "3.47.0"
+          channel: stable
           cache: true
 
       - name: Generate iOS platform when missing
         shell: bash
         run: |
           if [ ! -d ios ]; then
-            flutter create . --platforms=ios --org com.scoretime --project-name scoretime --no-pub
+            flutter create . \
+              --platforms=ios \
+              --org com.scoretime \
+              --project-name scoretime \
+              --no-pub
           fi
 
       - name: Apply ScoreTime iOS identity
@@ -47,16 +52,19 @@ jobs:
           rm -rf ios/Runner/Assets.xcassets/AppIcon.appiconset
           mkdir -p ios/Runner/Assets.xcassets/AppIcon.appiconset
           cp -R ../tooling/ios-appicon/. ios/Runner/Assets.xcassets/AppIcon.appiconset/
-          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName ScoreTime" ios/Runner/Info.plist \
-            || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string ScoreTime" ios/Runner/Info.plist
+
+          /usr/libexec/PlistBuddy \
+            -c "Set :CFBundleDisplayName ScoreTime" ios/Runner/Info.plist \
+            || /usr/libexec/PlistBuddy \
+            -c "Add :CFBundleDisplayName string ScoreTime" ios/Runner/Info.plist
 
       - name: Flutter dependencies
         run: flutter pub get
 
-      - name: Analyze
+      - name: Flutter analyze
         run: flutter analyze
 
-      - name: Tests
+      - name: Flutter tests
         run: flutter test
 
       - name: Build unsigned iOS app
@@ -69,9 +77,9 @@ jobs:
           ditto -c -k --sequesterRsrc --keepParent Runner.app ScoreTime-iOS-Unsigned.zip
 
       - name: Upload iOS build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.4.3-iOS-Unsigned
+          name: ScoreTime-V1.4.4-iOS-Unsigned
           if-no-files-found: error
           retention-days: 14
           path: mobile-flutter/build/ios/iphoneos/ScoreTime-iOS-Unsigned.zip
