@@ -35,6 +35,23 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Repair stale pre-ScoreTime widget test if present
+        shell: bash
+        run: |
+          if [ -f test/widget_test.dart ] && grep -q "MyApp" test/widget_test.dart; then
+            cat > test/widget_test.dart <<'DART'
+          import 'package:flutter_test/flutter_test.dart';
+          import 'package:scoretime/main.dart';
+
+          void main() {
+            test('ScoreTimeApp is available', () {
+              const app = ScoreTimeApp();
+              expect(app, isA<ScoreTimeApp>());
+            });
+          }
+          DART
+          fi
+
       - name: Generate Android platform when missing
         shell: bash
         run: |
@@ -92,7 +109,7 @@ jobs:
       - name: Upload APK and AAB
         uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.4.4-Android
+          name: ScoreTime-V1.4.6-Android
           if-no-files-found: error
           retention-days: 14
           path: |

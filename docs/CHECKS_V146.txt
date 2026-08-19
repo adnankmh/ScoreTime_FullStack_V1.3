@@ -1,0 +1,20 @@
+ScoreTime Global V1.4.6 static checks
+PHP files checked: 267
+PHP syntax errors: 0
+Active workflows: 3
+Workflow YAML errors: 0
+Legacy workflow YAML files: 0
+MySQL auto-start method 1: XAMPP mysql_start.bat
+MySQL auto-start method 2: direct mysqld.exe
+MySQL readiness wait: enabled
+MySQL CLI SELECT 1 verification: enabled
+Database destructive reset: disabled
+APP_KEY auto-generation: enabled
+Composer vendor auto-install: enabled
+
+Release validator:
+ScoreTime V1.4.6 validator
+PASS
+Workflows: 3
+MySQL auto-start fallback methods: 2
+Database destructive reset: disabled

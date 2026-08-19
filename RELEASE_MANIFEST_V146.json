@@ -1,33 +1,28 @@
 {
   "product": "ScoreTime",
-  "version": "1.4.3",
+  "version": "1.4.6",
   "active_workflows": [
     ".github/workflows/01-laravel.yml",
-    ".github/workflows/02-android-apk.yml",
-    ".github/workflows/03-android-aab.yml",
-    ".github/workflows/04-ios.yml"
+    ".github/workflows/02-android-apk-aab.yml",
+    ".github/workflows/03-ios.yml"
   ],
-  "file_count": 473,
+  "first_run": "START_SCORETIME_WINDOWS.bat",
+  "file_count": 483,
   "files": [
     {
       "path": ".github/workflows/01-laravel.yml",
-      "size": 2652,
-      "sha256": "e68f1db278da90a61ae337e46f32b9ec2681d6904dd1dae51e6744ea270c4579"
+      "size": 2656,
+      "sha256": "42c7f928415724d00c69e1c3c4478af22dab2159c10107cd42a87510ce26407a"
     },
     {
-      "path": ".github/workflows/02-android-apk.yml",
-      "size": 2110,
-      "sha256": "ec1a2ded46d490df88bac959e59b0f7920392b06b8d5c3c60bf12bd49fe41a5f"
+      "path": ".github/workflows/02-android-apk-aab.yml",
+      "size": 3469,
+      "sha256": "eebe5911d8b20fed816f43c675d7fd4c888b35699956c73651d40a6f9e80051c"
     },
     {
-      "path": ".github/workflows/03-android-aab.yml",
-      "size": 2119,
-      "sha256": "38ec8e03d5031bfe0c281539a7c1799afb8916eda8d4342dccadb6096ade35ad"
-    },
-    {
-      "path": ".github/workflows/04-ios.yml",
-      "size": 2183,
-      "sha256": "699bce9893a3bc47ffe514188609770e5c87f259fe291ed71e0358570a8e6721"
+      "path": ".github/workflows/03-ios.yml",
+      "size": 2890,
+      "sha256": "d4e51d501240e475de10435e9385fd3c5018eace6be08637b0056a142a6603d5"
     },
     {
       "path": ".gitignore",
@@ -35,19 +30,34 @@
       "sha256": "f2c5c6092f1c27ee12f1d9ddebaf93816079f511cc2336c5094585dd9c7de151"
     },
     {
+      "path": "CLEAN_OLD_GITHUB_FILES.bat",
+      "size": 120,
+      "sha256": "0abe7dbc5217901218f257e78349613c30d956e126a82997f447711197ec3c85"
+    },
+    {
+      "path": "CLEAN_OLD_GITHUB_FILES.ps1",
+      "size": 1002,
+      "sha256": "e8461354fd889bbad1200cb0e075cf6f8e51acb7545ef3ea7eca248cdbdbfb5a"
+    },
+    {
       "path": "README_AR.md",
       "size": 1853,
       "sha256": "4f3b1f7e55f519f80cd60fb96c17aa1437655f0dcf16a393399d2c06f4b20bba"
     },
     {
-      "path": "RELEASE_MANIFEST_V142.json",
-      "size": 83335,
-      "sha256": "98660d948a1632efc37efb447fc7f324002c845c15de91424c4a091f99318760"
+      "path": "START_SCORETIME_WINDOWS.bat",
+      "size": 707,
+      "sha256": "aa1fe45e217a7ec328a479c643f89845eb2da36b8c15260de5b012e2a5cff4c6"
+    },
+    {
+      "path": "START_SCORETIME_WINDOWS.ps1",
+      "size": 9040,
+      "sha256": "f750e5c940c7500a39cf7c0c70f489f3387510ab8178451b673e6e6e3a8aec32"
     },
     {
       "path": "VERSION",
       "size": 6,
-      "sha256": "bd31e8d9cf8d14a1e9e3fdf3b9f6a524819aed0d1b14627523c6765767c7d8f1"
+      "sha256": "563d5c80c54e77e2f8454ecd5c14388f9ab3af77edc73b6f4736ada64527952c"
     },
     {
       "path": "archive/README.md",
@@ -1930,14 +1940,44 @@
       "sha256": "4125b4ea5a122fbeb0d716e0eaf9a5c58d1772d49490c77ce611a8ca9b9a39b0"
     },
     {
+      "path": "docs/CHECKS_V144.txt",
+      "size": 642,
+      "sha256": "4daac5c65db8cabbbec3f26febb63eefab87bfa762d362d2c0ce2fa19968eff0"
+    },
+    {
+      "path": "docs/CHECKS_V145.txt",
+      "size": 682,
+      "sha256": "7349b61a2ac8cfc8141e2342a698b6753e0f98cbdf232475a240b34eeff876f0"
+    },
+    {
+      "path": "docs/CHECKS_V146.txt",
+      "size": 568,
+      "sha256": "0781f6dbe8a576664703e72fb2ab00ace1e03d130a1040dfbcfea01a0f8bbba1"
+    },
+    {
       "path": "docs/FEATURES_AR.md",
       "size": 1959,
       "sha256": "8911546976520d4f07bcc9b9a87981c36e67e8564bad6cb37813eeaebdd32c2f"
     },
     {
+      "path": "docs/FIRST_RUN_V145_AR.md",
+      "size": 1190,
+      "sha256": "ed27611599875d88a529f9cec5ec2dd4622de3dce6aa08668b0c226d1174da05"
+    },
+    {
       "path": "docs/FIXES_V141_AR.md",
       "size": 1388,
       "sha256": "701b145eb70473bbaff6d0c015458e16ab221bd80bd3d1d23557d1739f7fd434"
+    },
+    {
+      "path": "docs/FIXES_V145_AR.md",
+      "size": 769,
+      "sha256": "da569c56eb0e1b4bcfa1115669fa5e268ba26ce200ac2c86d202f966181f69ab"
+    },
+    {
+      "path": "docs/FIX_MYSQL_START_V146_AR.md",
+      "size": 898,
+      "sha256": "af2c28c8cf95e5b6ee50d9e64a474f28262d22602e2d2f367e6ad800e054848c"
     },
     {
       "path": "docs/GITHUB_DESKTOP_APK_AR.md",
@@ -1973,6 +2013,11 @@
       "path": "docs/WORKFLOWS_V143_AR.md",
       "size": 1336,
       "sha256": "c7346df7242080d7648106805e74e06621bd3c22ad36ebaece573757b383bd3a"
+    },
+    {
+      "path": "docs/WORKFLOWS_V144_AR.md",
+      "size": 1128,
+      "sha256": "f845c98deeef347817d1a580dee6e867704a28af52d14a69bb3c52ba1ed95bd8"
     },
     {
       "path": "mobile-flutter/assets/icons/scoretime_icon.png",
@@ -2197,12 +2242,17 @@
     {
       "path": "mobile-flutter/pubspec.yaml",
       "size": 699,
-      "sha256": "edd63d87b17932d0ef2e2b9e57a394c0189567135aa87dbb10c592106b73901e"
+      "sha256": "99cc49190699bc98ae41b50725d717db5eb184de7fc01cc90c3b4a3b389661dc"
     },
     {
       "path": "mobile-flutter/test/smoke_test.dart",
-      "size": 324,
-      "sha256": "801d539fb4e21ffd2398ff5e4a8c130d2e3aa7e75e86a481181c165a8d71f266"
+      "size": 391,
+      "sha256": "90f9b2fb4dd45dba70f2e589fa89a3aa2d760a4c0bba026bf87ec0f99d51363b"
+    },
+    {
+      "path": "mobile-flutter/test/widget_test.dart",
+      "size": 221,
+      "sha256": "b4aca5f848560dec7d14a016a445fc81cb9ff37b94711aad7618876ae02ddfd1"
     },
     {
       "path": "mobile-flutter/tooling/android-icons/hdpi/ic_launcher.png",
@@ -2361,8 +2411,8 @@
     },
     {
       "path": "tools/validate_release.py",
-      "size": 2491,
-      "sha256": "bd183ca6e568b0006622163eeb754e79906237bd65fe0212e520777fd9b85784"
+      "size": 1850,
+      "sha256": "2e8aeebbe56e91862ea457db8432397abbc25bf20c6a5029c04971817735ed4b"
     },
     {
       "path": "tools/windows/PREPARE_BACKEND.bat",
