@@ -1,9 +1,9 @@
 @echo off
-title ScoreTime V1.5.0 - One Click Setup and Run
+title ScoreTime V1.7.0 - One Click Setup and Run
 cd /d "%~dp0"
 echo.
 echo ============================================================
-echo   ScoreTime V1.5.0 - Automatic Local Setup + Browser Run
+echo   ScoreTime V1.7.0 - Automatic Local Setup + Browser Run
 echo ============================================================
 echo.
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0START_SCORETIME_WINDOWS.ps1"

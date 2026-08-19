@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Laravel • MySQL • PHPUnit
+    name: Laravel • Composer • MySQL • PHPUnit
     runs-on: ubuntu-latest
 
     services:
@@ -69,28 +69,45 @@ jobs:
           extensions: mbstring, pdo_mysql, mysql
           coverage: none
 
-      - name: Validate Composer
+      - name: Prepare Laravel filesystem and environment
+        shell: bash
+        run: |
+          mkdir -p bootstrap/cache
+          mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
+          cp .env.example .env
+          grep -q '^NEWS_QUERY="football OR soccer"$' .env
+
+      - name: Validate Composer metadata
         run: composer validate --no-check-publish --no-check-lock
 
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
+      - name: Resolve Composer dependencies
+        shell: bash
+        run: |
+          if [ -f composer.lock ]; then
+            echo "composer.lock found: deterministic install"
+            composer install --prefer-dist --no-progress --no-scripts
+          else
+            echo "composer.lock not found: resolving once with composer update"
+            composer update --prefer-dist --no-progress --no-scripts
+          fi
+          test -f vendor/autoload.php
+
+      - name: Laravel package discovery and key
+        run: |
+          composer dump-autoload --optimize --no-scripts
+          php artisan package:discover --ansi
+          php artisan key:generate --force
+          php artisan optimize:clear
 
       - name: Verify Tests autoload
         shell: bash
         run: |
-          composer dump-autoload
           php -r "require 'vendor/autoload.php'; if (!class_exists('Tests\\\\TestCase')) { fwrite(STDERR, 'Tests\\\\TestCase autoload failed'.PHP_EOL); exit(1); } echo 'Tests\\\\TestCase autoload OK'.PHP_EOL;"
-
-      - name: Prepare Laravel
-        run: |
-          cp .env.example .env
-          php artisan key:generate
 
       - name: PHP syntax scan
         shell: bash
         run: |
-          find app bootstrap config database routes tests -name '*.php' -print0 \
-            | xargs -0 -n1 php -l
+          find app bootstrap config database routes tests -name '*.php' -print0 | xargs -0 -n1 php -l
 
       - name: Database migrations and seed
         run: |

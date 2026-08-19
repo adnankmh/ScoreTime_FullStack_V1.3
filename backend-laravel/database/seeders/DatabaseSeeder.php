@@ -9,6 +9,17 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(AdminSeeder::class);
 
+        if (!config('scoretime.seed_demo_data', false)) {
+            // Production-safe seed: visual configuration and product navigation
+            // only. No invented matches, scores, players, injuries or articles.
+            $this->call(V04Seeder::class);
+            $this->call(V05EliteSeeder::class);
+            $this->call(V08VisualBuilderSeeder::class);
+            $this->call(V09NoCodeSeeder::class);
+            $this->call(V10GlobalSeeder::class);
+            return;
+        }
+
         $epl = Competition::updateOrCreate(
             ['slug' => 'premier-league'],
             ['name_ar' => 'الدوري الإنجليزي الممتاز', 'name_en' => 'Premier League', 'country' => 'England', 'season' => '2026/27', 'is_featured' => true, 'sort_order' => 1]

@@ -3,6 +3,7 @@ namespace App\Services\Providers;
 
 use App\Contracts\FootballDataProvider;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Cache;
 
 class FootballDataOrgProvider implements FootballDataProvider
 {
@@ -16,7 +17,7 @@ class FootballDataOrgProvider implements FootballDataProvider
             'headers' => [
                 'X-Auth-Token' => (string) config('football.secondary_key'),
                 'Accept' => 'application/json',
-                'User-Agent' => 'ScoreTime/1.6',
+                'User-Agent' => 'ScoreTime/1.7.0',
             ],
         ]);
     }
@@ -60,8 +61,9 @@ class FootballDataOrgProvider implements FootballDataProvider
             $query['dateFrom'] = $filters['date'];
             $query['dateTo'] = $filters['date'];
         }
+        if (!empty($filters['live'])) $query['status'] = 'IN_PLAY,PAUSED';
         if (!empty($filters['status'])) $query['status'] = $filters['status'];
-        $json = $this->get('matches', $query);
+        $json = $this->get('matches', $query, (!empty($filters['status']) || !empty($filters['live'])) ? 60 : 600);
         return array_map(fn ($m) => [
             'fixture' => [
                 'id' => $m['id'],
@@ -122,20 +124,36 @@ class FootballDataOrgProvider implements FootballDataProvider
 
     public function health(): array
     {
-        try {
-            $this->get('competitions');
-            return ['ok' => true, 'provider' => $this->name(), 'configured' => (bool) config('football.secondary_key')];
-        } catch (\Throwable $e) {
-            return ['ok' => false, 'provider' => $this->name(), 'configured' => (bool) config('football.secondary_key'), 'message' => $e->getMessage()];
-        }
+        return [
+            'ok' => Cache::get('scoretime:football-data:last-ok'),
+            'provider' => $this->name(),
+            'configured' => (bool) config('football.secondary_key'),
+            'mode' => 'passive',
+            'last_request_at' => Cache::get('scoretime:football-data:last-at'),
+            'message' => Cache::get('scoretime:football-data:last-error'),
+        ];
     }
 
-    private function get(string $endpoint, array $query = []): array
+    private function get(string $endpoint, array $query = [], int $ttl = 21600): array
     {
         if (!config('football.secondary_key')) {
             throw new \RuntimeException('FOOTBALL_DATA_ORG_KEY is missing.');
         }
-        $response = $this->http->get($endpoint, ['query' => $query]);
-        return json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        ksort($query);
+        $key = 'scoretime:football-data:'.hash('sha256', $endpoint.'?'.http_build_query($query));
+        return Cache::remember($key, now()->addSeconds($ttl), function () use ($endpoint, $query) {
+            try {
+                $response = $this->http->get($endpoint, ['query' => $query]);
+                $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+                Cache::put('scoretime:football-data:last-ok', true, now()->addDays(2));
+                Cache::put('scoretime:football-data:last-at', now('UTC')->toIso8601String(), now()->addDays(2));
+                Cache::forget('scoretime:football-data:last-error');
+                return $data;
+            } catch (\Throwable $e) {
+                Cache::put('scoretime:football-data:last-ok', false, now()->addDays(2));
+                Cache::put('scoretime:football-data:last-error', mb_substr($e->getMessage(), 0, 500), now()->addDays(2));
+                throw $e;
+            }
+        });
     }
 }

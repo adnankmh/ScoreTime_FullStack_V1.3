@@ -11,9 +11,12 @@ class FootballRepository {
 
   bool get _demo => AppConfig.webDemoMode;
 
-  Future<List<dynamic>> matches() async {
+  Future<List<dynamic>> matches([String? date]) async {
     if (_demo) return List<dynamic>.from(DemoData.matches);
-    return List<dynamic>.from((await _dio.get('/matches')).data['data']);
+    return List<dynamic>.from((await _dio.get(
+      '/matches',
+      queryParameters: {if (date != null) 'date': date},
+    )).data['data']);
   }
 
   Future<Map<String, dynamic>> match(int id) async {

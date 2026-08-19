@@ -1,0 +1,43 @@
+ScoreTime Global V1.6.1 FREE API STABLE — static checks
+PHP files checked: 276
+PHP syntax errors: 0
+Active workflows: 4
+Workflow YAML errors: 0
+Legacy workflow YAML files: 0
+Dart files checked: 40
+Missing local Dart imports: 0
+Legacy MyApp references: 0
+
+Dotenv NEWS_QUERY quoted: YES
+Duplicate football env keys removed: YES
+Flutter unused TransferIntelligence import removed: YES
+
+Composer strategy:
+- composer.lock exists -> composer install
+- no composer.lock -> composer update
+- no quiet error hiding
+- --no-scripts before Laravel boot
+- package discovery after vendor exists
+
+API-Football free plan:
+- Daily configured limit: 100
+- Protected reserve: 10
+- Live scheduler default: every 20 minutes
+- Today calendar scheduler default: every 2 hours
+- Provider response caching: YES
+- Detail endpoint caching: YES
+- Quota status API: YES
+- API key in client apps: NO
+
+Release validator:
+ScoreTime V1.6.1 validator
+PASS
+Dotenv whitespace issue: fixed
+Flutter unused import: fixed
+Composer no-lock recovery: enabled
+API-Football free quota guard: enabled
+Active workflows: 4
+
+Runtime gate:
+The real Composer/Flutter/Gradle/Xcode network builds execute on GitHub-hosted runners.
+A real football API key belongs to the user's API account and is intentionally not embedded in this archive.

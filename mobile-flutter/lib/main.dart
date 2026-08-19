@@ -126,6 +126,10 @@ class _AppShellState extends ConsumerState<AppShell> {
 
     if (index >= nav.length) index = 0;
     final pages = nav.map((n) => pageFor('${n['target']}')).toList();
+    void selectTarget(String target) {
+      final next = nav.indexWhere((item) => item['target'] == target);
+      if (next >= 0) setState(() => index = next);
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -192,7 +196,11 @@ class _AppShellState extends ConsumerState<AppShell> {
               Expanded(
                 child: Column(
                   children: [
-                    const _DesktopTopBar(),
+                    _DesktopTopBar(
+                      onSearch: () => selectTarget('explore'),
+                      onTvGuide: () => selectTarget('explore'),
+                      onAlerts: () => selectTarget('more'),
+                    ),
                     Divider(height: 1, color: Theme.of(context).dividerColor),
                     Expanded(
                       child: Align(
@@ -262,16 +270,16 @@ class _DesktopRail extends StatelessWidget {
               ),
               if (extended) ...[
                 const SizedBox(width: 11),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'ScoreTime',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                     ),
                     Text(
-                      'EVERY MOMENT COUNTS',
-                      style: TextStyle(
+                      AppStrings.of(context)('every_moment').toUpperCase(),
+                      style: const TextStyle(
                         fontSize: 8.5,
                         letterSpacing: 1.15,
                         color: ScoreTimeColors.cyan,
@@ -315,7 +323,10 @@ class _DesktopRail extends StatelessWidget {
 }
 
 class _DesktopTopBar extends ConsumerWidget {
-  const _DesktopTopBar();
+  const _DesktopTopBar({required this.onSearch, required this.onTvGuide, required this.onAlerts});
+  final VoidCallback onSearch;
+  final VoidCallback onTvGuide;
+  final VoidCallback onAlerts;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -330,6 +341,10 @@ class _DesktopTopBar extends ConsumerWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520),
                 child: TextField(
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (value) {
+                    if (value.trim().isNotEmpty) onSearch();
+                  },
                   decoration: InputDecoration(
                     isDense: true,
                     prefixIcon: const Icon(Icons.search_rounded),
@@ -339,9 +354,9 @@ class _DesktopTopBar extends ConsumerWidget {
               ),
             ),
             const Spacer(),
-            _TopAction(icon: Icons.live_tv_rounded, label: t('tv_guide')),
+            _TopAction(icon: Icons.live_tv_rounded, label: t('tv_guide'), onPressed: onTvGuide),
             const SizedBox(width: 8),
-            _TopAction(icon: Icons.notifications_none_rounded, label: t('alerts')),
+            _TopAction(icon: Icons.notifications_none_rounded, label: t('alerts'), onPressed: onAlerts),
             const SizedBox(width: 8),
             const GlobalTopControls(),
             const SizedBox(width: 8),
@@ -360,13 +375,14 @@ class _DesktopTopBar extends ConsumerWidget {
 class _TopAction extends StatelessWidget {
   final IconData icon;
   final String label;
-  const _TopAction({required this.icon, required this.label});
+  final VoidCallback onPressed;
+  const _TopAction({required this.icon, required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
       message: label,
-      child: IconButton.filledTonal(onPressed: () {}, icon: Icon(icon)),
+      child: IconButton.filledTonal(onPressed: onPressed, icon: Icon(icon)),
     );
   }
 }

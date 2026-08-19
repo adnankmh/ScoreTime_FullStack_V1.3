@@ -2,7 +2,20 @@
 use Illuminate\Support\Facades\{Artisan,Schedule};
 Artisan::command('scoretime:sync', function(){ $this->call('football:sync-live',['--events'=>true]); })->purpose('Synchronize live data from the configured licensed football provider');
 if (env('FOOTBALL_LIVE_SCHEDULER', false)) {
-    Schedule::command('football:sync-live --events')->everyMinute()->withoutOverlapping()->onOneServer();
+    if (config('football.free_plan_mode', true)) {
+        // The command runs frequently but calls the provider only while a locally
+        // cached fixture is inside the live window. A hard daily bucket cap also applies.
+        Schedule::command('football:sync-live')
+            ->cron(config('football.free_live_cron', '*/10 * * * *'))
+            ->withoutOverlapping();
+        Schedule::command('football:sync-priority-details')
+            ->cron(config('football.free_detail_cron', '13,43 * * * *'))
+            ->withoutOverlapping();
+    } else {
+        Schedule::command('football:sync-live --events')
+            ->everyMinute()
+            ->withoutOverlapping();
+    }
 }
 
 Artisan::command('notifications:dispatch-campaigns', function(){
@@ -21,14 +34,27 @@ if (env('NOTIFICATION_CAMPAIGN_SCHEDULER', true)) {
 }
 
 if (env('FOOTBALL_CATALOG_SCHEDULER', false)) {
-    Schedule::command('football:sync-global catalog --season='.(int)env('FOOTBALL_CATALOG_SEASON', date('Y')))
-        ->dailyAt('03:10')->withoutOverlapping()->onOneServer();
+    $catalogCommand = config('football.free_plan_mode', true)
+        ? 'football:sync-featured --season='.(int) config('football.catalog_season', date('Y'))
+        : 'football:sync-global catalog --season='.(int) config('football.catalog_season', date('Y'));
+    Schedule::command($catalogCommand)->dailyAt('03:10')->withoutOverlapping()->onOneServer();
 }
 
 if (env('FOOTBALL_TODAY_SCHEDULER', false)) {
-    Schedule::command('football:sync-today')->everyTenMinutes()->withoutOverlapping()->onOneServer();
+    if (config('football.free_plan_mode', true)) {
+        // One global fixtures call per day; all visitors read the local database.
+        Schedule::command('football:sync-today')
+            ->cron(config('football.free_today_cron', '5 0 * * *'))
+            ->withoutOverlapping();
+    } else {
+        Schedule::command('football:sync-today')
+            ->everyTenMinutes()
+            ->withoutOverlapping();
+    }
 }
 
 if (env('NEWS_SYNC_SCHEDULER', false)) {
-    Schedule::command('news:sync-global')->everyFifteenMinutes()->withoutOverlapping()->onOneServer();
+    Schedule::command('news:sync-global')
+        ->everySixHours()
+        ->withoutOverlapping();
 }

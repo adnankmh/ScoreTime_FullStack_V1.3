@@ -1,16 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scoretime/core/config/app_config.dart';
+import 'package:scoretime/core/i18n/app_strings.dart';
 
 void main() {
-  testWidgets('ScoreTime renders a Material surface', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: Center(child: Text('ScoreTime')),
-        ),
-      ),
-    );
+  test('ScoreTime ships the six requested locales', () {
+    expect(AppStrings.supported, ['en', 'ar', 'fr', 'es', 'de', 'tr']);
+  });
 
-    expect(find.text('ScoreTime'), findsOneWidget);
+  test('preview data is opt-in rather than a live fallback', () {
+    expect(AppConfig.webDemoMode, isFalse);
   });
 }

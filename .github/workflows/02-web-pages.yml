@@ -5,9 +5,18 @@ on:
     branches: [main, master]
     paths:
       - "mobile-flutter/**"
-      - "tooling/web/**"
       - ".github/workflows/02-web-pages.yml"
   workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: "Public ScoreTime Laravel API ending in /api/v1 (or configure SCORETIME_API_BASE_URL repository variable)"
+        required: false
+        type: string
+      allow_demo_mode:
+        description: "Explicitly publish preview data instead of a real backend"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -20,9 +29,8 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    name: Flutter Web • Build • Deploy
+    name: Flutter Web • Verify • Deploy
     runs-on: ubuntu-latest
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -35,7 +43,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Configure GitHub Pages
+      - name: Configure Pages
         uses: actions/configure-pages@v6
 
       - name: Flutter 3.47.0
@@ -45,62 +53,66 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Verify ScoreTime Pages repository name
-        shell: bash
-        run: |
-          if [ "${{ github.event.repository.name }}" != "ScoreTime" ]; then
-            echo "::error::Rename the GitHub repository to ScoreTime to use https://adnankmh.github.io/ScoreTime/"
-            exit 1
-          fi
-
-      - name: Flutter dependencies
+      - name: Dependencies
         run: flutter pub get
 
-      - name: Flutter analyze
+      - name: Analyze
         run: flutter analyze
 
-      - name: Flutter tests
+      - name: Tests
         run: flutter test
 
-      - name: Select live API or professional demo mode
+      - name: Select live backend or preview mode
         id: mode
         shell: bash
+        env:
+          SCORETIME_INPUT_API_URL: ${{ inputs.api_base_url }}
+          SCORETIME_REPOSITORY_API_URL: ${{ vars.SCORETIME_API_BASE_URL }}
+          SCORETIME_ALLOW_DEMO: ${{ inputs.allow_demo_mode }}
         run: |
-          API_URL="${{ vars.SCORETIME_API_BASE_URL }}"
+          API_URL="$SCORETIME_INPUT_API_URL"
+          if [ -z "$API_URL" ]; then API_URL="$SCORETIME_REPOSITORY_API_URL"; fi
           if [ -z "$API_URL" ]; then
-            API_URL="https://scoretime-demo.invalid/api/v1"
-            DEMO_MODE="true"
-            echo "ScoreTime Pages will deploy in professional demo mode."
+            if [ "$SCORETIME_ALLOW_DEMO" = "true" ]; then
+              API_URL="https://scoretime-preview.invalid/api/v1"
+              DEMO_MODE="true"
+            else
+              echo "Configure SCORETIME_API_BASE_URL or enter api_base_url. ScoreTime will not silently publish demo scores."
+              exit 1
+            fi
           else
+            if [[ ! "$API_URL" =~ ^https://.+/api/v1/?$ ]] || [[ "$API_URL" == *"example.com"* ]]; then
+              echo "The live API URL must use HTTPS and end in /api/v1"
+              exit 1
+            fi
             DEMO_MODE="false"
-            echo "ScoreTime Pages will use configured Laravel API."
           fi
           echo "api_url=$API_URL" >> "$GITHUB_OUTPUT"
           echo "demo_mode=$DEMO_MODE" >> "$GITHUB_OUTPUT"
 
-      - name: Build Flutter Web for /ScoreTime/
+      - name: Build web
+        shell: bash
+        env:
+          SCORETIME_BUILD_API_URL: ${{ steps.mode.outputs.api_url }}
+          SCORETIME_BUILD_DEMO_MODE: ${{ steps.mode.outputs.demo_mode }}
         run: |
+          BASE_HREF="/${GITHUB_REPOSITORY#*/}/"
           flutter build web \
             --release \
-            --base-href "/ScoreTime/" \
-            --dart-define=API_BASE_URL="${{ steps.mode.outputs.api_url }}" \
-            --dart-define=WEB_DEMO_MODE="${{ steps.mode.outputs.demo_mode }}"
+            --base-href "$BASE_HREF" \
+            --dart-define=API_BASE_URL="$SCORETIME_BUILD_API_URL" \
+            --dart-define=WEB_DEMO_MODE="$SCORETIME_BUILD_DEMO_MODE"
 
-      - name: Harden GitHub Pages output
-        shell: bash
+      - name: GitHub Pages fallback
         run: |
           touch build/web/.nojekyll
           cp build/web/index.html build/web/404.html
-          test -f build/web/index.html
-          test -f build/web/flutter_bootstrap.js
-          test -f build/web/manifest.json
-          test -f build/web/favicon.png
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
           path: mobile-flutter/build/web
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v5

@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','ScoreTime — The Next Generation Football Platform')
-@section('description','ScoreTime brings live football, tactical intelligence, trusted news, transfers, rankings, TV schedules and fan experiences into one premium platform.')
+@section('title','ScoreTime — '.__('ui.every_moment_counts'))
+@section('description',__('ui.hero_subtitle'))
 @section('content')
 @php($isAr=app()->getLocale()==='ar')
 @php($featuredLive=$live->first() ?? $matches->first())
@@ -8,18 +8,18 @@
 
 <section class="st-hero">
   <div class="st-hero-copy">
-    <div class="st-kicker"><span class="st-live-dot"></span>SCORETIME • NEXT-GEN FOOTBALL</div>
-    <h1>Unlimited Football.<br><span>Real-Time. Everywhere.</span></h1>
-    <p>Live scores, match intelligence, trusted stories, transfers, TV schedules and your personalized football universe in one premium experience.</p>
+    <div class="st-kicker"><span class="st-live-dot"></span>SCORETIME • {{strtoupper(__('ui.world'))}}</div>
+    <h1>{{__('ui.every_moment_counts')}}.<br><span>{{__('ui.live')}}. {{__('ui.world')}}.</span></h1>
+    <p>{{__('ui.hero_subtitle')}}</p>
     <div class="st-hero-actions">
-      <a class="btn primary" href="/matches">Explore Live Matches →</a>
-      <a class="btn ghost" href="/world">Explore World Football</a>
+      <a class="btn primary" href="/matches">{{__('ui.explore')}} {{__('ui.matches')}} →</a>
+      <a class="btn ghost" href="/world">{{__('ui.explore')}} {{__('ui.world')}}</a>
     </div>
     <div class="st-hero-stats">
-      <div><strong>{{$live->count()}}</strong><span>Live now</span></div>
-      <div><strong>{{$matches->count()}}</strong><span>Today</span></div>
-      <div><strong>{{$competitions->count()}}</strong><span>Competitions</span></div>
-      <div><strong>{{$news->count()}}</strong><span>Stories</span></div>
+      <div><strong>{{$live->count()}}</strong><span>{{__('ui.live')}}</span></div>
+      <div><strong>{{$matches->count()}}</strong><span>{{__('ui.today')}}</span></div>
+      <div><strong>{{$competitions->count()}}</strong><span>{{__('ui.competitions')}}</span></div>
+      <div><strong>{{$news->count()}}</strong><span>{{__('ui.news')}}</span></div>
     </div>
   </div>
   <div class="st-hero-console">
@@ -27,14 +27,13 @@
       <div class="st-console-head"><span>{{$isAr ? ($featuredLive->competition?->name_ar ?? $featuredLive->competition?->name_en) : ($featuredLive->competition?->name_en ?? $featuredLive->competition?->name_ar)}}</span><b class="st-live-pill">{{$featuredLive->status==='live' ? 'LIVE '.$featuredLive->minute."'" : strtoupper($featuredLive->status)}}</b></div>
       <a href="{{route('match.show',$featuredLive)}}" class="st-score-stage">
         <div class="st-team"><i>{{mb_substr($isAr ? ($featuredLive->homeTeam?->name_ar ?? 'H') : ($featuredLive->homeTeam?->name_en ?? 'H'),0,2)}}</i><span>{{$isAr ? ($featuredLive->homeTeam?->name_ar ?? 'Home') : ($featuredLive->homeTeam?->name_en ?? 'Home')}}</span></div>
-        <strong>{{$featuredLive->home_score}} : {{$featuredLive->away_score}}</strong>
+        <strong>{{$featuredLive->status==='scheduled' ? ($featuredLive->kickoff_at?->format('H:i') ?? '—') : ($featuredLive->home_score.' : '.$featuredLive->away_score)}}</strong>
         <div class="st-team"><i>{{mb_substr($isAr ? ($featuredLive->awayTeam?->name_ar ?? 'A') : ($featuredLive->awayTeam?->name_en ?? 'A'),0,2)}}</i><span>{{$isAr ? ($featuredLive->awayTeam?->name_ar ?? 'Away') : ($featuredLive->awayTeam?->name_en ?? 'Away')}}</span></div>
       </a>
     @else
-      <div class="st-console-empty">Connect a licensed football data provider to activate the live command center.</div>
+      <div class="st-console-empty">{{__('ui.data_pending')}}</div>
     @endif
-    <div class="st-momentum"><svg viewBox="0 0 500 90" preserveAspectRatio="none"><defs><linearGradient id="stline" x1="0" x2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#19d8ff"/></linearGradient></defs><path d="M0,65 L30,62 L55,70 L85,47 L110,54 L145,31 L170,45 L200,21 L230,42 L260,26 L285,54 L315,17 L350,36 L380,14 L410,27 L440,20 L470,42 L500,22" fill="none" stroke="url(#stline)" stroke-width="4"/></svg></div>
-    <div class="st-probs"><span><small>HOME</small><b>58%</b></span><span><small>DRAW</small><b>24%</b></span><span><small>AWAY</small><b>18%</b></span></div>
+    <p class="muted">{{__('ui.analytics_verified_only')}}</p>
   </div>
 </section>
 
@@ -42,7 +41,7 @@
 @forelse($competitions->take(8) as $c)
   <a href="{{route('competition.show',$c)}}"><i>◈</i><span>{{$isAr ? ($c->name_ar ?? $c->name_en) : ($c->name_en ?? $c->name_ar)}}</span></a>
 @empty
-  @foreach(['Champions League','Premier League','LaLiga','Serie A','Bundesliga','Ligue 1'] as $name)<span><i>◈</i>{{$name}}</span>@endforeach
+  <span><i>◈</i>{{__('ui.data_pending')}}</span>
 @endforelse
 </section>
 
@@ -72,25 +71,25 @@
   <div class="st-panel">
     <div class="st-panel-head"><div><span>PLAYER RADAR</span><h2>Top performers</h2></div><a href="/world/players">Explore</a></div>
     <div class="st-ranking">
-      @foreach(['Impact Leader','Finisher','Creator','Progressor','Defender'] as $i=>$role)
-      <div><b>{{$i+1}}</b><i>{{chr(65+$i)}}P</i><span><strong>{{$role}}</strong><small>ScoreTime Index</small></span><em>{{number_format(8.8-($i*.2),1)}}</em></div>
-      @endforeach
+      @forelse($topPlayers as $i=>$player)
+      <div><b>{{$i+1}}</b><i>{{mb_substr($player->name,0,2)}}</i><span><strong>{{$player->name}}</strong><small>{{$player->team?->name_en ?? $player->nationality}}</small></span><em>{{number_format($player->rating,1)}}</em></div>
+      @empty<div class="muted">{{__('ui.data_pending')}}</div>@endforelse
     </div>
   </div>
 </section>
 
 <div class="section-head"><div><span class="eyebrow">SCORETIME INTELLIGENCE</span><h2>Read the match, not just the score</h2></div><a class="link" href="/matches">Open Match Center →</a></div>
 <section class="st-intelligence">
-  <div class="st-panel st-pitch-panel"><div class="st-panel-head"><div><span>TACTICAL LENS</span><h2>Pressure & activity map</h2></div></div><div class="st-pitch"><i class="hot h1"></i><i class="hot h2"></i><i class="hot h3"></i><b class="shot s1"></b><b class="shot s2"></b><b class="shot s3"></b></div></div>
-  <div class="st-panel"><div class="st-panel-head"><div><span>MATCH MOMENTUM</span><h2>Territorial pressure</h2></div></div><div class="st-big-chart"><svg viewBox="0 0 500 220" preserveAspectRatio="none"><path d="M0,170 L35,150 L65,170 L95,105 L125,130 L160,75 L195,120 L230,55 L260,112 L300,82 L330,145 L365,50 L400,92 L430,38 L465,80 L500,48" fill="none" stroke="#19d8ff" stroke-width="4"/></svg></div></div>
-  <div class="st-panel"><div class="st-panel-head"><div><span>ATTRIBUTE OVERVIEW</span><h2>Player radar</h2></div></div><div class="st-radar"><span>PACE</span><span>PASS</span><span>SHOT</span><span>DEF</span><span>PHYS</span><span>CREATIVE</span><i></i></div></div>
+  @foreach([__('ui.shot_map'),__('ui.momentum'),__('ui.predictions')] as $feature)
+  <div class="st-panel"><div class="st-panel-head"><div><span>SCORETIME</span><h2>{{$feature}}</h2></div></div><p class="muted">{{__('ui.analytics_verified_only')}}</p><a class="btn ghost compact" href="/matches">{{__('ui.matches')}}</a></div>
+  @endforeach
 </section>
 
 <div class="section-head"><div><span class="eyebrow">YOUR FOOTBALL</span><h2>Personalized, connected, global</h2></div></div>
 <section class="st-personal-grid">
-  <div class="st-panel"><h3>Follow Your Teams</h3><p class="muted">Smart alerts, news and match reminders for the clubs that matter to you.</p><div class="st-team-chips">@foreach(['RM','BAR','LIV','CITY','PSG','MIL'] as $x)<span>{{$x}}</span>@endforeach</div></div>
-  <div class="st-panel"><h3>TV Guide</h3><p class="muted">A single schedule for live broadcasts and match windows.</p><div class="st-guide"><span>18:00 <b>Champions League</b><em>LIVE</em></span><span>20:30 <b>Premier League</b><em>LIVE</em></span><span>22:45 <b>LaLiga</b><em>TONIGHT</em></span></div></div>
-  <div class="st-panel"><h3>Fan Zone</h3><p class="muted">Predictions, friends, mini leagues, XP, challenges and achievements.</p><div class="st-fan-metrics"><b>12<small>Picks</small></b><b>84%<small>Form</small></b><b>2.4K<small>XP</small></b></div></div>
+  <div class="st-panel"><h3>{{__('ui.favorites')}}</h3><p class="muted">{{__('ui.sign_in_customize')}}</p><a class="btn ghost compact" href="/login">{{__('ui.login')}}</a></div>
+  <div class="st-panel"><h3>{{__('ui.tv_guide')}}</h3><p class="muted">{{__('ui.broadcast_verified_only')}}</p></div>
+  <div class="st-panel"><h3>{{__('ui.predictions')}}</h3><p class="muted">{{__('ui.sign_in_customize')}}</p><div class="st-fan-metrics"><b>—<small>XP</small></b><b>—<small>{{__('ui.predictions')}}</small></b><b>—<small>{{__('ui.challenges')}}</small></b></div></div>
   <div class="st-panel"><h3>Transfer Intelligence</h3><p class="muted">Confidence, verification state, source attribution and movement tracking.</p><a class="btn ghost compact" href="/transfers">Open Transfer Desk</a></div>
 </section>
 

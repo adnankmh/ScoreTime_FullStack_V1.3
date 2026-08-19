@@ -1,12 +1,13 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/network/demo_data.dart';
+import '../../../core/i18n/app_strings.dart';
 import '../../../core/network/football_repository.dart';
 import '../../../core/theme/theme_controller.dart';
-import '../../transfers/presentation/transfer_intelligence_screen.dart';
 import '../../world/presentation/global_football_screen.dart';
 import '../../worldclass/presentation/world_class_screen.dart';
+import '../../matches/presentation/matches_screen.dart';
+import '../../settings/presentation/settings_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -59,14 +60,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        matches = List<dynamic>.from(DemoData.matches);
-        news = List<dynamic>.from(DemoData.news);
-        players = List<dynamic>.from(DemoData.players);
-        competitions = List<dynamic>.from(DemoData.competitions);
-        transfers = List<dynamic>.from(DemoData.transfers);
-        summary = Map<String, dynamic>.from(DemoData.worldSummary);
         loading = false;
-        error = 'Preview data is active while the live provider reconnects.';
+        error = 'live_data_unavailable';
       });
     }
   }
@@ -80,7 +75,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ? Map<String, dynamic>.from(live.first)
         : matches.isNotEmpty
             ? Map<String, dynamic>.from(matches.first)
-            : Map<String, dynamic>.from(DemoData.matches.first);
+            : <String, dynamic>{};
+    final t = AppStrings.of(context);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -114,7 +110,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: _StatusStrip(message: error!),
+                    child: _StatusStrip(message: t(error!)),
                   ),
                 ),
               SliverToBoxAdapter(
@@ -320,7 +316,7 @@ class _MobileHeader extends StatelessWidget {
         _LiveBadge(text: '$liveCount LIVE'),
         const SizedBox(width: 6),
         IconButton.filledTonal(
-          onPressed: () {},
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
           icon: const Icon(Icons.notifications_none_rounded),
         ),
       ],
@@ -472,7 +468,7 @@ class _HeroCopy extends StatelessWidget {
           runSpacing: 10,
           children: [
             FilledButton.icon(
-              onPressed: () {},
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MatchesScreen())),
               icon: const Icon(Icons.bolt_rounded),
               label: Text('Explore $liveCount live matches'),
             ),
@@ -491,9 +487,9 @@ class _HeroCopy extends StatelessWidget {
           spacing: 24,
           runSpacing: 12,
           children: [
-            _HeroMetric(value: '${summary['competitions'] ?? '1.2K+'}', label: 'Competitions'),
-            _HeroMetric(value: '${summary['teams'] ?? '18K+'}', label: 'Teams'),
-            _HeroMetric(value: '${summary['players'] ?? '300K+'}', label: 'Players'),
+            _HeroMetric(value: '${summary['competitions'] ?? '—'}', label: 'Competitions'),
+            _HeroMetric(value: '${summary['teams'] ?? '—'}', label: 'Teams'),
+            _HeroMetric(value: '${summary['players'] ?? '—'}', label: 'Players'),
             const _HeroMetric(value: '24/7', label: 'Match pulse'),
           ],
         ),
@@ -551,6 +547,21 @@ class _FeaturedMatchGlass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (match.isEmpty) {
+      return Container(
+        constraints: const BoxConstraints(minHeight: 280),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          color: const Color(0xFF061225).withValues(alpha: .82),
+          border: Border.all(color: Colors.white.withValues(alpha: .1)),
+        ),
+        child: const _EmptyState(
+          icon: Icons.event_busy_rounded,
+          message: 'No synchronized match is available yet.',
+        ),
+      );
+    }
     final home = Map<String, dynamic>.from(match['home_team'] ?? match['homeTeam'] ?? {});
     final away = Map<String, dynamic>.from(match['away_team'] ?? match['awayTeam'] ?? {});
     final competition = Map<String, dynamic>.from(match['competition'] ?? {});
@@ -608,17 +619,10 @@ class _FeaturedMatchGlass extends StatelessWidget {
               Expanded(child: _TeamLockup(team: away, align: CrossAxisAlignment.end)),
             ],
           ),
-          const SizedBox(height: 24),
-          const SizedBox(height: 74, child: _MiniMomentum()),
-          const SizedBox(height: 14),
-          Row(
-            children: const [
-              Expanded(child: _Probability(label: 'HOME', value: '58%', active: true)),
-              SizedBox(width: 8),
-              Expanded(child: _Probability(label: 'DRAW', value: '24%')),
-              SizedBox(width: 8),
-              Expanded(child: _Probability(label: 'AWAY', value: '18%')),
-            ],
+          const SizedBox(height: 22),
+          const _EmptyState(
+            icon: Icons.analytics_outlined,
+            message: 'Open Match Center for synchronized events and available analytics.',
           ),
         ],
       ),
@@ -651,46 +655,22 @@ class _TeamLockup extends StatelessWidget {
   }
 }
 
-class _Probability extends StatelessWidget {
-  final String label;
-  final String value;
-  final bool active;
-  const _Probability({required this.label, required this.value, this.active = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(13),
-        color: active
-            ? ScoreTimeColors.blue.withValues(alpha: .16)
-            : Colors.white.withValues(alpha: .035),
-        border: Border.all(
-          color: active
-              ? ScoreTimeColors.blue.withValues(alpha: .35)
-              : Colors.white.withValues(alpha: .06),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w800)),
-          const SizedBox(width: 5),
-          Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900)),
-        ],
-      ),
-    );
-  }
-}
-
 class _CompetitionRail extends StatelessWidget {
   final List<dynamic> items;
   const _CompetitionRail({required this.items});
 
   @override
   Widget build(BuildContext context) {
-    final source = items.isNotEmpty ? items : DemoData.competitions;
+    final source = items;
+    if (source.isEmpty) {
+      return const SizedBox(
+        height: 90,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 14, 16, 4),
+          child: _EmptyState(icon: Icons.emoji_events_outlined, message: 'Competitions will appear after synchronization.'),
+        ),
+      );
+    }
     return SizedBox(
       height: 108,
       child: ListView.separated(
@@ -756,8 +736,10 @@ class _LiveDesk extends StatelessWidget {
       trailing: const _LiveBadge(text: 'MATCH PULSE'),
       child: loading
           ? const SizedBox(height: 260, child: Center(child: CircularProgressIndicator()))
-          : Column(
-              children: (matches.isNotEmpty ? matches : DemoData.matches)
+          : matches.isEmpty
+              ? const SizedBox(height: 180, child: _EmptyState(icon: Icons.sports_soccer_outlined, message: 'No synchronized matches in this view.'))
+              : Column(
+              children: matches
                   .take(6)
                   .map((raw) => _MatchRow(match: Map<String, dynamic>.from(raw)))
                   .toList(),
@@ -837,11 +819,13 @@ class _NewsDesk extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final source = news.isNotEmpty ? news : DemoData.news;
+    final source = news;
     return _Panel(
       title: 'Top News',
       kicker: 'Editorial + breaking stories',
-      child: Column(
+      child: source.isEmpty
+        ? const SizedBox(height: 180, child: _EmptyState(icon: Icons.newspaper_outlined, message: 'No verified news is available yet.'))
+        : Column(
         children: source.take(5).toList().asMap().entries.map((entry) {
           final n = Map<String, dynamic>.from(entry.value);
           final feature = entry.key == 0;
@@ -928,11 +912,13 @@ class _PlayerDesk extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final source = players.isNotEmpty ? players : DemoData.players;
+    final source = players;
     return _Panel(
       title: 'Trending Players',
       kicker: 'Performance radar',
-      child: Column(
+      child: source.isEmpty
+        ? const SizedBox(height: 180, child: _EmptyState(icon: Icons.person_search_outlined, message: 'Player rankings need synchronized statistics.'))
+        : Column(
         children: source.take(6).toList().asMap().entries.map((entry) {
           final p = Map<String, dynamic>.from(entry.value);
           return _PlayerRank(rank: entry.key + 1, player: p);
@@ -986,7 +972,7 @@ class _PlayerRank extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              '${player['rating'] ?? (8.5 - rank * .2).toStringAsFixed(1)}',
+              '${player['rating'] ?? '—'}',
               style: const TextStyle(color: ScoreTimeColors.green, fontSize: 10, fontWeight: FontWeight.w900),
             ),
           ),
@@ -1059,7 +1045,7 @@ class _SectionHeading extends StatelessWidget {
             ],
           ),
         ),
-        TextButton(onPressed: () {}, child: Text(action)),
+        Text(action, style: const TextStyle(color: ScoreTimeColors.cyan, fontSize: 12, fontWeight: FontWeight.w800)),
       ],
     );
   }
@@ -1139,30 +1125,10 @@ class _TVGuideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const items = [
-      ('18:00', 'Champions League', 'Live'),
-      ('20:30', 'Premier League', 'Live'),
-      ('22:45', 'LaLiga', 'Tonight'),
-    ];
     return _Panel(
       title: 'TV Guide',
       kicker: 'Where to watch',
-      child: Column(
-        children: items
-            .map(
-              (x) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 7),
-                child: Row(
-                  children: [
-                    SizedBox(width: 42, child: Text(x.$1, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900))),
-                    Expanded(child: Text(x.$2, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700))),
-                    Text(x.$3, style: const TextStyle(color: ScoreTimeColors.red, fontSize: 9, fontWeight: FontWeight.w900)),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
-      ),
+      child: const _EmptyState(icon: Icons.live_tv_outlined, message: 'Broadcast information appears only when supplied by the data source.'),
     );
   }
 }
@@ -1173,11 +1139,13 @@ class _TransferPulseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final source = items.isNotEmpty ? items : DemoData.transfers;
+    final source = items;
     return _Panel(
       title: 'Transfer Pulse',
       kicker: 'Confidence + movement',
-      child: Column(
+      child: source.isEmpty
+        ? const _EmptyState(icon: Icons.sync_alt_rounded, message: 'No verified transfer updates are available.')
+        : Column(
         children: source.take(3).map((raw) {
           final t = Map<String, dynamic>.from(raw);
           return Padding(
@@ -1188,7 +1156,8 @@ class _TransferPulseCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(child: Text('${t['headline'] ?? 'Market movement'}', maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700))),
                 const SizedBox(width: 6),
-                Text('${t['confidence'] ?? 70}%', style: const TextStyle(color: ScoreTimeColors.gold, fontSize: 9.5, fontWeight: FontWeight.w900)),
+                if (t['confidence'] != null)
+                  Text('${t['confidence']}%', style: const TextStyle(color: ScoreTimeColors.gold, fontSize: 9.5, fontWeight: FontWeight.w900)),
               ],
             ),
           );
@@ -1210,11 +1179,11 @@ class _FanZoneCard extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Expanded(child: _MiniStat(value: '12', label: 'Picks')),
+              Expanded(child: _MiniStat(value: '—', label: 'Picks')),
               SizedBox(width: 8),
-              Expanded(child: _MiniStat(value: '84%', label: 'Form')),
+              Expanded(child: _MiniStat(value: '—', label: 'Form')),
               SizedBox(width: 8),
-              Expanded(child: _MiniStat(value: '2.4K', label: 'XP')),
+              Expanded(child: _MiniStat(value: '—', label: 'XP')),
             ],
           ),
           const SizedBox(height: 12),
@@ -1266,7 +1235,7 @@ class _FeatureRibbon extends StatelessWidget {
       (Icons.query_stats_rounded, 'Deep Stats', 'xG-ready analytics layer'),
       (Icons.radar_rounded, 'Tactical Insights', 'Heatmaps & momentum'),
       (Icons.tune_rounded, 'Personalized', 'Teams, players & alerts'),
-      (Icons.public_rounded, 'Global Coverage', '${summary['competitions'] ?? '1K+'} competitions'),
+      (Icons.public_rounded, 'Global Coverage', '${summary['competitions'] ?? '—'} competitions'),
       (Icons.verified_user_rounded, 'Secure & Reliable', 'Hardened Laravel backend'),
     ];
     return Container(
@@ -1346,6 +1315,34 @@ class _StatusStrip extends StatelessWidget {
   }
 }
 
+class _EmptyState extends StatelessWidget {
+  final IconData icon;
+  final String message;
+  const _EmptyState({required this.icon, required this.message});
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 30, color: Theme.of(context).colorScheme.secondary),
+              const SizedBox(height: 9),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 10.5,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+}
+
 class _LiveBadge extends StatelessWidget {
   final String text;
   const _LiveBadge({required this.text});
@@ -1407,15 +1404,6 @@ String _initials(String name) {
   if (parts.isEmpty) return 'ST';
   if (parts.length == 1) return parts.first.substring(0, math.min(2, parts.first.length)).toUpperCase();
   return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-}
-
-class _MiniMomentum extends StatelessWidget {
-  const _MiniMomentum();
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(painter: _MomentumPainter(compact: true));
-  }
 }
 
 class _PitchPainter extends CustomPainter {

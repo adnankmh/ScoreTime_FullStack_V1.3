@@ -4,20 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       api_base_url:
-        description: "Laravel API URL ending in /api/v1"
+        description: "Public ScoreTime Laravel API ending in /api/v1"
         required: true
         default: "https://example.com/api/v1"
 
 permissions:
   contents: read
 
-concurrency:
-  group: scoretime-ios-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
-    name: Flutter • iOS Release
+    name: Flutter • iOS Unsigned Release
     runs-on: macos-latest
 
     defaults:
@@ -35,68 +31,53 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Repair stale pre-ScoreTime widget test if present
+      - name: Validate public API URL
         shell: bash
+        env:
+          SCORETIME_BUILD_API_URL: ${{ inputs.api_base_url }}
         run: |
-          if [ -f test/widget_test.dart ] && grep -q "MyApp" test/widget_test.dart; then
-            cat > test/widget_test.dart <<'DART'
-          import 'package:flutter_test/flutter_test.dart';
-          import 'package:scoretime/main.dart';
-
-          void main() {
-            test('ScoreTimeApp is available', () {
-              const app = ScoreTimeApp();
-              expect(app, isA<ScoreTimeApp>());
-            });
-          }
-          DART
+          if [[ ! "$SCORETIME_BUILD_API_URL" =~ ^https://.+/api/v1/?$ ]] || [[ "$SCORETIME_BUILD_API_URL" == *"example.com"* ]]; then
+            echo "api_base_url must be your real HTTPS Laravel endpoint ending in /api/v1"
+            exit 1
           fi
 
       - name: Generate iOS platform when missing
-        shell: bash
         run: |
           if [ ! -d ios ]; then
-            flutter create . \
-              --platforms=ios \
-              --org com.scoretime \
-              --project-name scoretime \
-              --no-pub
+            flutter create . --platforms=ios --org com.scoretime --project-name scoretime --no-pub
           fi
 
-      - name: Apply ScoreTime iOS identity
-        shell: bash
+      - name: Apply ScoreTime iOS icon/name
         run: |
           rm -rf ios/Runner/Assets.xcassets/AppIcon.appiconset
           mkdir -p ios/Runner/Assets.xcassets/AppIcon.appiconset
           cp -R ../tooling/ios-appicon/. ios/Runner/Assets.xcassets/AppIcon.appiconset/
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName ScoreTime" ios/Runner/Info.plist || \
+          /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string ScoreTime" ios/Runner/Info.plist
 
-          /usr/libexec/PlistBuddy \
-            -c "Set :CFBundleDisplayName ScoreTime" ios/Runner/Info.plist \
-            || /usr/libexec/PlistBuddy \
-            -c "Add :CFBundleDisplayName string ScoreTime" ios/Runner/Info.plist
-
-      - name: Flutter dependencies
+      - name: Dependencies
         run: flutter pub get
 
-      - name: Flutter analyze
+      - name: Analyze
         run: flutter analyze
 
-      - name: Flutter tests
+      - name: Tests
         run: flutter test
 
-      - name: Build unsigned iOS app
-        run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL="${{ inputs.api_base_url }}"
+      - name: Build iOS unsigned
+        env:
+          SCORETIME_BUILD_API_URL: ${{ inputs.api_base_url }}
+        run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL="$SCORETIME_BUILD_API_URL"
 
-      - name: Package iOS app
-        shell: bash
+      - name: Package
         run: |
           cd build/ios/iphoneos
           ditto -c -k --sequesterRsrc --keepParent Runner.app ScoreTime-iOS-Unsigned.zip
 
-      - name: Upload iOS build
+      - name: Upload iOS
         uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.5.0-iOS-Unsigned
-          if-no-files-found: error
+          name: ScoreTime-V1.7.0-iOS-Unsigned
           retention-days: 14
+          if-no-files-found: error
           path: mobile-flutter/build/ios/iphoneos/ScoreTime-iOS-Unsigned.zip

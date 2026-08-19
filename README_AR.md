@@ -1,23 +1,29 @@
-# ScoreTime Global V1.6.0 — Live Global Platform
+# ScoreTime Global V1.7.0 — REAL DATA SAFE
 
-نسخة Full-Stack:
-- Laravel 12 Backend / Website / Admin / API
-- Flutter Web / Android / iOS
-- GitHub Pages workflow
-- Android APK + AAB workflow
-- iOS workflow
-- مزامنة كرة قدم عالمية حقيقية عبر مزود مرخص
-- مزامنة أخبار مع المصدر والرابط
-- 6 لغات + RTL
-- Theme + Language controls في أعلى الواجهة
-- Match Center / World Football / Transfers / News / Fan / Predictions / Admin / Experience Studio
+حزمة أصلية Full‑Stack لمنصة كرة قدم عالمية تحمل اسم وشعار **ScoreTime**:
 
-## تشغيل الموقع
-`START_SCORETIME_WINDOWS.bat`
+- موقع وREST API ولوحة إدارة بـ Laravel 12 / PHP 8.2+.
+- تطبيق Android وiOS وWeb بـ Flutter 3.47 مع Null Safety وRiverpod.
+- ست لغات: العربية والإنجليزية والفرنسية والإسبانية والألمانية والتركية، مع RTL كامل.
+- بناء APK وAAB وFlutter Web من GitHub Actions من دون Android Studio.
+- API‑Football هو المزود الأساسي، وfootball-data.org بديل محدود.
+- النتائج والأخبار والتشكيلات والإحصاءات والانتقالات لا تُستبدل تلقائياً بأرقام تجريبية.
 
-## تفعيل البيانات الحقيقية
-`CONFIGURE_LIVE_DATA_WINDOWS.bat`
+## أسرع تشغيل على Windows
 
-راجع:
-- `docs/LIVE_GLOBAL_DATA_AR.md`
-- `docs/COMPETITIVE_PRODUCT_SCOPE_AR.md`
+1. فك الضغط في مسار بسيط مثل `C:\ScoreTime`.
+2. شغّل `START_SCORETIME_WINDOWS.bat`؛ سيجهّز Laravel وMySQL وينشئ كلمة إدارة قوية ويشغل الموقع والـscheduler.
+3. شغّل `SETUP_FREE_API_WINDOWS.bat` مرة واحدة والصق مفتاح API‑Football المجاني.
+4. افتح `http://127.0.0.1:8000`.
+
+ابدأ من [دليل التشغيل الكامل](docs/START_HERE_V170_AR.md)، ثم راجع [ملاحظات الإصدار](docs/RELEASE_V170_AR.md) و[معمارية البيانات والرصيد](docs/ARCHITECTURE_V170_AR.md).
+
+## مبدأ البيانات الحقيقية
+
+تطبيق Flutter والمتصفح لا يتصلان بمزود كرة القدم مباشرة. Laravel يطلب البيانات وفق جدول محمي، يخزنها في MySQL، ثم يخدم كل المستخدمين من قاعدة بيانات ScoreTime. فتح مليون مستخدم لصفحة مباريات اليوم لا يعني مليون طلب إلى المزود.
+
+وضع العرض موجود للتطوير فقط، ولا يعمل إلا بخيار صريح `WEB_DEMO_MODE=true` أو `SCORETIME_SEED_DEMO_DATA=true`.
+
+## التصميم والملكية
+
+التجربة مستلهمة وظيفياً من أنماط تطبيقات النتائج العالمية: مركز مباشر، روزنامة، أحداث، تشكيلات، إحصاءات، بحث عالمي، أخبار، انتقالات، مفضلة وتنبيهات. الشيفرة والهوية والتخطيط المرئي داخل الحزمة أصلية ولا تحتوي على شيفرة أو أصول من القوالب والمواقع المرجعية.

@@ -1,15 +1,16 @@
-# ScoreTime V1.4 — Security
+# ScoreTime V1.7 — الأمان
 
 لا يوجد تطبيق يمكن ضمان أنه غير قابل للاختراق 100%. ScoreTime يستخدم Defense-in-Depth ويمنع لوحة الإدارة من كتابة PHP/Dart/JavaScript عشوائيًا.
 
-- Hashing عبر Laravel للمPasswords.
-- Web CSRF + encrypted cookies.
-- Sanctum tokens لتطبيق Flutter مع flutter_secure_storage.
-- Rate limits لتسجيل الدخول والعمليات الحساسة.
-- Admin middleware + optional IP allowlist + TOTP 2FA + recovery codes.
-- Audit logs وdevice/session controls.
-- CSP/HSTS/anti-sniff/frame/security headers في production.
-- مفاتيح Football Provider وFirebase تبقى على Laravel server ولا تدخل التطبيق.
-- News ingestion يسمح فقط بمصادر licensed / rss-permitted / partner مع attribution ومراجعة تحريرية افتراضية.
+- Laravel hashing لكلمات المرور، وCSRF للويب، وجلسات مشفرة افتراضياً.
+- Sanctum tokens لتطبيق Flutter مع `flutter_secure_storage`.
+- Rate limits لتسجيل الدخول والعمليات الحساسة، وCORS محدد بالنطاقات.
+- Admin middleware وIP allowlist اختياري وTOTP 2FA وrecovery codes.
+- Audit logs وإدارة الأجهزة والجلسات.
+- CSP/HSTS وanti-sniff وframe/security headers في الإنتاج.
+- مفاتيح مزود كرة القدم وFirebase تبقى على Laravel ولا تدخل APK أو JavaScript.
+- أقفال ذرية وسقوف يومية تمنع عمال المزامنة المتزامنين من تجاوز ميزانية المزود.
+- المستخدم الإداري المحلي يحصل على كلمة قوية مولدة مرة واحدة؛ لا توجد كلمة مرور افتراضية منشورة.
+- جلب الأخبار مقيد بالمصادر المرخصة أو RSS المسموح أو الشراكات، مع attribution ومراجعة تحريرية.
 
-قبل النشر: غيّر كلمة مرور Adnan bootstrap، فعّل HTTPS و2FA، استخدم production secrets، Redis/queues عند الحاجة، backups واختبارات staging.
+قبل النشر: فعّل HTTPS و2FA، ضع أسرار إنتاج مستقلة، استخدم Redis للـcache/locks/queues، حدّث التبعيات، أنشئ نسخاً احتياطية واختبر الاستعادة. لا يوجد نظام يمكن ضمان أنه «مستحيل الاختراق»؛ الأمان عملية تشغيل وصيانة مستمرة.

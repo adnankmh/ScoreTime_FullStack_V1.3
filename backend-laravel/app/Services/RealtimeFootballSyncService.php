@@ -7,6 +7,8 @@ use App\Models\FootballCountry;
 use App\Models\FootballMatch;
 use App\Models\LiveCommentary;
 use App\Models\Team;
+use App\Support\FootballStatus;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class RealtimeFootballSyncService
@@ -31,7 +33,13 @@ class RealtimeFootballSyncService
                 $away = $this->upsertTeam(data_get($raw, 'teams.away', []));
                 if (!$competition || !$home || !$away) continue;
 
-                $status = strtolower((string) data_get($raw, 'fixture.status.short', 'NS'));
+                $rawStatus = (string) data_get($raw, 'fixture.status.short', 'NS');
+                $status = FootballStatus::canonical($rawStatus);
+                $existing = FootballMatch::where('provider_id', (string) $fixtureId)->first();
+                $broadcastMeta = array_replace($existing?->broadcast_meta ?? [], [
+                    'provider' => $provider->name(),
+                    'provider_status' => $rawStatus,
+                ]);
                 $match = FootballMatch::updateOrCreate(
                     ['provider_id' => (string) $fixtureId],
                     [
@@ -45,8 +53,10 @@ class RealtimeFootballSyncService
                         'away_score' => (int) (data_get($raw, 'goals.away') ?? 0),
                         'venue' => data_get($raw, 'fixture.venue.name'),
                         'round' => data_get($raw, 'league.round'),
-                        'realtime_state' => in_array(strtoupper((string) data_get($raw, 'fixture.status.short')), ['1H','HT','2H','ET','BT','P','LIVE']) ? 'active' : null,
+                        'realtime_state' => FootballStatus::isLive($rawStatus) ? 'active' : 'idle',
                         'realtime_heartbeat_at' => now(),
+                        'revision' => ((int) ($existing?->revision ?? 0)) + 1,
+                        'broadcast_meta' => $broadcastMeta,
                         'last_synced_at' => now(),
                     ]
                 );
@@ -97,6 +107,14 @@ class RealtimeFootballSyncService
                 'started_at' => $started,
                 'finished_at' => now(),
             ]);
+
+            if (!empty($filters['date'])) {
+                $key = 'scoretime:matches:version:'.(string) $filters['date'];
+                Cache::add($key, 1, now()->addDays(2));
+                Cache::increment($key);
+            }
+            Cache::add('scoretime:matches:version:live', 1, now()->addDays(2));
+            Cache::increment('scoretime:matches:version:live');
 
             return ['matches' => $matches, 'events' => $events];
         } catch (\Throwable $e) {

@@ -1,52 +1,52 @@
 {
-  "product": "ScoreTime",
-  "version": "1.6.0",
-  "release": "Live Global Platform",
-  "languages": [
-    "en",
-    "ar",
-    "fr",
-    "es",
-    "de",
-    "tr"
-  ],
-  "providers": {
-    "football_primary": "api-football",
-    "football_secondary": "football-data.org",
-    "news": "newsapi"
+  "product": "ScoreTime Global",
+  "version": "1.7.0",
+  "flutter_build": "40",
+  "generated_at_utc": "2026-08-19T17:10:18.805359+00:00",
+  "truthfulness_mode": "real-data-by-default; preview-explicit-only",
+  "counts": {
+    "files": 432,
+    "php": 283,
+    "dart": 40,
+    "workflows": 4,
+    "web_locales": 6,
+    "flutter_locales": 6
   },
-  "active_workflows": [
-    ".github/workflows/02-web-pages.yml",
-    ".github/workflows/04-ios.yml",
-    ".github/workflows/03-android-apk-aab.yml",
-    ".github/workflows/01-laravel.yml"
-  ],
-  "file_count": 517,
   "files": [
     {
       "path": ".github/workflows/01-laravel.yml",
-      "size": 2656,
-      "sha256": "42c7f928415724d00c69e1c3c4478af22dab2159c10107cd42a87510ce26407a"
+      "size": 3460,
+      "sha256": "f9f39b95c6400b8c9e44149c0946047e30139179a6e3bc74bea7c589661df7a1"
     },
     {
       "path": ".github/workflows/02-web-pages.yml",
-      "size": 2906,
-      "sha256": "45731083f9bc10b9c1622e988d2f9a00a294f2737386e5b5bc58ea5e615b682c"
+      "size": 3482,
+      "sha256": "c472f964be5672c3f4ea9f2dd3eea12b733bd997da512bad85351a59f9f3c2b6"
     },
     {
       "path": ".github/workflows/03-android-apk-aab.yml",
-      "size": 3469,
-      "sha256": "a88b5ef2c777a6290f8d41f75d79b2c3f5fb611c00bf838b1074ba3f6ddbf7a6"
+      "size": 3214,
+      "sha256": "1b3bb487bc6ebe37c41c7ff6347d084d6a7540f150803a49c293a07abbff19e7"
     },
     {
       "path": ".github/workflows/04-ios.yml",
-      "size": 2890,
-      "sha256": "ecddd3cc433bf52ef9f92398f8b5b090a442e39a9c1735fdfc0781e2f8303b72"
+      "size": 2546,
+      "sha256": "4722a1bd87ffb1abadba688c61fe554b84015c29ce99695e87df0655494f0b23"
     },
     {
       "path": ".gitignore",
       "size": 893,
       "sha256": "f2c5c6092f1c27ee12f1d9ddebaf93816079f511cc2336c5094585dd9c7de151"
+    },
+    {
+      "path": "CLEAN_GITHUB_BEFORE_PUSH.bat",
+      "size": 122,
+      "sha256": "fa4ffe4894b2828a1f21b93db30ab9ddd5fe5b1fc542f2fb6fb69329d28f1c5f"
+    },
+    {
+      "path": "CLEAN_GITHUB_BEFORE_PUSH.ps1",
+      "size": 919,
+      "sha256": "2839da1df29dce3af61a4265c23ad80fab86d32f78bdb3f2ae5075ba5bf843e0"
     },
     {
       "path": "CLEAN_OLD_GITHUB_FILES.bat",
@@ -65,508 +65,53 @@
     },
     {
       "path": "CONFIGURE_LIVE_DATA_WINDOWS.ps1",
-      "size": 2239,
-      "sha256": "5bffe60ae56c7eb9ca86b249cfb79b3a5e1618eb8c492f78d7ab0edc0a017534"
+      "size": 258,
+      "sha256": "adb15f6b9ec0159b2a1518e9f360616a3c6b35c055ec29ea2ed7c46496c048bd"
+    },
+    {
+      "path": "README.md",
+      "size": 1389,
+      "sha256": "0c753ea78fa7174958bc95481315f01c9ccabb481468bb804d2317cda83650b9"
     },
     {
       "path": "README_AR.md",
-      "size": 755,
-      "sha256": "d19e2281c9ed4bc21f21afafa46cdab2695d6b54776b594bd0a4df086b287eb0"
+      "size": 2554,
+      "sha256": "4ae9d7c5b55b13a288ecaf2486b39cf7203e1913b154ab316dc0e9f3fe960ceb"
+    },
+    {
+      "path": "SETUP_FREE_API_WINDOWS.bat",
+      "size": 177,
+      "sha256": "84b5255c6cac60c24e6d3c1a968179a3389afc785ce674d268bb8761006c03a4"
+    },
+    {
+      "path": "SETUP_FREE_API_WINDOWS.ps1",
+      "size": 3604,
+      "sha256": "2ce0cc5dd8d838a117686bd5e07fe4ed6f3410b6e1104b62122ae1f6eed52196"
     },
     {
       "path": "START_SCORETIME_WINDOWS.bat",
       "size": 707,
-      "sha256": "b4fd094f660e2be130ffea1d4bc2aab3df2abc3a0e4a42dc954218a6a07a4075"
+      "sha256": "addee4cc29ce74d6a82bfc804a8a2be82c5f59601774a04e1594a823beeb29d6"
     },
     {
       "path": "START_SCORETIME_WINDOWS.ps1",
-      "size": 9160,
-      "sha256": "2c9987d62f3da71f4cad5af9f6d59030ce9a5edcb40085c57ac88e938b36a305"
+      "size": 11422,
+      "sha256": "f6ab3b3d6876d80f2be346f9968d3e0ab32ffa02cad739e1296fbc151078f797"
     },
     {
       "path": "VERSION",
       "size": 6,
-      "sha256": "cb1d9a30bc4ab8a397f39b7d786bb82aca0b816077eefc35d7c822017d75f6a5"
-    },
-    {
-      "path": "archive/README.md",
-      "size": 245,
-      "sha256": "3315009ff447533968a2c2eb799aa677041f8a1ecd15b504a8fcabce4267f551"
-    },
-    {
-      "path": "archive/legacy-releases/WORKFLOWS_HISTORY.md",
-      "size": 401,
-      "sha256": "d2844fe1a5837fc22102b86969b0556a51231320730fcee986aef3687aae371f"
-    },
-    {
-      "path": "archive/legacy-releases/branding/ScoreTime_V11_Visual_Direction.png",
-      "size": 2495178,
-      "sha256": "c32ab64ac9b4e91858c53584e1fface507a75dcd353e8c016c85f484216c3a7e"
-    },
-    {
-      "path": "archive/legacy-releases/docs/BUILD_APK_WITH_GITHUB_AR.md",
-      "size": 1561,
-      "sha256": "e244c517b7e5868a181c874641384fb637b9d97c98e523b865c74438f47f2f38"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V03.txt",
-      "size": 274,
-      "sha256": "43a2d3b2ae633f7a91fd08cd264d2ff9b4de9db382bbd97771fd0ebe5f24d26c"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V04.txt",
-      "size": 293,
-      "sha256": "e5ffedcd2d097fc779ae963b2dd4bc7d2011a5b82bae3ecc7b6b0e4d6cde0263"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V05.txt",
-      "size": 550,
-      "sha256": "a2bb1e3289fb9a6b49872ac795e44180b8a2a4f2394cf61e85f42868364dcd07"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V06.txt",
-      "size": 649,
-      "sha256": "3b55782c13811b99d8f4f5ab6a843f11e40b5ce7b938879f9232169b48f8dd71"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V07.txt",
-      "size": 783,
-      "sha256": "6956d263b27bc3f13b78889d8530935495ab95aed27cc777e3982301aa114fb5"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V08.txt",
-      "size": 471,
-      "sha256": "560d48f4c800d7259a17b0c621f23b7840f89b58ef0f8251a96ace3d19a9af4e"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V09.txt",
-      "size": 500,
-      "sha256": "e488c076f48cd3d7d5996da5ca04fee6e8dab9429fb104dacc64225926875b34"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V10.txt",
-      "size": 865,
-      "sha256": "ff9608ac43ac4017ff3463079d5064d28ebab71e1cf9ed987dc1c202d7de3b5a"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V12.txt",
-      "size": 207,
-      "sha256": "e1a7a00b25c138c34f8dca8426446ca867ce6c7c13ad63d2a79dd31ca52bfcc9"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V13.txt",
-      "size": 275,
-      "sha256": "3286bded591999336e8a979347a7832c41af842b0e558761e650db0d53a758c3"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V14.txt",
-      "size": 1239,
-      "sha256": "851ee0a232f9aac2f37623464d81bdda23b8b76c5383cfbc8f3fa846c4739210"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V141.txt",
-      "size": 541,
-      "sha256": "d8bbb8896865aee803e8859ea93eb9f91a32fd23b031837c8bfdc99b5246492d"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V142.txt",
-      "size": 677,
-      "sha256": "fac510d3d57c521724b7256579f3e3d2bd3706777f0a40ef61f3eebb8b5773ca"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V143.txt",
-      "size": 672,
-      "sha256": "4125b4ea5a122fbeb0d716e0eaf9a5c58d1772d49490c77ce611a8ca9b9a39b0"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V144.txt",
-      "size": 642,
-      "sha256": "4daac5c65db8cabbbec3f26febb63eefab87bfa762d362d2c0ce2fa19968eff0"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V145.txt",
-      "size": 682,
-      "sha256": "7349b61a2ac8cfc8141e2342a698b6753e0f98cbdf232475a240b34eeff876f0"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V146.txt",
-      "size": 568,
-      "sha256": "0781f6dbe8a576664703e72fb2ab00ace1e03d130a1040dfbcfea01a0f8bbba1"
-    },
-    {
-      "path": "archive/legacy-releases/docs/CHECKS_V147.txt",
-      "size": 863,
-      "sha256": "7a7aa7d17a40f8b75fc25be484b8f74698c4f6e7c50bc600628b9a4257fcdd40"
-    },
-    {
-      "path": "archive/legacy-releases/docs/FIRST_RUN_V145_AR.md",
-      "size": 1190,
-      "sha256": "ed27611599875d88a529f9cec5ec2dd4622de3dce6aa08668b0c226d1174da05"
-    },
-    {
-      "path": "archive/legacy-releases/docs/FIXES_V141_AR.md",
-      "size": 1388,
-      "sha256": "701b145eb70473bbaff6d0c015458e16ab221bd80bd3d1d23557d1739f7fd434"
-    },
-    {
-      "path": "archive/legacy-releases/docs/FIXES_V145_AR.md",
-      "size": 769,
-      "sha256": "da569c56eb0e1b4bcfa1115669fa5e268ba26ce200ac2c86d202f966181f69ab"
-    },
-    {
-      "path": "archive/legacy-releases/docs/FIX_MYSQL_START_V146_AR.md",
-      "size": 898,
-      "sha256": "af2c28c8cf95e5b6ee50d9e64a474f28262d22602e2d2f367e6ad800e054848c"
-    },
-    {
-      "path": "archive/legacy-releases/docs/GITHUB_PAGES_V147_AR.md",
-      "size": 1372,
-      "sha256": "2c8c39c8f359f38eb08ecab6ccb8f2103e130b1300969f5904045114ade2fe8d"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V02.json",
-      "size": 20766,
-      "sha256": "eaa148174bbb14a3d807b268b228578f21b34555370d8acf3af97cd1f1cec1e9"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V03.json",
-      "size": 25513,
-      "sha256": "c3c556cbf5e0a5a9894eb5561d080a1e2e05aa22d44535aa23c4a9231f6ed7ae"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V04.json",
-      "size": 31877,
-      "sha256": "f7f39adad0ff4a9e978caa3fe4213ad302fb6b4b6b2df93fbb5838569d61eaca"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V05.json",
-      "size": 36319,
-      "sha256": "3a8dfe67292e6443e9d727f9f158abf3ed64376a3a11c38631ea3ec879731b95"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V06.json",
-      "size": 42802,
-      "sha256": "cbbc8c3e920c457602357f2430548a4fa30cea910ae850b8297b56569ad6fe29"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V07.json",
-      "size": 50534,
-      "sha256": "b8eb7fc5152919f8fe5b9bf7285be01efb86b9ae32861e49100b2f18c5488573"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V08.json",
-      "size": 53889,
-      "sha256": "8991d079eb5dbe83641c7b586dcc502bb2d9d031a563566566b69329f6020e4f"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V09.json",
-      "size": 58211,
-      "sha256": "d79f567f09364ac3761d06a485806d6724d12b3164f8877685f3ee75baa77165"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V10.json",
-      "size": 62712,
-      "sha256": "9aa774dd19e906ff2505d1c4ca0f0aefc6db7df23b3cede7d5c8f36094506e18"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V11.json",
-      "size": 65790,
-      "sha256": "b2c64368f6d64d2119456287887acde3a8e62135360114b1e6d60b3d0cd1fb1a"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V12.json",
-      "size": 68677,
-      "sha256": "75ffaffebb607cbac75b44105a032f80d27fadad3a373c45677328bbe8ba5f10"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V13.json",
-      "size": 71958,
-      "sha256": "7e608d285e9a17e60a3f302fa26d90ee7ccf3253ee3592f09279a310d0523cd2"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V14.json",
-      "size": 82833,
-      "sha256": "0f92aff5ef7bd1b90adfb6890cda590cc76f7daa428182911284d37e5c9c552b"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_MANIFEST_V141.json",
-      "size": 83660,
-      "sha256": "05c0f95e11b355c53e78711ad0a5693383e913708e67cb729072a37cedace50b"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V02_AR.md",
-      "size": 1075,
-      "sha256": "93819fccbe299380e3cd52ef3fd49778744d83034f06e46cb7a17a3bc3418592"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V03_AR.md",
-      "size": 704,
-      "sha256": "893643fe7316af3bfb07e3281cfc609c7cb94bf4b03ef7f474ba8b6939b583f2"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V04_AR.md",
-      "size": 1350,
-      "sha256": "99f9a630aad0c357289a744f3fe7d559f1cd1a7d73ea8b37e48836e37a4a1516"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V05_AR.md",
-      "size": 975,
-      "sha256": "eff201a23360c1664c7e1a00499555211207f15c40ff8963875bfec178dfe9c5"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V06_AR.md",
-      "size": 732,
-      "sha256": "db387174be29953f0a7963e89e47f72d94fddf1dbbfaba8af796d40d81cf84dc"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V07_AR.md",
-      "size": 525,
-      "sha256": "00c297b2aa5fbbffc1c7cd040048bd152a56603f24773de6b8fa3133b265b8b5"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V08_AR.md",
-      "size": 1256,
-      "sha256": "83448c072c52d0cc35ced1b0dc6ddf9a0855a2572c2f1af916c7c65344598bb7"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V09_AR.md",
-      "size": 988,
-      "sha256": "f22b08b15381975dd026a4507a0cdd6815a5c53ca2f6a5b56bfa899b6d355c9c"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V10_AR.md",
-      "size": 1031,
-      "sha256": "1f53913f32082be43e4a3a87ff4ba3535402e853521e1fe64c09e5e4eee969a4"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V11_AR.md",
-      "size": 519,
-      "sha256": "3efe869e3774aadebd8df022ac76f02b6b99e0521eeaac3ba6c36c281509d603"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V12_AR.md",
-      "size": 565,
-      "sha256": "e832fe53f2f50d03aa4a510e6ee9eac914b7e6e84030f1f111387fa1d267ccf1"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V13_AR.md",
-      "size": 479,
-      "sha256": "951e269da2c688eb00931c4ca1d345f9284ee0cf7a49ad70d2bd95764d8ecaa2"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_NOTES_V14_AR.md",
-      "size": 2446,
-      "sha256": "4bcf5b17d75140cc85bb6235a8226ce40137ac498820954febe3eb23f65119d8"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RELEASE_V147_AR.md",
-      "size": 570,
-      "sha256": "4d431f5bb083112cd9104e6eb491f78bef09bea815ee668915afe37b00db2541"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V04_AR.md",
-      "size": 2572,
-      "sha256": "7dfa58ad6e931e6ccbd695785484673939f0b19a332ba13f42e221dc46361c14"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V05_AR.md",
-      "size": 1105,
-      "sha256": "70fad3634351fff2c511bc64367e6574c56fe2644fd222b61f9f581abcaf3d2d"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V06_AR.md",
-      "size": 1456,
-      "sha256": "8e8c20550bff5235b7944ec67e1fc02d70d5f94ca72d35d68f1655bce1e71d38"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V07_AR.md",
-      "size": 2427,
-      "sha256": "07becd6ab2f50a9acc288f23efecbeb2ba522772f68c1c77a26620b69f2756ad"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V08_AR.md",
-      "size": 2057,
-      "sha256": "f2ffdd0d48d51ce2ac36de98b33772900b5a5518f85581958b3e3fffbb1541e4"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V09_AR.md",
-      "size": 2391,
-      "sha256": "1d58a611c680f295cc29e2eaee053a1129213c0786a14abb43d89450eaa25f63"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V10_AR.md",
-      "size": 2424,
-      "sha256": "ca29aae5a746cbf608ee45d3f5a3e562d84c867575a0debda1c23497a1b1f16a"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V11_AR.md",
-      "size": 947,
-      "sha256": "26065004d77ffbdba9c2cd2cfce9af4c2734e7657904fda86d5a285327095209"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V12_AR.md",
-      "size": 418,
-      "sha256": "65763bdd722819727a04822e6a6bd579092a1223a5a0c0cadfeea51b91dfd1cc"
-    },
-    {
-      "path": "archive/legacy-releases/docs/RUN_V13_AR.md",
-      "size": 963,
-      "sha256": "f4c89edeae0411a6468369cf1733a5f13c3b53847117e9e44237b4f9f68c1371"
-    },
-    {
-      "path": "archive/legacy-releases/docs/WORKFLOWS_V142_AR.md",
-      "size": 1237,
-      "sha256": "ada303f6b666933ca0dc2b1a0a2b618d8c3c6fade30b161fe18b47916643ea8b"
-    },
-    {
-      "path": "archive/legacy-releases/docs/WORKFLOWS_V143_AR.md",
-      "size": 1336,
-      "sha256": "c7346df7242080d7648106805e74e06621bd3c22ad36ebaece573757b383bd3a"
-    },
-    {
-      "path": "archive/legacy-releases/docs/WORKFLOWS_V144_AR.md",
-      "size": 1128,
-      "sha256": "f845c98deeef347817d1a580dee6e867704a28af52d14a69bb3c52ba1ed95bd8"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/ARCHITECTURE.md",
-      "size": 591,
-      "sha256": "9f61da60f8bb5f0c4674c7f4f26cb572eee15a3fde26794ddcab81f8823d9e07"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/BRANDING_OPTIONS_AR.md",
-      "size": 1269,
-      "sha256": "16027939a7835917272634584f58a84c8bfb4a12031669068ab9c4621c98ee4e"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/PRODUCT_BLUEPRINT_AR.md",
-      "size": 2775,
-      "sha256": "da53802ae79e9331ec208f90db2934a184544773b0c5793abf3ab20b5b3a60cd"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/RUN_V02_AR.md",
-      "size": 606,
-      "sha256": "fb037f5e8bae696dded60debad5c193d5fbde548e668b7cf891df41e73348297"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/SECURITY_HARDENING_AR.md",
-      "size": 2525,
-      "sha256": "741f9f50d7dabf873730691f35890a20e74c24a7435afaeed3680666aad5c9f6"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V02_FEATURE_MATRIX_AR.md",
-      "size": 1096,
-      "sha256": "e13e592d1353c5a4e84175eaa28a20ee3d9d57487823cf5c5a6309b6ff6655aa"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V03_ARCHITECTURE_AR.md",
-      "size": 1109,
-      "sha256": "e20353699d783b814b4a7f407d57d8149caf9522d1329844f2e9d7a6a6fdc521"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V03_FEATURE_MATRIX_AR.md",
-      "size": 1459,
-      "sha256": "84bc09f4831a275dcbf85c59452728a23299bfbbcfe9f97c694fd28ddcd88eb4"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V04_FEATURE_MATRIX_AR.md",
-      "size": 1047,
-      "sha256": "03214686f807e7089375d6e1b9de83628290ab3dad99f597ff11f867811c6026"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V04_SECURITY_AR.md",
-      "size": 1177,
-      "sha256": "a92fea5c28f45dd74a946acc5ea7b32d870dd489023b0b35e44f6d3c61306ef6"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V05_ARCHITECTURE_AR.md",
-      "size": 699,
-      "sha256": "48dd3c6f13461031cbc6467b0a7ef8b0f83bf9f63c362afe297420f2683346f2"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V06_ARCHITECTURE_AR.md",
-      "size": 937,
-      "sha256": "e315205fb19ee173e42d213e575a5708ba724e9dd3319184996bb54ec3968178"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V06_FEATURE_MATRIX_AR.md",
-      "size": 743,
-      "sha256": "3ba54799ee8b430be1093faff72ac05d5d6b04a9108491f1e3854829613a9b4e"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V07_ARCHITECTURE_AR.md",
-      "size": 765,
-      "sha256": "dd3ea34da8f1e7beabcc6d2e2d3a8639749a969017306a9c5de8d7fd3d9aef6b"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V07_FEATURE_MATRIX_AR.md",
-      "size": 606,
-      "sha256": "a6f21274df52fd93d3b64d23371e1eb5945d09905c68cd000511398a89ae4236"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V08_VISUAL_BUILDER_AR.md",
-      "size": 1030,
-      "sha256": "98b8c5661e8440f385b838bac83e8f54772a58878b5b560533d18fcb549dff79"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V09_EXPERIENCE_OS_AR.md",
-      "size": 1415,
-      "sha256": "8b9f4b81092e8b533421b468ca71c9b6a43925cc4d0d0bd89ec249914b113e94"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V10_FEATURE_MATRIX_AR.md",
-      "size": 1245,
-      "sha256": "61e40ad23270a50016006a12c0dafea04000380abde6e365452d638a502ae96e"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V10_GLOBAL_DATA_AR.md",
-      "size": 1250,
-      "sha256": "b81cc081de1aad2eac0200c0f2b8e45456b469206131ed6c03c58fbe59b4a67f"
-    },
-    {
-      "path": "archive/legacy-releases/docs/reference/V10_SECURITY_AR.md",
-      "size": 1083,
-      "sha256": "eb987e8ca724ebd2d6798da789aa812995b11eab765c2a740e34124c582a5433"
-    },
-    {
-      "path": "archive/legacy-releases/tools/validate_v05.py",
-      "size": 1103,
-      "sha256": "b723c84740a5eb85f0143c399a59693beffa3b8487d6bc7c7986d61b51669629"
-    },
-    {
-      "path": "archive/legacy-releases/tools/validate_v06.py",
-      "size": 1194,
-      "sha256": "792d54bfd6264ee4712a9bc1091c4ac438139e72ca60abc525af74bfb72e2619"
-    },
-    {
-      "path": "archive/legacy-releases/tools/validate_v07.py",
-      "size": 915,
-      "sha256": "a06e4dc8e1e9cb5b318f4f9229931f1e5f117d6ed45559ee715d6b1328e2196e"
-    },
-    {
-      "path": "archive/legacy-releases/tools/validate_v08.py",
-      "size": 1064,
-      "sha256": "4563ff6e6715534402513a2fc7dc40a13a90bd43b2fed65c9418536ba9d68f3c"
-    },
-    {
-      "path": "archive/legacy-releases/tools/validate_v09.py",
-      "size": 1399,
-      "sha256": "2fc370ae1028689ed0802bf6cdae78ae5a75dbd4923d68d0225d4882c8170e32"
-    },
-    {
-      "path": "archive/legacy-releases/tools/validate_v10.py",
-      "size": 1801,
-      "sha256": "b88f3e9a751416df1cf8c411f1eb45407d911f58253868a1fd100eba8b9d861d"
-    },
-    {
-      "path": "archive/legacy-releases/tools/validate_v13.py",
-      "size": 723,
-      "sha256": "ec790629b146c03ebca3c50f1fe792a8d8c5425d9224ea8e38459769a5d06ee4"
+      "sha256": "bb7320d831e7a151aa901c35e7326c752fa2ef5024f30768c42319b8bed171ed"
     },
     {
       "path": "backend-laravel/.env.example",
-      "size": 1816,
-      "sha256": "c2a8ce9a92d791302eeb8891ab20fc80ece8b7d20e9d9b9eb022afa1453ba38e"
+      "size": 2687,
+      "sha256": "abcd6801633cc13068942a2f517fa16753e4fac55bb5b43a554b4e9dec39a99e"
+    },
+    {
+      "path": "backend-laravel/app/Console/Commands/SyncFeaturedFootball.php",
+      "size": 2155,
+      "sha256": "40a97df573e9a2a1dbc60c4d33d62aeafa250feb867f0a747f6850beed85836d"
     },
     {
       "path": "backend-laravel/app/Console/Commands/SyncGlobalFootball.php",
@@ -580,8 +125,13 @@
     },
     {
       "path": "backend-laravel/app/Console/Commands/SyncLiveFootball.php",
-      "size": 797,
-      "sha256": "3813cad489bee0d385964488ded881e53a5c77bb03a855c022a587b95c322ca4"
+      "size": 1660,
+      "sha256": "352855fd0e8174af1548ec2bdde1c83977f4127cf0945079de3a03e62294eec7"
+    },
+    {
+      "path": "backend-laravel/app/Console/Commands/SyncPriorityMatchDetails.php",
+      "size": 1225,
+      "sha256": "c3f5a67d886279fac8a3a063300948f37f34ab57b1caddebb222564539ce10f7"
     },
     {
       "path": "backend-laravel/app/Console/Commands/SyncTodayFootball.php",
@@ -705,8 +255,8 @@
     },
     {
       "path": "backend-laravel/app/Http/Controllers/Api/V1/DataStatusController.php",
-      "size": 1055,
-      "sha256": "1bb62732d824876a4d94471f25d6cff31f315c75cbd8bb39ce4d1f0bb873cc9e"
+      "size": 2067,
+      "sha256": "ec142468d6031aa5c1aa36f997734fb0843819936bae147164de987316a6906d"
     },
     {
       "path": "backend-laravel/app/Http/Controllers/Api/V1/DesignController.php",
@@ -745,8 +295,8 @@
     },
     {
       "path": "backend-laravel/app/Http/Controllers/Api/V1/MatchController.php",
-      "size": 560,
-      "sha256": "a2aab59d5842fc0ab5e0c14e2aab245c2e47c82f965a5c72c75696409c5a02e2"
+      "size": 2104,
+      "sha256": "f7cda725177e53b736ca07457cae16cef34bfc040ddd96a338b7083a0b736e0d"
     },
     {
       "path": "backend-laravel/app/Http/Controllers/Api/V1/MatchIntelligenceController.php",
@@ -895,8 +445,8 @@
     },
     {
       "path": "backend-laravel/app/Http/Controllers/WebController.php",
-      "size": 3983,
-      "sha256": "43a82e8484a1d6584c87ad22550d83936e98022065e613d05a388c7426af1bac"
+      "size": 4199,
+      "sha256": "21f3dcbc33a3a683b404a2cc31fa0ade4230c3ce07dae87b3c8f0dc6f1fe9fde"
     },
     {
       "path": "backend-laravel/app/Http/Controllers/WorldWebController.php",
@@ -915,8 +465,8 @@
     },
     {
       "path": "backend-laravel/app/Http/Middleware/ProductionSecurityHeaders.php",
-      "size": 1079,
-      "sha256": "c847ecf05afe424802f67a33304c126a26ab4500bcceee629d9de9b63a2ebf34"
+      "size": 1164,
+      "sha256": "db2b2c839fe83b8b580fc6efd5bd873616832e8b7adc09a55ac13215082c24d5"
     },
     {
       "path": "backend-laravel/app/Http/Middleware/RequireAdminTwoFactor.php",
@@ -1280,8 +830,8 @@
     },
     {
       "path": "backend-laravel/app/Services/DesignStudioService.php",
-      "size": 2089,
-      "sha256": "f3b3db726c1474d57997b320110bec5b72eb7c0c566bec475e820b4ca32f8cc9"
+      "size": 2246,
+      "sha256": "9c33e344f818e494d65b5a0a0557d02d6cfdedb81c7f0e2f12a0130a9e3d8ab1"
     },
     {
       "path": "backend-laravel/app/Services/DynamicBlockService.php",
@@ -1300,23 +850,28 @@
     },
     {
       "path": "backend-laravel/app/Services/FootballDataService.php",
-      "size": 533,
-      "sha256": "ec44cd937c975505abb5964ed0c9fdbe338a76e8d0ebf367abffe55619e53ff8"
+      "size": 1817,
+      "sha256": "dbf61b9285b732d13019b54fe3fd59db345a1e569e09e73494980da691873152"
     },
     {
       "path": "backend-laravel/app/Services/FootballProviderManager.php",
-      "size": 735,
-      "sha256": "d50c14889d689a891b7ff465c05bc28d62e1b64362f050b3bedbbba3a15ae6ed"
+      "size": 1153,
+      "sha256": "2d697971f13a78bf2aee8701f389fdf3f6b4331750b3d8a187d032ca457c8ecd"
     },
     {
       "path": "backend-laravel/app/Services/GlobalFootballCatalogService.php",
-      "size": 7709,
-      "sha256": "49c0175b97ff799bba87c57bd443fe8d030b8ce322536bdb8b21fca84cf831cf"
+      "size": 10133,
+      "sha256": "52d5627d060c471f1fbe6298415ebe53016b0d150cb8570d776a557ca1df465b"
+    },
+    {
+      "path": "backend-laravel/app/Services/MatchDetailSyncService.php",
+      "size": 4289,
+      "sha256": "bc2bf2b2e55ccdf7baa30ea863b0b65f1d88a9e3f2c7e6b7783d8bc98495ac49"
     },
     {
       "path": "backend-laravel/app/Services/MatchIntelligenceService.php",
-      "size": 2291,
-      "sha256": "1574d4331c7e94f9613deb4d4536ab9e63837e93212c859c4d207fbc7e4658e7"
+      "size": 3287,
+      "sha256": "267d424d309f640cca59d602ac1ce3e329a3541ce4d3f4f2123c39e980da2ab0"
     },
     {
       "path": "backend-laravel/app/Services/MatchVisualService.php",
@@ -1330,8 +885,8 @@
     },
     {
       "path": "backend-laravel/app/Services/NewsApiService.php",
-      "size": 1496,
-      "sha256": "a38db65593eb1e7b5a6e291d48075bf3324610b1abb6768e6cf15354397f83ee"
+      "size": 1498,
+      "sha256": "0d46ed34adc76f5931250511f2c2be3ee46c71cda6100a10650355ca47a94230"
     },
     {
       "path": "backend-laravel/app/Services/NewsPersonalizationService.php",
@@ -1340,8 +895,8 @@
     },
     {
       "path": "backend-laravel/app/Services/NoCodeExperienceService.php",
-      "size": 3008,
-      "sha256": "4dc16fa5dce1fd0b63358d7f9998336a0dcfc5c9332d80c0edd822d17fdfac12"
+      "size": 3098,
+      "sha256": "80bd4cd8eae07e04646d78e04653d3d0b1b1de5ed7b6d4bf29cbff44bb65b4f7"
     },
     {
       "path": "backend-laravel/app/Services/PersonalizedFeedService.php",
@@ -1354,9 +909,14 @@
       "sha256": "71b3e8d285a2658fed403e7554417c12f06b6594d387721e8aff4426b0d151fc"
     },
     {
+      "path": "backend-laravel/app/Services/ProviderQuotaService.php",
+      "size": 6328,
+      "sha256": "ecaa094830ee6e453b44d02ba5cee32cd564d35552b823a8a72107cc2f7f9a04"
+    },
+    {
       "path": "backend-laravel/app/Services/Providers/ApiFootballProvider.php",
-      "size": 4231,
-      "sha256": "37216b8dbff717ea803a4e154fd1e7e4690f7508778683f203893113b3a8c0b6"
+      "size": 6538,
+      "sha256": "37676957b8e3775c9bd4515a5606b94a2691e775e0b8c128e244b28ad313ac69"
     },
     {
       "path": "backend-laravel/app/Services/Providers/DemoFootballProvider.php",
@@ -1365,13 +925,13 @@
     },
     {
       "path": "backend-laravel/app/Services/Providers/FootballDataOrgProvider.php",
-      "size": 5969,
-      "sha256": "372b0862d4ea6f2c0822f5448008750a8ca1453cb6315f2d02dba0311040c627"
+      "size": 7049,
+      "sha256": "5c248a62efc8cebf05f6c33c58da93b5996f1e2b1ef4474f5e24c79966360225"
     },
     {
       "path": "backend-laravel/app/Services/RealtimeFootballSyncService.php",
-      "size": 6808,
-      "sha256": "14b0e43926198f7b05544ce76cbe229943929ffb74e48f1d3938f09869d04d6c"
+      "size": 7683,
+      "sha256": "cc23ee96d1105b3e71f88e3c1d240c93aed1777b73c36feb31c2e4a2f1678726"
     },
     {
       "path": "backend-laravel/app/Services/RealtimeMatchService.php",
@@ -1389,14 +949,19 @@
       "sha256": "7c41ceb011138dde6fc94d761a4903498fec130f711cf766b374b9434c85fc03"
     },
     {
+      "path": "backend-laravel/app/Support/FootballStatus.php",
+      "size": 760,
+      "sha256": "ea94eefe1451ef38bd2140cd856113423836effef79d4094c3903ebf39d4f0d3"
+    },
+    {
       "path": "backend-laravel/artisan",
       "size": 239,
       "sha256": "23394a924adac02d12a1a268a2a7636982eb170b9f728abff4dc75edc9d1d260"
     },
     {
       "path": "backend-laravel/bootstrap/app.php",
-      "size": 841,
-      "sha256": "361df25b5a5095c947c48ae84034f739011b148d1b346ec0513ae9a4de71fe50"
+      "size": 892,
+      "sha256": "a316bdf5839b04881eff848cf6376d7f41c0ddca727a070d837ef320c860cc34"
     },
     {
       "path": "backend-laravel/bootstrap/cache/.gitkeep",
@@ -1410,8 +975,8 @@
     },
     {
       "path": "backend-laravel/composer.json",
-      "size": 997,
-      "sha256": "dd4a4c1a6d893257e2765f2b09caaea7feea4a0a5be0daa3b119a1ca3543ec78"
+      "size": 1064,
+      "sha256": "b812ccf4e148bab70946fd062f92bc6846297d5ba1778020aec1efb0a275cb86"
     },
     {
       "path": "backend-laravel/config/app.php",
@@ -1445,8 +1010,8 @@
     },
     {
       "path": "backend-laravel/config/football.php",
-      "size": 1038,
-      "sha256": "11b4ed4ff88ee89a5f239ccd0ac59a9184fb237f7fdc748b1d8b81e5f5468767"
+      "size": 1941,
+      "sha256": "ccd9c916b4ea82d854d3ca149c72b13386d64e6bbeaa6dd2a9b046036dd3139b"
     },
     {
       "path": "backend-laravel/config/hashing.php",
@@ -1475,8 +1040,8 @@
     },
     {
       "path": "backend-laravel/config/scoretime.php",
-      "size": 373,
-      "sha256": "62482e45330f0f7a08de98939303e050ea0d0b78546d53cdd47311a2a896db00"
+      "size": 468,
+      "sha256": "9dcff0d9b6d5d915e2e8e8b1e2f57b2f8bd421e1dad6c14a3a1dd23ce717e46a"
     },
     {
       "path": "backend-laravel/config/scoretime_v12.php",
@@ -1490,13 +1055,13 @@
     },
     {
       "path": "backend-laravel/config/services.php",
-      "size": 214,
-      "sha256": "07445fd4f98fc4d8e00752b41ee6ac264a18b4105522bf4d01a211c8387fe37a"
+      "size": 73,
+      "sha256": "a51563cd3801d96736417a45a01f9f2f4534f1ab580522740be00cbf48941c6c"
     },
     {
       "path": "backend-laravel/config/session.php",
-      "size": 488,
-      "sha256": "d5fdb95e22a8803ec96a9acec6e409cb7132fa24cbed690d3350dea911008300"
+      "size": 607,
+      "sha256": "7e8a15e793382f045fe81adbd51fba747da976f0dfda5c178d3b71b0746cdb8d"
     },
     {
       "path": "backend-laravel/database/.gitkeep",
@@ -1599,24 +1164,29 @@
       "sha256": "9c141bc7e2f9cafcaeb94611da35e5710c6d4dc0aff8718843e4e6d9f8068c7f"
     },
     {
+      "path": "backend-laravel/database/migrations/2026_08_19_170000_remove_implicit_demo_content.php",
+      "size": 1898,
+      "sha256": "45c4e88c4684fe2817b8520c798e5658d6aa380351223fc04c310178c5fed2bd"
+    },
+    {
       "path": "backend-laravel/database/seeders/AdminSeeder.php",
-      "size": 391,
-      "sha256": "49be0c4e582ee1855102f1b053f4294e2ebe0c81d044e833e8d0eb293ce67908"
+      "size": 664,
+      "sha256": "9031d956f6dd6cb72410afa3b35c84ad29124941a531c639e0fcf89af0192a9e"
     },
     {
       "path": "backend-laravel/database/seeders/DatabaseSeeder.php",
-      "size": 3504,
-      "sha256": "d5bf265d9d7ce6c60298c1baddb434514f2d73448f9158307dd54d0153d5f4fe"
+      "size": 4000,
+      "sha256": "b13c7579d9fb95fee6a8f7482c25e4b19e2458b48f8203068fd13e8b7e0bcae6"
     },
     {
       "path": "backend-laravel/database/seeders/V04Seeder.php",
-      "size": 1343,
-      "sha256": "ae3d0e8a23c13690d3963579f778b9db7e6e145f59d0cd0a8a1a2593ef8dec20"
+      "size": 1389,
+      "sha256": "15c707b7b1e6588f81d8ec9e9894e1ecbd4da709864319110babd8910962a733"
     },
     {
       "path": "backend-laravel/database/seeders/V05EliteSeeder.php",
-      "size": 2306,
-      "sha256": "f36588f833f0944025824512f1342fafef6a91acb37d96722de58f041fcfc13b"
+      "size": 2352,
+      "sha256": "795cd733775006e8f3466c10797da12d1ee381c0413437b04ee5cd74a9b8e200"
     },
     {
       "path": "backend-laravel/database/seeders/V08VisualBuilderSeeder.php",
@@ -1635,28 +1205,33 @@
     },
     {
       "path": "backend-laravel/lang/ar/ui.php",
-      "size": 2296,
-      "sha256": "773f984a0cc941abac8af2b71329bd3972363e0b30b457e91fbdca68d2adc8f2"
+      "size": 3272,
+      "sha256": "0e69bfb87e946dca3bae75228d82468439ff613273aa04ea7dd4ed1f484574d0"
+    },
+    {
+      "path": "backend-laravel/lang/de/ui.php",
+      "size": 2609,
+      "sha256": "2929efc6f854d19d2c564788519d5030c39abae42044085876cb3d5de292113c"
     },
     {
       "path": "backend-laravel/lang/en/ui.php",
-      "size": 1720,
-      "sha256": "13aca04c7878a7dd1b5b4148b39856a4316425d1178a7ce28ebd2d1ccca4ca7b"
+      "size": 2462,
+      "sha256": "a5fbfaf680b66e6ebbfbf3f8f278f4599b3aa2237a5c06eef2202564274f2541"
     },
     {
       "path": "backend-laravel/lang/es/ui.php",
-      "size": 1832,
-      "sha256": "68481aa4d6544fe8f55b2b2cc0bad8a3b0d4dd09f683c2859c60baed9beaf13d"
+      "size": 2632,
+      "sha256": "b440bc7ebb159cc70be05856b2371b9555ef6863afb9ae01f874d5ea34025e6a"
     },
     {
       "path": "backend-laravel/lang/fr/ui.php",
-      "size": 1876,
-      "sha256": "17e4994834e6d06a899bc617545fc4997499a0e4fb31369f4ad8ecdb8c919af6"
+      "size": 2728,
+      "sha256": "2997902802c9a4b1debfaa466fc08af0a6f0495b5497d7e40d450313978309cf"
     },
     {
       "path": "backend-laravel/lang/tr/ui.php",
-      "size": 1852,
-      "sha256": "e6d7ad668d36a34015c7aedd1b613d3acb412d58731605b63734c5ceee8a652b"
+      "size": 2660,
+      "sha256": "f8f26ef9b6917029ec4f95443003b747d1909126e9972953b0c0cd8fb81eb35b"
     },
     {
       "path": "backend-laravel/phpunit.xml",
@@ -1706,7 +1281,7 @@
     {
       "path": "backend-laravel/public/css/app.css",
       "size": 27103,
-      "sha256": "0a62e194bb873b3681aa40f933c5cf51b16b89d6672f08c8c830141d31bc00c7"
+      "sha256": "b5931c8754bc873ef3d572ed5d29c2b8ed3d17696a6c610fd340b87892d7d7be"
     },
     {
       "path": "backend-laravel/public/index.php",
@@ -1945,8 +1520,8 @@
     },
     {
       "path": "backend-laravel/resources/views/home/index.blade.php",
-      "size": 8553,
-      "sha256": "d9380ddec5c97143f13aca64ea668a43cd7e50b7ad52ca03ec574d4b2a20aff9"
+      "size": 7006,
+      "sha256": "f0b5da6b6c8f5468b7f9a0c8035eb6d6d2e3b08d7baf7ab62b799199e1dbddb1"
     },
     {
       "path": "backend-laravel/resources/views/layouts/app.blade.php",
@@ -2020,8 +1595,8 @@
     },
     {
       "path": "backend-laravel/routes/console.php",
-      "size": 2614,
-      "sha256": "c4f1d11f2cd0821a2cc9e8ec32ef7062f7f87a024ff9eaef2fc6841ab0c2130b"
+      "size": 3694,
+      "sha256": "ad3cbba20cb5f73bd51a414db8694f311d76c5416ca73cd0da6bf802016f0472"
     },
     {
       "path": "backend-laravel/routes/web.php",
@@ -2054,6 +1629,11 @@
       "sha256": "5b87668ff541fc3d2c546accfbd09edc0e30233cebaf816feed8bce28c1da21e"
     },
     {
+      "path": "backend-laravel/tests/Feature/V17IntegrityTest.php",
+      "size": 2277,
+      "sha256": "6ddca07d40976dda9c8fbe173be63d6fbc099723c5007cf1896bfaaaea48dc4c"
+    },
+    {
       "path": "backend-laravel/tests/TestCase.php",
       "size": 142,
       "sha256": "c7c209f5579c42647c1f7b2a79ac828e8b54ac62a98442045a6e94fa2c0d0ebc"
@@ -2075,18 +1655,13 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "size": 1480,
-      "sha256": "965bc6f96eedeb147072935f91c158fafa4cf24439c64c0130c28a467c4c8f85"
+      "size": 1127,
+      "sha256": "b121112f0fd48dbb5b0300e44fd8efdb2c8e04b421140189f18309c0a650096e"
     },
     {
-      "path": "docs/CHECKS_V150.txt",
-      "size": 640,
-      "sha256": "40182e0625a6c02f75132d8531821c744c80a72d9d116d3cfb4bc395dc551da1"
-    },
-    {
-      "path": "docs/CHECKS_V160.txt",
-      "size": 1488,
-      "sha256": "bffe40747b088b3b3486beb1b572b783824a6eb467dc9a84ad45e8a6f2a7bf88"
+      "path": "docs/ARCHITECTURE_V170_AR.md",
+      "size": 3038,
+      "sha256": "203deb22c0cbba3eba011f54dfcad13d1f2295fcc3dd53a6aca30478a9d57ca5"
     },
     {
       "path": "docs/COMPETITIVE_PRODUCT_SCOPE_AR.md",
@@ -2095,58 +1670,43 @@
     },
     {
       "path": "docs/FEATURES_AR.md",
-      "size": 1959,
-      "sha256": "8911546976520d4f07bcc9b9a87981c36e67e8564bad6cb37813eeaebdd32c2f"
-    },
-    {
-      "path": "docs/FIRST_RUN_V150_AR.md",
-      "size": 502,
-      "sha256": "c91a6a13703adcf92f7fbd6da4853e3676cc35b435a620d70679b8fd295b03a4"
+      "size": 2527,
+      "sha256": "69caa6301cc0197c3ae018aadeda60a0cc17e3da863a40b5f7e438e9d7b71c4f"
     },
     {
       "path": "docs/GITHUB_DESKTOP_APK_AR.md",
-      "size": 1074,
-      "sha256": "17d0435e24eb6204ffb7850bb9ddc58330c7855ea2990d8019bb7c12cc24914b"
-    },
-    {
-      "path": "docs/GITHUB_PAGES_V150_AR.md",
-      "size": 566,
-      "sha256": "da13906b0455ef8b481be3f07897f9013ee1969d44fbf8b7552e1e7e081e3484"
-    },
-    {
-      "path": "docs/LIVE_GLOBAL_DATA_AR.md",
-      "size": 2347,
-      "sha256": "a88d82a703d29c07abb36690985b05e4473cdd4b0c719116960ea0f8d27c7ae0"
-    },
-    {
-      "path": "docs/LOCAL_RUN_AR.md",
-      "size": 644,
-      "sha256": "a92c414137002a450e4e18bd381744f766f58a0ed8c9f2329775476d39317b55"
-    },
-    {
-      "path": "docs/NEXT_GEN_V150_AR.md",
-      "size": 1413,
-      "sha256": "10e46e7602fc62bad2241a32d0af28c7e308823f1a4f38022032ae04f45592cf"
+      "size": 1113,
+      "sha256": "2188dee9530618c5d73b03ea9467a8e338f59c3483b496024b205440e4dac9ed"
     },
     {
       "path": "docs/PROJECT_STRUCTURE.md",
-      "size": 447,
-      "sha256": "f2bbce2b7f6997a22007e89b80a95c6bb02e05e7dff313a7e52203fb21201af6"
+      "size": 413,
+      "sha256": "39e920dc4766ac9eb0084b07cfe3f99cf4dbe60a4d7939cd5069611627474785"
+    },
+    {
+      "path": "docs/RELEASE_V170_AR.md",
+      "size": 3451,
+      "sha256": "d80b9134bf1c0de65e7fefc95c4bef0649578cefd667699d1904481079a58e84"
     },
     {
       "path": "docs/SECURITY_AR.md",
-      "size": 1086,
-      "sha256": "fd4530b8f32a135273c552e864ac9b834a3d9dec7470c6184288eff541ab98ea"
+      "size": 1722,
+      "sha256": "1ea6031c2537e27d6e89b9c1c3dca08a12a668839b058ee8a9c37597bed03efc"
     },
     {
-      "path": "docs/WORKFLOWS_V150_AR.md",
-      "size": 439,
-      "sha256": "cfc4eb8de52793ce3c8de81ff6faf2fe7ff7462ccfcd029bc41eebe501cad209"
+      "path": "docs/START_HERE_V170_AR.md",
+      "size": 4696,
+      "sha256": "502562e47039242586dbf78531d11ac478a270fc1423b0745b5256ebbf9f6b76"
     },
     {
       "path": "docs/design/scoretime-nextgen-reference.png",
       "size": 1890932,
       "sha256": "83340a813376c9eff3ac406941f223af0f1f15d90891508beda27f0601a62161"
+    },
+    {
+      "path": "mobile-flutter/analysis_options.yaml",
+      "size": 101,
+      "sha256": "cafaa4a855cfc00a33c961a63d1d887ba35fa71d374c56811de82ebb7a40da44"
     },
     {
       "path": "mobile-flutter/assets/icons/scoretime_icon.png",
@@ -2175,13 +1735,13 @@
     },
     {
       "path": "mobile-flutter/lib/core/i18n/app_strings.dart",
-      "size": 15763,
-      "sha256": "82d5b0fe457483c9c7b63954a5d12fba32ab3304e0a072cd712b5851b02a5d3d"
+      "size": 22462,
+      "sha256": "beed0481884b6586d4fa9b9ba78986ab68cf4e91ae515707a8b7caba57606557"
     },
     {
       "path": "mobile-flutter/lib/core/network/api_client.dart",
-      "size": 1094,
-      "sha256": "f508f429f9e84ce94f3ffc0c36003a05db660eae569ce6ef416d6bcf6ca7b29a"
+      "size": 2219,
+      "sha256": "6faea3074221ce188901df1fdff278ea14813dfa66883285c7803872ca39b243"
     },
     {
       "path": "mobile-flutter/lib/core/network/auth_repository.dart",
@@ -2195,8 +1755,8 @@
     },
     {
       "path": "mobile-flutter/lib/core/network/football_repository.dart",
-      "size": 13168,
-      "sha256": "b06070e5859f77ebdefdd15bba97a7b3cccdcb17fc7c0cf2d6d6f2a587a810fb"
+      "size": 13252,
+      "sha256": "8fd9054b2ca1657c8b8844fda7fdc6d008c8caf0b106cc8514b1dc9d0ecdfb30"
     },
     {
       "path": "mobile-flutter/lib/core/theme/app_theme.dart",
@@ -2255,18 +1815,18 @@
     },
     {
       "path": "mobile-flutter/lib/features/home/presentation/home_screen.dart",
-      "size": 53912,
-      "sha256": "845b190a7cd0dec05b074cfcc65d6fd4eb7bc015a9ff13906aafb05bd3a4be21"
+      "size": 53659,
+      "sha256": "2302af108d32e0ec548e866e58c3d1ad7ad65d3241161e8169862c088b3dd01c"
     },
     {
       "path": "mobile-flutter/lib/features/matches/presentation/match_detail_screen.dart",
-      "size": 5568,
-      "sha256": "2a083d7a2416586d3bf8caf5003973447e658af2ab2fe1e95b28925c1da516a1"
+      "size": 14246,
+      "sha256": "d46f408a658e181dbdf19a7074932f4755d7498030a0d364288bed301f1d1ee6"
     },
     {
       "path": "mobile-flutter/lib/features/matches/presentation/matches_screen.dart",
-      "size": 7851,
-      "sha256": "275e7d8f542957a286f70b81d753bb187fb5ab20873887019494978f38d1a187"
+      "size": 13886,
+      "sha256": "ab254f7b062c6b5029aaee289528ec260327b7142e010699f0bbbbf36298d932"
     },
     {
       "path": "mobile-flutter/lib/features/matches/presentation/visual_match_widgets.dart",
@@ -2380,18 +1940,18 @@
     },
     {
       "path": "mobile-flutter/lib/main.dart",
-      "size": 12391,
-      "sha256": "6b48e1335cced7f83ce4468386b746c1608cf9f6a6de0d957949dc1077ca6cb7"
+      "size": 13250,
+      "sha256": "06042b727dcd2e848b2f50e33761462e22519c8a5b9784103d28937908f00d8d"
     },
     {
       "path": "mobile-flutter/pubspec.yaml",
       "size": 699,
-      "sha256": "e9ed5799ce4e358336447144dcca406cfb24316486c4f537a0780bcb2f320b94"
+      "sha256": "de794e08d5e260500a8d72930e6f6caeebccef916b4b87604fc98a2075452774"
     },
     {
       "path": "mobile-flutter/test/smoke_test.dart",
-      "size": 391,
-      "sha256": "90f9b2fb4dd45dba70f2e589fa89a3aa2d760a4c0bba026bf87ec0f99d51363b"
+      "size": 429,
+      "sha256": "eedf23863c872ed896d3531e5c6061d13860d1c3b9865cf6c65e4ac20108e51c"
     },
     {
       "path": "mobile-flutter/test/widget_test.dart",
@@ -2589,14 +2149,19 @@
       "sha256": "ddf4bccb4c742ed7fb82ddbea702570330cfa960f06cf2228ee1f971516f52a5"
     },
     {
+      "path": "tools/build_release_manifest.py",
+      "size": 1720,
+      "sha256": "96172009544a4dc3050004d49270640dc7b9df58a99b35537383b019c7e68bce"
+    },
+    {
       "path": "tools/prepare_clean_checkout.ps1",
       "size": 617,
       "sha256": "26edc84ce6747c0aebef9f7da6cfe38fda8a557ae017ae35dc6d4a5070deccb7"
     },
     {
       "path": "tools/validate_release.py",
-      "size": 3116,
-      "sha256": "61015a8e0f8d3c3cf75b4f6c819d40e25927dcfeca2bc8ef9368c859f84031b6"
+      "size": 10068,
+      "sha256": "4366ff7d19d280ac09bc0b341cf2e8609fd33f77aaaa890ad5149e77d8eaf95b"
     },
     {
       "path": "tools/windows/PREPARE_BACKEND.bat",

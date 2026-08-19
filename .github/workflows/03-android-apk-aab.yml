@@ -4,20 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       api_base_url:
-        description: "Laravel API URL ending in /api/v1"
+        description: "Public ScoreTime Laravel API ending in /api/v1"
         required: true
         default: "https://example.com/api/v1"
 
 permissions:
   contents: read
 
-concurrency:
-  group: scoretime-android-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
-    name: Flutter • Android Release
+    name: Flutter • APK + AAB
     runs-on: ubuntu-latest
 
     defaults:
@@ -35,32 +31,21 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Repair stale pre-ScoreTime widget test if present
+      - name: Validate public API URL
         shell: bash
+        env:
+          SCORETIME_BUILD_API_URL: ${{ inputs.api_base_url }}
         run: |
-          if [ -f test/widget_test.dart ] && grep -q "MyApp" test/widget_test.dart; then
-            cat > test/widget_test.dart <<'DART'
-          import 'package:flutter_test/flutter_test.dart';
-          import 'package:scoretime/main.dart';
-
-          void main() {
-            test('ScoreTimeApp is available', () {
-              const app = ScoreTimeApp();
-              expect(app, isA<ScoreTimeApp>());
-            });
-          }
-          DART
+          API_URL="$SCORETIME_BUILD_API_URL"
+          if [[ ! "$API_URL" =~ ^https://.+/api/v1/?$ ]] || [[ "$API_URL" == *"example.com"* ]]; then
+            echo "api_base_url must be your real HTTPS Laravel endpoint ending in /api/v1"
+            exit 1
           fi
 
       - name: Generate Android platform when missing
-        shell: bash
         run: |
           if [ ! -d android ]; then
-            flutter create . \
-              --platforms=android \
-              --org com.scoretime \
-              --project-name scoretime \
-              --no-pub
+            flutter create . --platforms=android --org com.scoretime --project-name scoretime --no-pub
           fi
 
       - name: Java 17
@@ -69,49 +54,47 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Apply ScoreTime icon and name
-        shell: bash
+      - name: ScoreTime Android identity
         run: |
           for density in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
             mkdir -p "android/app/src/main/res/mipmap-$density"
-            cp "../tooling/android-icons/$density/ic_launcher.png" \
-               "android/app/src/main/res/mipmap-$density/ic_launcher.png"
+            cp "../tooling/android-icons/$density/ic_launcher.png" "android/app/src/main/res/mipmap-$density/ic_launcher.png"
           done
-
-          if grep -q 'android:label="scoretime"' android/app/src/main/AndroidManifest.xml; then
-            sed -i 's/android:label="scoretime"/android:label="ScoreTime"/g' \
-              android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="scoretime"/android:label="ScoreTime"/g' android/app/src/main/AndroidManifest.xml || true
+          if ! grep -q 'android.permission.INTERNET' android/app/src/main/AndroidManifest.xml; then
+            sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET" />' android/app/src/main/AndroidManifest.xml
           fi
 
-      - name: Flutter dependencies
+      - name: Dependencies
         run: flutter pub get
 
-      - name: Flutter analyze
+      - name: Analyze
         run: flutter analyze
 
-      - name: Flutter tests
+      - name: Tests
         run: flutter test
 
       - name: Build APK
-        run: flutter build apk --release --dart-define=API_BASE_URL="${{ inputs.api_base_url }}"
+        env:
+          SCORETIME_BUILD_API_URL: ${{ inputs.api_base_url }}
+        run: flutter build apk --release --dart-define=API_BASE_URL="$SCORETIME_BUILD_API_URL"
 
       - name: Build AAB
-        run: flutter build appbundle --release --dart-define=API_BASE_URL="${{ inputs.api_base_url }}"
+        env:
+          SCORETIME_BUILD_API_URL: ${{ inputs.api_base_url }}
+        run: flutter build appbundle --release --dart-define=API_BASE_URL="$SCORETIME_BUILD_API_URL"
 
-      - name: Verify Android outputs
-        shell: bash
+      - name: Verify outputs
         run: |
           test -f build/app/outputs/flutter-apk/app-release.apk
           test -f build/app/outputs/bundle/release/app-release.aab
-          ls -lh build/app/outputs/flutter-apk/app-release.apk
-          ls -lh build/app/outputs/bundle/release/app-release.aab
 
-      - name: Upload APK and AAB
+      - name: Upload Android
         uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.5.0-Android
-          if-no-files-found: error
+          name: ScoreTime-V1.7.0-Android
           retention-days: 14
+          if-no-files-found: error
           path: |
             mobile-flutter/build/app/outputs/flutter-apk/app-release.apk
             mobile-flutter/build/app/outputs/bundle/release/app-release.aab

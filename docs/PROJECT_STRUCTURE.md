@@ -1,9 +1,8 @@
 # Project structure
 
-- `.github/workflows/` — current CI only (2 workflows).
-- `archive/legacy-releases/` — old workflows, release notes, checks and historical docs.
+- `.github/workflows/` — Laravel, Flutter Web, Android and iOS build gates.
 - `backend-laravel/` — Laravel website, API and Adnan Control Room.
 - `mobile-flutter/` — Flutter application source.
 - `branding/` — approved ScoreTime master logo and emblem.
-- `docs/` — current V1.4 documentation only.
+- `docs/` — current V1.7 setup, architecture, security and feature documentation.
 - `tools/` — validation/developer utilities.

@@ -19,5 +19,5 @@ class NoCodeExperienceService {
  }
  public function customPages(string $surface,string $locale): array { return CustomPage::where('is_published',true)->whereIn('surface',[$surface,'both'])->orderBy('slug')->get()->map(fn($p)=>['slug'=>$p->slug,'title'=>$p->title[$locale]??$p->title['en']??$p->slug,'blocks'=>$p->blocks,'seo'=>$p->seo])->all(); }
  public function menu(string $surface,string $locale): array { $roots=MenuNode::where('surface',$surface)->where('enabled',true)->whereNull('parent_id')->orderBy('sort_order')->with('children')->get();$map=function($n)use($locale,&$map){return['key'=>$n->key,'label'=>$n->label[$locale]??$n->label['en']??$n->key,'icon'=>$n->icon,'target'=>$n->target,'location'=>$n->location,'children'=>$n->children->where('enabled',true)->map(fn($c)=>$map($c))->values()->all()];};return $roots->map(fn($n)=>$map($n))->all(); }
- public function clear(): void { Cache::flush(); }
+ public function clear(): void { Cache::add('scoretime:design:version',1,now()->addYears(5));Cache::increment('scoretime:design:version'); }
 }

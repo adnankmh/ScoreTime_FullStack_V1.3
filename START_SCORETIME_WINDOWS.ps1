@@ -142,7 +142,7 @@ if (-not (Test-Path $Backend)) {
 $php = Resolve-PHP
 $composer = Resolve-Composer
 
-Log "ScoreTime V1.5.0 local setup started."
+Log "ScoreTime V1.7.0 local setup started."
 Log "PHP: $php"
 
 Push-Location $Backend
@@ -164,14 +164,26 @@ try {
             throw "Composer is required because vendor/autoload.php is missing. Install Composer for Windows once, then run START_SCORETIME_WINDOWS.bat again."
         }
 
-        Log "vendor/autoload.php is missing. Installing Laravel dependencies..."
-        & $composer install --prefer-dist --no-interaction --no-progress
+        Log "vendor/autoload.php is missing. Resolving Laravel dependencies..."
+
+        if (Test-Path "composer.lock") {
+            & $composer install --prefer-dist --no-interaction --no-progress --no-scripts
+        } else {
+            Log "composer.lock is not present. Running composer update once to create it..."
+            & $composer update --prefer-dist --no-interaction --no-progress --no-scripts
+        }
+
         if ($LASTEXITCODE -ne 0) {
-            throw "composer install failed with exit code $LASTEXITCODE"
+            throw "Composer dependency resolution failed with exit code $LASTEXITCODE. The full Composer output is shown above."
         }
 
         if (-not (Test-Path "vendor\autoload.php")) {
             throw "Composer finished but vendor/autoload.php is still missing."
+        }
+
+        & $php artisan package:discover --ansi
+        if ($LASTEXITCODE -ne 0) {
+            throw "Laravel package discovery failed."
         }
     } else {
         Log "Laravel vendor dependencies already exist."
@@ -198,6 +210,18 @@ try {
     Set-EnvValue ".env" "SESSION_COOKIE" "scoretime_session"
     Set-EnvValue ".env" "QUEUE_CONNECTION" "sync"
     Set-EnvValue ".env" "CORS_ALLOWED_ORIGINS" "http://localhost:3000,http://127.0.0.1:8000,https://adnankmh.github.io"
+
+    # Generate a one-time strong local administrator password when none exists.
+    $envText = Get-Content ".env" -Raw
+    $generatedAdminPassword = $null
+    if ($envText -match "(?m)^ADMIN_PASSWORD=\s*$" -or $envText -notmatch "(?m)^ADMIN_PASSWORD=.+$" -or $envText -match "(?m)^ADMIN_PASSWORD=Adnan123\s*$") {
+        $passwordBytes = New-Object byte[] 24
+        $passwordRng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+        try { $passwordRng.GetBytes($passwordBytes) } finally { $passwordRng.Dispose() }
+        $generatedAdminPassword = [Convert]::ToBase64String($passwordBytes).Replace("+", "-").Replace("/", "_").TrimEnd("=")
+        Set-EnvValue ".env" "ADMIN_PASSWORD" $generatedAdminPassword
+        Log "A strong local administrator password was generated."
+    }
 
     # APP_KEY.
     $envText = Get-Content ".env" -Raw
@@ -269,6 +293,21 @@ No database was erased or reset.
         "Set-Location '$escapedBackend'; & '$escapedPhp' artisan serve --host=127.0.0.1 --port=8000"
     )
 
+    $schedulerRunning = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+        $_.CommandLine -like "*artisan schedule:work*" -and $_.CommandLine -like "*$Backend*"
+    }
+    if (-not $schedulerRunning) {
+        Start-Process powershell.exe -ArgumentList @(
+            "-NoExit",
+            "-ExecutionPolicy", "Bypass",
+            "-Command",
+            "Set-Location '$escapedBackend'; & '$escapedPhp' artisan schedule:work"
+        )
+        Log "Automatic football/news scheduler started."
+    } else {
+        Log "ScoreTime scheduler is already running."
+    }
+
     Start-Sleep -Seconds 3
 
     if (-not $NoBrowser) {
@@ -276,6 +315,13 @@ No database was erased or reset.
     }
 
     Log "Done. ScoreTime should now be open in your browser."
+    if ($generatedAdminPassword) {
+        Write-Host ""
+        Write-Host "ScoreTime administrator (shown once):" -ForegroundColor Yellow
+        Write-Host "  Username: Adnan" -ForegroundColor White
+        Write-Host "  Password: $generatedAdminPassword" -ForegroundColor White
+        Write-Host "Change it from the admin account page after login." -ForegroundColor DarkGray
+    }
 }
 finally {
     Pop-Location
