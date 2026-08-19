@@ -91,19 +91,95 @@ class _AppShellState extends ConsumerState<AppShell> {
             {'target': 'more', 'label': t('more'), 'icon': 'tune'},
           ];
     if (index >= nav.length) index = 0;
-    return Scaffold(
-      body: IndexedStack(index: index, children: nav.map((n) => pageFor('${n['target']}')).toList()),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: index,
-        onDestinationSelected: (value) => setState(() => index = value),
-        destinations: nav
-            .map((n) => NavigationDestination(
-                  icon: Icon(iconFor('${n['icon']}')),
-                  selectedIcon: Icon(iconFor('${n['icon']}'), color: Theme.of(context).colorScheme.primary),
-                  label: '${n['label']}',
-                ))
-            .toList(),
-      ),
+    final pages = nav.map((n) => pageFor('${n['target']}')).toList();
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final desktop = constraints.maxWidth >= 980;
+
+        if (!desktop) {
+          return Scaffold(
+            body: IndexedStack(index: index, children: pages),
+            bottomNavigationBar: NavigationBar(
+              selectedIndex: index,
+              onDestinationSelected: (value) => setState(() => index = value),
+              destinations: nav
+                  .map((n) => NavigationDestination(
+                        icon: Icon(iconFor('${n['icon']}')),
+                        selectedIcon: Icon(
+                          iconFor('${n['icon']}'),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        label: '${n['label']}',
+                      ))
+                  .toList(),
+            ),
+          );
+        }
+
+        return Scaffold(
+          body: Row(
+            children: [
+              SafeArea(
+                child: NavigationRail(
+                  selectedIndex: index,
+                  onDestinationSelected: (value) => setState(() => index = value),
+                  extended: constraints.maxWidth >= 1220,
+                  minExtendedWidth: 220,
+                  leading: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 16, 10, 24),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: Image.asset(
+                            'assets/icons/scoretime_icon.png',
+                            width: 42,
+                            height: 42,
+                          ),
+                        ),
+                        if (constraints.maxWidth >= 1220) ...[
+                          const SizedBox(width: 10),
+                          const Text(
+                            'ScoreTime',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  destinations: nav
+                      .map(
+                        (n) => NavigationRailDestination(
+                          icon: Icon(iconFor('${n['icon']}')),
+                          selectedIcon: Icon(
+                            iconFor('${n['icon']}'),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          label: Text('${n['label']}'),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              const VerticalDivider(width: 1),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1540),
+                    child: IndexedStack(index: index, children: pages),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

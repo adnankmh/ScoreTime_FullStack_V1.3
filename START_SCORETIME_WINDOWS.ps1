@@ -197,6 +197,7 @@ try {
     Set-EnvValue ".env" "SESSION_DRIVER" "file"
     Set-EnvValue ".env" "SESSION_COOKIE" "scoretime_session"
     Set-EnvValue ".env" "QUEUE_CONNECTION" "sync"
+    Set-EnvValue ".env" "CORS_ALLOWED_ORIGINS" "http://localhost:3000,http://127.0.0.1:8000,https://adnankmh.github.io"
 
     # APP_KEY.
     $envText = Get-Content ".env" -Raw

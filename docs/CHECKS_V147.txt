@@ -1,0 +1,32 @@
+ScoreTime Global V1.4.7 Web Ready static checks
+PHP files checked: 267
+PHP syntax errors: 0
+Active workflows: 4
+Workflow YAML errors: 0
+Legacy workflow YAML files: 0
+Dart files checked: 38
+Legacy MyApp references: 0
+Missing local Dart imports: 0
+Dart delimiter warnings: 0
+Web index: YES
+PWA manifest: YES
+Favicon: YES
+GitHub Pages base href: /ScoreTime/
+Pages configure action: v6
+Pages upload action: v5
+Pages deploy action: v5
+Professional web demo fallback: YES
+Live API variable switch: SCORETIME_API_BASE_URL
+Responsive desktop layout: YES
+Laravel Pages CORS: YES
+
+Release validator:
+ScoreTime V1.4.7 validator
+PASS
+Active workflows: 4
+GitHub Pages workflow: ready
+Professional web demo fallback: ready
+Responsive desktop shell: ready
+
+Runtime note:
+The real Flutter Web/APK/AAB/iOS compilation and GitHub Pages deployment execute on GitHub-hosted runners.

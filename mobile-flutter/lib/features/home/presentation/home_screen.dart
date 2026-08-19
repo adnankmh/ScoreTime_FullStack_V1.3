@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/design/remote_design.dart';
+import '../../../core/config/app_config.dart';
+import '../../../core/network/demo_data.dart';
 import '../../../core/i18n/app_strings.dart';
 import '../../../core/network/api_client.dart';
 import '../../transfers/presentation/transfer_intelligence_screen.dart';
@@ -26,6 +28,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _load() async {
+    if (AppConfig.webDemoMode) {
+      if (!mounted) return;
+      setState(() {
+        matches = List<dynamic>.from(DemoData.matches);
+        news = List<dynamic>.from(DemoData.news);
+        loading = false;
+        error = null;
+      });
+      return;
+    }
+
     try {
       final api = ApiClient();
       final matchData = await api.getMatches();

@@ -28,3 +28,8 @@
 
 ## ملاحظة الأمان
 حساب Bootstrap للإدارة `Adnan / Adnan123` مخصص لأول تشغيل فقط. غيّر كلمة المرور وفعّل 2FA قبل النشر الحقيقي.
+
+
+## GitHub Pages
+الرابط المستهدف: `https://adnankmh.github.io/ScoreTime/`
+راجع `docs/GITHUB_PAGES_V147_AR.md`.
