@@ -441,4 +441,22 @@ class FootballRepository {
           .data['data'] ?? [],
     );
   }
+
+  Future<Map<String, dynamic>> dataStatus() async {
+    if (_demo) {
+      return {
+        'provider': {'ok': true, 'provider': 'preview', 'configured': false},
+        'freshness': {},
+        'catalog': {
+          'teams': DemoData.worldSummary['teams'] ?? 0,
+          'players': DemoData.worldSummary['players'] ?? 0,
+          'matches': DemoData.matches.length,
+          'articles': DemoData.news.length,
+        },
+      };
+    }
+    return Map<String, dynamic>.from(
+      (await _dio.get('/data-status')).data['data'],
+    );
+  }
 }

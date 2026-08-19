@@ -142,7 +142,7 @@ if (-not (Test-Path $Backend)) {
 $php = Resolve-PHP
 $composer = Resolve-Composer
 
-Log "ScoreTime V1.4.6 local setup started."
+Log "ScoreTime V1.5.0 local setup started."
 Log "PHP: $php"
 
 Push-Location $Backend

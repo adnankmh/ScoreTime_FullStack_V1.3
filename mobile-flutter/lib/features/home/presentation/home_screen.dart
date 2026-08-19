@@ -1,25 +1,29 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/design/remote_design.dart';
-import '../../../core/config/app_config.dart';
 import '../../../core/network/demo_data.dart';
-import '../../../core/i18n/app_strings.dart';
-import '../../../core/network/api_client.dart';
+import '../../../core/network/football_repository.dart';
+import '../../../core/theme/theme_controller.dart';
 import '../../transfers/presentation/transfer_intelligence_screen.dart';
 import '../../world/presentation/global_football_screen.dart';
 import '../../worldclass/presentation/world_class_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool loading = true;
+  String? error;
   List<dynamic> matches = [];
   List<dynamic> news = [];
-  String? error;
+  List<dynamic> players = [];
+  List<dynamic> competitions = [];
+  List<dynamic> transfers = [];
+  Map<String, dynamic> summary = {};
 
   @override
   void initState() {
@@ -28,61 +32,252 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _load() async {
-    if (AppConfig.webDemoMode) {
-      if (!mounted) return;
-      setState(() {
-        matches = List<dynamic>.from(DemoData.matches);
-        news = List<dynamic>.from(DemoData.news);
-        loading = false;
-        error = null;
-      });
-      return;
-    }
-
+    setState(() {
+      loading = true;
+      error = null;
+    });
     try {
-      final api = ApiClient();
-      final matchData = await api.getMatches();
-      final newsResponse = await api.dio.get('/news');
+      final repo = FootballRepository();
+      final result = await Future.wait<dynamic>([
+        repo.matches(),
+        repo.personalizedNews(),
+        repo.worldPlayers(),
+        repo.worldCompetitions(),
+        repo.transfers(),
+        repo.worldSummary(),
+      ]);
       if (!mounted) return;
       setState(() {
-        matches = matchData;
-        news = List<dynamic>.from(newsResponse.data['data'] ?? []);
+        matches = List<dynamic>.from(result[0] as List);
+        news = List<dynamic>.from(result[1] as List);
+        players = List<dynamic>.from(result[2] as List);
+        competitions = List<dynamic>.from(result[3] as List);
+        transfers = List<dynamic>.from(result[4] as List);
+        summary = Map<String, dynamic>.from(result[5] as Map);
         loading = false;
-        error = null;
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
+        matches = List<dynamic>.from(DemoData.matches);
+        news = List<dynamic>.from(DemoData.news);
+        players = List<dynamic>.from(DemoData.players);
+        competitions = List<dynamic>.from(DemoData.competitions);
+        transfers = List<dynamic>.from(DemoData.transfers);
+        summary = Map<String, dynamic>.from(DemoData.worldSummary);
         loading = false;
-        error = 'Unable to refresh ScoreTime. Pull down to try again.';
+        error = 'Preview data is active while the live provider reconnects.';
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final remote = ref.watch(remoteDesignProvider).asData?.value ?? RemoteDesign.fallback();
-    final t = AppStrings.of(context);
-    final live = matches.where((m) => ['live', 'halftime'].contains('${m['status']}'.toLowerCase())).toList();
+    final live = matches
+        .where((m) => ['live', 'halftime'].contains('${m['status']}'.toLowerCase()))
+        .toList();
+    final featured = live.isNotEmpty
+        ? Map<String, dynamic>.from(live.first)
+        : matches.isNotEmpty
+            ? Map<String, dynamic>.from(matches.first)
+            : Map<String, dynamic>.from(DemoData.matches.first);
+
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: SafeArea(
+        top: MediaQuery.sizeOf(context).width < 980,
         child: RefreshIndicator(
           onRefresh: _load,
           child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              SliverToBoxAdapter(child: _ScoreTimeHeader(remote: remote)),
-              SliverToBoxAdapter(child: _HeroCard(liveCount: live.length, t: t)),
-              SliverToBoxAdapter(child: _QuickAccess(t: t)),
-              SliverToBoxAdapter(child: _SectionTitle(kicker: 'LIVE & UPCOMING', title: t('matches'))),
-              if (loading)
-                const SliverToBoxAdapter(child: SizedBox(height: 180, child: Center(child: CircularProgressIndicator())))
-              else
-                SliverToBoxAdapter(child: _MatchRail(items: live.isNotEmpty ? live : matches.take(8).toList())),
-              SliverToBoxAdapter(child: _SectionTitle(kicker: 'SCORETIME EDITORIAL', title: t('latest'))),
-              SliverToBoxAdapter(child: _NewsFeed(items: news)),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: _MobileHeader(liveCount: live.length),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                  child: _HeroCommandCenter(
+                    featured: featured,
+                    liveCount: live.length,
+                    summary: summary,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: _CompetitionRail(items: competitions),
+              ),
               if (error != null)
-                SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.all(18), child: Text(error!, textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.error)))),
-              const SliverToBoxAdapter(child: SizedBox(height: 28)),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: _StatusStrip(message: error!),
+                  ),
+                ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 18, 16, 0),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final wide = constraints.maxWidth >= 1180;
+                      final medium = constraints.maxWidth >= 760;
+                      if (wide) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 12,
+                              child: _LiveDesk(
+                                loading: loading,
+                                matches: live.isNotEmpty ? live : matches,
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(flex: 11, child: _NewsDesk(news: news)),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              flex: 8,
+                              child: _PlayerDesk(players: players),
+                            ),
+                          ],
+                        );
+                      }
+                      if (medium) {
+                        return Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: _LiveDesk(
+                                    loading: loading,
+                                    matches: live.isNotEmpty ? live : matches,
+                                  ),
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(child: _NewsDesk(news: news)),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            _PlayerDesk(players: players),
+                          ],
+                        );
+                      }
+                      return Column(
+                        children: [
+                          _LiveDesk(
+                            loading: loading,
+                            matches: live.isNotEmpty ? live : matches,
+                          ),
+                          const SizedBox(height: 14),
+                          _NewsDesk(news: news),
+                          const SizedBox(height: 14),
+                          _PlayerDesk(players: players),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                  child: _SectionHeading(
+                    kicker: 'SCORETIME INTELLIGENCE',
+                    title: 'Read the match, not just the score',
+                    action: 'Explore analytics',
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth >= 960) {
+                        return const Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(flex: 10, child: _TacticalPitchCard()),
+                            SizedBox(width: 14),
+                            Expanded(flex: 8, child: _MomentumCard()),
+                            SizedBox(width: 14),
+                            Expanded(flex: 7, child: _RadarCard()),
+                          ],
+                        );
+                      }
+                      return const Column(
+                        children: [
+                          _TacticalPitchCard(),
+                          SizedBox(height: 14),
+                          _MomentumCard(),
+                          SizedBox(height: 14),
+                          _RadarCard(),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                  child: _SectionHeading(
+                    kicker: 'YOUR FOOTBALL',
+                    title: 'Everything that matters to you',
+                    action: 'Customize',
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final cards = <Widget>[
+                        const _FollowCard(),
+                        const _TVGuideCard(),
+                        _TransferPulseCard(items: transfers),
+                        const _FanZoneCard(),
+                      ];
+                      if (constraints.maxWidth >= 1040) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (var i = 0; i < cards.length; i++) ...[
+                              Expanded(child: cards[i]),
+                              if (i != cards.length - 1) const SizedBox(width: 12),
+                            ],
+                          ],
+                        );
+                      }
+                      return Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: cards
+                            .map(
+                              (card) => SizedBox(
+                                width: constraints.maxWidth >= 650
+                                    ? (constraints.maxWidth - 12) / 2
+                                    : constraints.maxWidth,
+                                child: card,
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+                  child: _FeatureRibbon(summary: summary),
+                ),
+              ),
             ],
           ),
         ),
@@ -91,120 +286,456 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-class _ScoreTimeHeader extends StatelessWidget {
-  final RemoteDesign remote;
-  const _ScoreTimeHeader({required this.remote});
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(18, 12, 12, 8),
-        child: Row(children: [
-          ClipRRect(borderRadius: BorderRadius.circular(15), child: Image.asset('assets/icons/scoretime_icon.png', width: 46, height: 46, fit: BoxFit.cover)),
-          const SizedBox(width: 11),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            RichText(text: TextSpan(style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900), children: [const TextSpan(text: 'Score'), TextSpan(text: 'Time', style: TextStyle(color: Theme.of(context).colorScheme.secondary))])),
-            Text(remote.tagline.isEmpty ? 'Every moment counts.' : remote.tagline, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
-          ])),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_none_rounded)),
-        ]),
-      );
-}
-
-class _HeroCard extends StatelessWidget {
+class _MobileHeader extends StatelessWidget {
   final int liveCount;
-  final String Function(String) t;
-  const _HeroCard({required this.liveCount, required this.t});
+  const _MobileHeader({required this.liveCount});
+
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.fromLTRB(22, 24, 20, 22),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0A234B), Color(0xFF061329), Color(0xFF07101F)]),
-        border: Border.all(color: Colors.white.withValues(alpha: .08)),
-        boxShadow: [BoxShadow(color: scheme.primary.withValues(alpha: .12), blurRadius: 45, offset: const Offset(0, 18))],
-      ),
-      child: Stack(children: [
-        Positioned(right: -22, bottom: -34, child: Opacity(opacity: .16, child: Image.asset('assets/icons/scoretime_icon.png', width: 170))),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFFFF4D6D), shape: BoxShape.circle)), const SizedBox(width: 8), Text('$liveCount ${t('live').toUpperCase()}', style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.4, fontSize: 12, color: Color(0xFFFF8398)))]),
-          const SizedBox(height: 14),
-          const Text('Football moves fast.\nScoreTime moves faster.', style: TextStyle(fontSize: 31, height: 1.02, fontWeight: FontWeight.w900, letterSpacing: -1.2)),
-          const SizedBox(height: 12),
-          Text('Live scores • Match intelligence • News • Transfers', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white70)),
-          const SizedBox(height: 20),
-          FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.sports_soccer_rounded), label: Text(t('matches'))),
-        ]),
-      ]),
+    if (MediaQuery.sizeOf(context).width >= 980) return const SizedBox.shrink();
+    return Row(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Image.asset('assets/icons/scoretime_icon.png', width: 42, height: 42),
+        ),
+        const SizedBox(width: 10),
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('ScoreTime', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+              Text(
+                'EVERY MOMENT COUNTS',
+                style: TextStyle(
+                  fontSize: 8.5,
+                  color: ScoreTimeColors.cyan,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.05,
+                ),
+              ),
+            ],
+          ),
+        ),
+        _LiveBadge(text: '$liveCount LIVE'),
+        const SizedBox(width: 6),
+        IconButton.filledTonal(
+          onPressed: () {},
+          icon: const Icon(Icons.notifications_none_rounded),
+        ),
+      ],
     );
   }
 }
 
-class _QuickAccess extends StatelessWidget {
-  final String Function(String) t;
-  const _QuickAccess({required this.t});
+class _HeroCommandCenter extends StatelessWidget {
+  final Map<String, dynamic> featured;
+  final int liveCount;
+  final Map<String, dynamic> summary;
+  const _HeroCommandCenter({
+    required this.featured,
+    required this.liveCount,
+    required this.summary,
+  });
+
   @override
   Widget build(BuildContext context) {
-    final items = [
-      (Icons.public_rounded, t('world'), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GlobalFootballScreen()))),
-      (Icons.swap_horiz_rounded, t('transfers'), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransferIntelligenceScreen()))),
-      (Icons.insights_rounded, 'Intelligence', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const WorldClassScreen()))),
-      (Icons.emoji_events_rounded, 'Fan Hub', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const WorldClassScreen()))),
-    ];
-    return SizedBox(
-      height: 96,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: items.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (context, i) => InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: items[i].$3,
-          child: Container(width: 132, padding: const EdgeInsets.all(14), decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .22))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Icon(items[i].$1, color: Theme.of(context).colorScheme.secondary), const SizedBox(height: 8), Text(items[i].$2, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800))])),
+    final width = MediaQuery.sizeOf(context).width;
+    final desktop = width >= 900;
+    return Container(
+      constraints: const BoxConstraints(minHeight: 380),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(desktop ? 30 : 24),
+        border: Border.all(color: Colors.white.withValues(alpha: .08)),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF06162E), Color(0xFF071A37), Color(0xFF031126)],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: ScoreTimeColors.blue.withValues(alpha: .12),
+            blurRadius: 48,
+            spreadRadius: -18,
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          Positioned(
+            right: -90,
+            top: -100,
+            child: Container(
+              width: 360,
+              height: 360,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    ScoreTimeColors.blue.withValues(alpha: .28),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 30,
+            bottom: -120,
+            child: Container(
+              width: 320,
+              height: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(999),
+                color: ScoreTimeColors.cyan.withValues(alpha: .05),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(desktop ? 32 : 22),
+            child: desktop
+                ? Row(
+                    children: [
+                      Expanded(
+                        flex: 11,
+                        child: _HeroCopy(liveCount: liveCount, summary: summary),
+                      ),
+                      const SizedBox(width: 28),
+                      Expanded(
+                        flex: 9,
+                        child: _FeaturedMatchGlass(match: featured),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _HeroCopy(liveCount: liveCount, summary: summary),
+                      const SizedBox(height: 22),
+                      _FeaturedMatchGlass(match: featured),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeroCopy extends StatelessWidget {
+  final int liveCount;
+  final Map<String, dynamic> summary;
+  const _HeroCopy({required this.liveCount, required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    final desktop = MediaQuery.sizeOf(context).width >= 900;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const _LiveBadge(text: 'NEXT-GEN FOOTBALL'),
+            const SizedBox(width: 8),
+            Text(
+              '•  GLOBAL  •  REAL-TIME',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 10,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        Text(
+          'Unlimited Football.\nReal-Time. Everywhere.',
+          style: (desktop
+                  ? Theme.of(context).textTheme.displayLarge
+                  : Theme.of(context).textTheme.headlineLarge)
+              ?.copyWith(height: 1.02),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Live scores, deep match intelligence, trusted news, transfers, TV schedules and your personalized football world — in one premium experience.',
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                height: 1.55,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+        const SizedBox(height: 22),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            FilledButton.icon(
+              onPressed: () {},
+              icon: const Icon(Icons.bolt_rounded),
+              label: Text('Explore $liveCount live matches'),
+            ),
+            OutlinedButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const GlobalFootballScreen()),
+              ),
+              icon: const Icon(Icons.public_rounded),
+              label: const Text('Explore world football'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Wrap(
+          spacing: 24,
+          runSpacing: 12,
+          children: [
+            _HeroMetric(value: '${summary['competitions'] ?? '1.2K+'}', label: 'Competitions'),
+            _HeroMetric(value: '${summary['teams'] ?? '18K+'}', label: 'Teams'),
+            _HeroMetric(value: '${summary['players'] ?? '300K+'}', label: 'Players'),
+            const _HeroMetric(value: '24/7', label: 'Match pulse'),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _HeroMetric extends StatelessWidget {
+  final String value;
+  final String label;
+  const _HeroMetric({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 6,
+          height: 28,
+          decoration: BoxDecoration(
+            color: ScoreTimeColors.cyan,
+            borderRadius: BorderRadius.circular(9),
+            boxShadow: [
+              BoxShadow(
+                color: ScoreTimeColors.cyan.withValues(alpha: .45),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(value, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+            Text(
+              label,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 10.5,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _FeaturedMatchGlass extends StatelessWidget {
+  final Map<String, dynamic> match;
+  const _FeaturedMatchGlass({required this.match});
+
+  @override
+  Widget build(BuildContext context) {
+    final home = Map<String, dynamic>.from(match['home_team'] ?? match['homeTeam'] ?? {});
+    final away = Map<String, dynamic>.from(match['away_team'] ?? match['awayTeam'] ?? {});
+    final competition = Map<String, dynamic>.from(match['competition'] ?? {});
+    final live = ['live', 'halftime'].contains('${match['status']}'.toLowerCase());
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: const Color(0xFF061225).withValues(alpha: .82),
+        border: Border.all(color: Colors.white.withValues(alpha: .1)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${competition['name_en'] ?? competition['name_ar'] ?? 'Featured match'}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+              _LiveBadge(text: live ? 'LIVE ${match['minute'] ?? ''}\'' : '${match['status'] ?? 'UPCOMING'}'),
+            ],
+          ),
+          const SizedBox(height: 22),
+          Row(
+            children: [
+              Expanded(child: _TeamLockup(team: home, align: CrossAxisAlignment.start)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Column(
+                  children: [
+                    Text(
+                      '${match['home_score'] ?? 0}  :  ${match['away_score'] ?? 0}',
+                      style: const TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      live ? '${match['minute'] ?? ''}\'' : '${match['venue'] ?? 'Match Center'}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: _TeamLockup(team: away, align: CrossAxisAlignment.end)),
+            ],
+          ),
+          const SizedBox(height: 24),
+          const SizedBox(height: 74, child: _MiniMomentum()),
+          const SizedBox(height: 14),
+          Row(
+            children: const [
+              Expanded(child: _Probability(label: 'HOME', value: '58%', active: true)),
+              SizedBox(width: 8),
+              Expanded(child: _Probability(label: 'DRAW', value: '24%')),
+              SizedBox(width: 8),
+              Expanded(child: _Probability(label: 'AWAY', value: '18%')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TeamLockup extends StatelessWidget {
+  final Map<String, dynamic> team;
+  final CrossAxisAlignment align;
+  const _TeamLockup({required this.team, required this.align});
+
+  @override
+  Widget build(BuildContext context) {
+    final name = '${team['name_en'] ?? team['name_ar'] ?? 'Team'}';
+    return Column(
+      crossAxisAlignment: align,
+      children: [
+        _TeamBadge(name: name, size: 52),
+        const SizedBox(height: 7),
+        Text(
+          name,
+          maxLines: 2,
+          textAlign: align == CrossAxisAlignment.end ? TextAlign.end : TextAlign.start,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+        ),
+      ],
+    );
+  }
+}
+
+class _Probability extends StatelessWidget {
+  final String label;
+  final String value;
+  final bool active;
+  const _Probability({required this.label, required this.value, this.active = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(13),
+        color: active
+            ? ScoreTimeColors.blue.withValues(alpha: .16)
+            : Colors.white.withValues(alpha: .035),
+        border: Border.all(
+          color: active
+              ? ScoreTimeColors.blue.withValues(alpha: .35)
+              : Colors.white.withValues(alpha: .06),
         ),
       ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w800)),
+          const SizedBox(width: 5),
+          Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900)),
+        ],
+      ),
     );
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  final String kicker, title;
-  const _SectionTitle({required this.kicker, required this.title});
-  @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.fromLTRB(18, 28, 18, 12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(kicker, style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 1.3)), const SizedBox(height: 4), Text(title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900))]));
-}
-
-class _MatchRail extends StatelessWidget {
+class _CompetitionRail extends StatelessWidget {
   final List<dynamic> items;
-  const _MatchRail({required this.items});
+  const _CompetitionRail({required this.items});
+
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) return const Padding(padding: EdgeInsets.all(22), child: Text('No matches loaded yet.'));
+    final source = items.isNotEmpty ? items : DemoData.competitions;
     return SizedBox(
-      height: 184,
+      height: 108,
       child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: items.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 11),
+        itemCount: math.min(source.length, 12),
+        separatorBuilder: (_, __) => const SizedBox(width: 9),
         itemBuilder: (context, i) {
-          final m = Map<String, dynamic>.from(items[i]);
-          final h = Map<String, dynamic>.from(m['home_team'] ?? m['homeTeam'] ?? {});
-          final a = Map<String, dynamic>.from(m['away_team'] ?? m['awayTeam'] ?? {});
-          final live = ['live', 'halftime'].contains('${m['status']}'.toLowerCase());
+          final c = Map<String, dynamic>.from(source[i]);
+          final name = '${c['name_en'] ?? c['name_ar'] ?? 'Competition'}';
           return Container(
-            width: 286,
-            padding: const EdgeInsets.all(17),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: Theme.of(context).colorScheme.surface, border: Border.all(color: live ? const Color(0x44FF4D6D) : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .22))),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [Expanded(child: Text('${m['competition']?['name_en'] ?? m['competition']?['name_ar'] ?? 'Football'}', maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.labelSmall)), if (live) const Text('● LIVE', style: TextStyle(color: Color(0xFFFF6B84), fontWeight: FontWeight.w900, fontSize: 11))]),
-              const Spacer(),
-              Row(children: [Expanded(child: Text('${h['name_en'] ?? h['name_ar'] ?? 'Home'}', maxLines: 2, style: const TextStyle(fontWeight: FontWeight.w800))), Text('${m['home_score'] ?? 0}  —  ${m['away_score'] ?? 0}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)), Expanded(child: Text('${a['name_en'] ?? a['name_ar'] ?? 'Away'}', textAlign: TextAlign.end, maxLines: 2, style: const TextStyle(fontWeight: FontWeight.w800)))]),
-              const Spacer(),
-              Text('${m['venue'] ?? ''}  •  ${m['minute'] ?? m['status'] ?? ''}', maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
-            ]),
+            width: 138,
+            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: .7),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Theme.of(context).dividerColor),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: LinearGradient(
+                      colors: [
+                        ScoreTimeColors.blue.withValues(alpha: .34),
+                        ScoreTimeColors.cyan.withValues(alpha: .10),
+                      ],
+                    ),
+                  ),
+                  child: const Icon(Icons.emoji_events_rounded, size: 18),
+                ),
+                const SizedBox(width: 9),
+                Expanded(
+                  child: Text(
+                    name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -212,28 +743,808 @@ class _MatchRail extends StatelessWidget {
   }
 }
 
-class _NewsFeed extends StatelessWidget {
-  final List<dynamic> items;
-  const _NewsFeed({required this.items});
+class _LiveDesk extends StatelessWidget {
+  final bool loading;
+  final List<dynamic> matches;
+  const _LiveDesk({required this.loading, required this.matches});
+
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) return const Padding(padding: EdgeInsets.all(22), child: Text('No published stories yet.'));
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(children: items.take(7).map((raw) {
-        final n = Map<String, dynamic>.from(raw);
-        return Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .22))),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(width: 54, height: 54, decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), gradient: const LinearGradient(colors: [Color(0xFF0B8CFF), Color(0xFF18D7FF)])), child: Icon(n['is_breaking'] == true ? Icons.bolt_rounded : Icons.article_rounded, color: Colors.white)),
-            const SizedBox(width: 13),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('${n['category'] ?? 'Football'}', style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w800, fontSize: 11)), const SizedBox(height: 4), Text('${n['title'] ?? ''}', maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w900, height: 1.2))])),
-            const Icon(Icons.chevron_right_rounded),
-          ]),
-        );
-      }).toList()),
+    return _Panel(
+      title: 'Live Now',
+      kicker: '${matches.length} matches in focus',
+      trailing: const _LiveBadge(text: 'MATCH PULSE'),
+      child: loading
+          ? const SizedBox(height: 260, child: Center(child: CircularProgressIndicator()))
+          : Column(
+              children: (matches.isNotEmpty ? matches : DemoData.matches)
+                  .take(6)
+                  .map((raw) => _MatchRow(match: Map<String, dynamic>.from(raw)))
+                  .toList(),
+            ),
     );
   }
+}
+
+class _MatchRow extends StatelessWidget {
+  final Map<String, dynamic> match;
+  const _MatchRow({required this.match});
+
+  @override
+  Widget build(BuildContext context) {
+    final h = Map<String, dynamic>.from(match['home_team'] ?? match['homeTeam'] ?? {});
+    final a = Map<String, dynamic>.from(match['away_team'] ?? match['awayTeam'] ?? {});
+    final live = ['live', 'halftime'].contains('${match['status']}'.toLowerCase());
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 38,
+            child: Text(
+              live ? '${match['minute'] ?? '•'}\'' : '${match['status'] ?? ''}',
+              style: TextStyle(
+                color: live ? ScoreTimeColors.green : Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                _CompactTeam(team: h, score: '${match['home_score'] ?? 0}'),
+                const SizedBox(height: 7),
+                _CompactTeam(team: a, score: '${match['away_score'] ?? 0}'),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Icon(Icons.chevron_right_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompactTeam extends StatelessWidget {
+  final Map<String, dynamic> team;
+  final String score;
+  const _CompactTeam({required this.team, required this.score});
+
+  @override
+  Widget build(BuildContext context) {
+    final name = '${team['name_en'] ?? team['name_ar'] ?? 'Team'}';
+    return Row(
+      children: [
+        _TeamBadge(name: name, size: 24),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+        ),
+        Text(score, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14)),
+      ],
+    );
+  }
+}
+
+class _NewsDesk extends StatelessWidget {
+  final List<dynamic> news;
+  const _NewsDesk({required this.news});
+
+  @override
+  Widget build(BuildContext context) {
+    final source = news.isNotEmpty ? news : DemoData.news;
+    return _Panel(
+      title: 'Top News',
+      kicker: 'Editorial + breaking stories',
+      child: Column(
+        children: source.take(5).toList().asMap().entries.map((entry) {
+          final n = Map<String, dynamic>.from(entry.value);
+          final feature = entry.key == 0;
+          return _NewsRow(news: n, feature: feature);
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _NewsRow extends StatelessWidget {
+  final Map<String, dynamic> news;
+  final bool feature;
+  const _NewsRow({required this.news, required this.feature});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: feature ? 14 : 11, top: feature ? 0 : 11),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: feature ? 96 : 62,
+            height: feature ? 76 : 52,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF123A70), Color(0xFF081B38)],
+              ),
+            ),
+            child: Icon(
+              news['is_breaking'] == true ? Icons.bolt_rounded : Icons.article_rounded,
+              color: news['is_breaking'] == true ? ScoreTimeColors.gold : ScoreTimeColors.cyan,
+            ),
+          ),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${news['category'] ?? 'Football'}'.toUpperCase(),
+                  style: const TextStyle(
+                    color: ScoreTimeColors.cyan,
+                    fontSize: 8.5,
+                    letterSpacing: .8,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${news['title'] ?? ''}',
+                  maxLines: feature ? 3 : 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: feature ? 14 : 11.5,
+                    height: 1.25,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${news['author_name'] ?? 'ScoreTime'} • now',
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 9),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlayerDesk extends StatelessWidget {
+  final List<dynamic> players;
+  const _PlayerDesk({required this.players});
+
+  @override
+  Widget build(BuildContext context) {
+    final source = players.isNotEmpty ? players : DemoData.players;
+    return _Panel(
+      title: 'Trending Players',
+      kicker: 'Performance radar',
+      child: Column(
+        children: source.take(6).toList().asMap().entries.map((entry) {
+          final p = Map<String, dynamic>.from(entry.value);
+          return _PlayerRank(rank: entry.key + 1, player: p);
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _PlayerRank extends StatelessWidget {
+  final int rank;
+  final Map<String, dynamic> player;
+  const _PlayerRank({required this.rank, required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    final team = Map<String, dynamic>.from(player['team'] ?? {});
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 11),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 26,
+            child: Text('$rank', style: const TextStyle(fontWeight: FontWeight.w900)),
+          ),
+          CircleAvatar(
+            radius: 17,
+            backgroundColor: ScoreTimeColors.panel2,
+            child: Text(
+              _initials('${player['name'] ?? 'P'}'),
+              style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w900),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${player['name'] ?? 'Player'}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800)),
+                Text('${team['name_en'] ?? player['nationality'] ?? ''}', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 8.5, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            decoration: BoxDecoration(
+              color: ScoreTimeColors.green.withValues(alpha: .13),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '${player['rating'] ?? (8.5 - rank * .2).toStringAsFixed(1)}',
+              style: const TextStyle(color: ScoreTimeColors.green, fontSize: 10, fontWeight: FontWeight.w900),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Panel extends StatelessWidget {
+  final String title;
+  final String kicker;
+  final Widget child;
+  final Widget? trailing;
+  const _Panel({required this.title, required this.kicker, required this.child, this.trailing});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: .73),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900)),
+                    const SizedBox(height: 2),
+                    Text(kicker, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 9.5)),
+                  ],
+                ),
+              ),
+              if (trailing != null) trailing!,
+            ],
+          ),
+          const SizedBox(height: 13),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionHeading extends StatelessWidget {
+  final String kicker;
+  final String title;
+  final String action;
+  const _SectionHeading({required this.kicker, required this.title, required this.action});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(kicker, style: const TextStyle(color: ScoreTimeColors.cyan, fontSize: 9, letterSpacing: 1.15, fontWeight: FontWeight.w900)),
+              const SizedBox(height: 5),
+              Text(title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
+            ],
+          ),
+        ),
+        TextButton(onPressed: () {}, child: Text(action)),
+      ],
+    );
+  }
+}
+
+class _TacticalPitchCard extends StatelessWidget {
+  const _TacticalPitchCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _Panel(
+      title: 'Tactical Lens',
+      kicker: 'Heatmap • pressure zones • shot locations',
+      child: AspectRatio(
+        aspectRatio: 1.65,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: CustomPaint(painter: _PitchPainter()),
+        ),
+      ),
+    );
+  }
+}
+
+class _MomentumCard extends StatelessWidget {
+  const _MomentumCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _Panel(
+      title: 'Match Momentum',
+      kicker: 'Live territorial pressure',
+      child: SizedBox(
+        height: 190,
+        child: CustomPaint(painter: _MomentumPainter()),
+      ),
+    );
+  }
+}
+
+class _RadarCard extends StatelessWidget {
+  const _RadarCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _Panel(
+      title: 'Player Radar',
+      kicker: 'Attribute overview',
+      child: SizedBox(
+        height: 190,
+        child: CustomPaint(painter: _RadarPainter()),
+      ),
+    );
+  }
+}
+
+class _FollowCard extends StatelessWidget {
+  const _FollowCard();
+
+  @override
+  Widget build(BuildContext context) {
+    const teams = ['Real', 'Barça', 'City', 'Liverpool', 'PSG', 'Milan'];
+    return _Panel(
+      title: 'Follow Your Teams',
+      kicker: 'Personalized alerts and stories',
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: teams.map((t) => _TeamBadge(name: t, size: 38)).toList(),
+      ),
+    );
+  }
+}
+
+class _TVGuideCard extends StatelessWidget {
+  const _TVGuideCard();
+
+  @override
+  Widget build(BuildContext context) {
+    const items = [
+      ('18:00', 'Champions League', 'Live'),
+      ('20:30', 'Premier League', 'Live'),
+      ('22:45', 'LaLiga', 'Tonight'),
+    ];
+    return _Panel(
+      title: 'TV Guide',
+      kicker: 'Where to watch',
+      child: Column(
+        children: items
+            .map(
+              (x) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7),
+                child: Row(
+                  children: [
+                    SizedBox(width: 42, child: Text(x.$1, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900))),
+                    Expanded(child: Text(x.$2, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700))),
+                    Text(x.$3, style: const TextStyle(color: ScoreTimeColors.red, fontSize: 9, fontWeight: FontWeight.w900)),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
+class _TransferPulseCard extends StatelessWidget {
+  final List<dynamic> items;
+  const _TransferPulseCard({required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    final source = items.isNotEmpty ? items : DemoData.transfers;
+    return _Panel(
+      title: 'Transfer Pulse',
+      kicker: 'Confidence + movement',
+      child: Column(
+        children: source.take(3).map((raw) {
+          final t = Map<String, dynamic>.from(raw);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 7),
+            child: Row(
+              children: [
+                const Icon(Icons.sync_alt_rounded, color: ScoreTimeColors.cyan, size: 18),
+                const SizedBox(width: 8),
+                Expanded(child: Text('${t['headline'] ?? 'Market movement'}', maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700))),
+                const SizedBox(width: 6),
+                Text('${t['confidence'] ?? 70}%', style: const TextStyle(color: ScoreTimeColors.gold, fontSize: 9.5, fontWeight: FontWeight.w900)),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _FanZoneCard extends StatelessWidget {
+  const _FanZoneCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _Panel(
+      title: 'Fan Zone',
+      kicker: 'Predictions • friends • XP',
+      child: Column(
+        children: [
+          const Row(
+            children: [
+              Expanded(child: _MiniStat(value: '12', label: 'Picks')),
+              SizedBox(width: 8),
+              Expanded(child: _MiniStat(value: '84%', label: 'Form')),
+              SizedBox(width: 8),
+              Expanded(child: _MiniStat(value: '2.4K', label: 'XP')),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const WorldClassScreen())),
+              icon: const Icon(Icons.groups_rounded),
+              label: const Text('Open fan experience'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MiniStat extends StatelessWidget {
+  final String value;
+  final String label;
+  const _MiniStat({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .035),
+        borderRadius: BorderRadius.circular(13),
+      ),
+      child: Column(
+        children: [
+          Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
+          Text(label, style: TextStyle(fontSize: 8.5, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        ],
+      ),
+    );
+  }
+}
+
+class _FeatureRibbon extends StatelessWidget {
+  final Map<String, dynamic> summary;
+  const _FeatureRibbon({required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      (Icons.bolt_rounded, 'Real-Time Data', 'Fast scores & key events'),
+      (Icons.query_stats_rounded, 'Deep Stats', 'xG-ready analytics layer'),
+      (Icons.radar_rounded, 'Tactical Insights', 'Heatmaps & momentum'),
+      (Icons.tune_rounded, 'Personalized', 'Teams, players & alerts'),
+      (Icons.public_rounded, 'Global Coverage', '${summary['competitions'] ?? '1K+'} competitions'),
+      (Icons.verified_user_rounded, 'Secure & Reliable', 'Hardened Laravel backend'),
+    ];
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: .7),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) => Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: items
+              .map(
+                (x) => SizedBox(
+                  width: constraints.maxWidth >= 1000
+                      ? (constraints.maxWidth - 50) / 6
+                      : constraints.maxWidth >= 600
+                          ? (constraints.maxWidth - 20) / 3
+                          : (constraints.maxWidth - 10) / 2,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: ScoreTimeColors.blue.withValues(alpha: .12),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(x.$1, color: ScoreTimeColors.cyan, size: 18),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(x.$2, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w900)),
+                            const SizedBox(height: 2),
+                            Text(x.$3, style: TextStyle(fontSize: 8.5, height: 1.3, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusStrip extends StatelessWidget {
+  final String message;
+  const _StatusStrip({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+      decoration: BoxDecoration(
+        color: ScoreTimeColors.gold.withValues(alpha: .08),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: ScoreTimeColors.gold.withValues(alpha: .18)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.cloud_sync_rounded, color: ScoreTimeColors.gold, size: 17),
+          const SizedBox(width: 8),
+          Expanded(child: Text(message, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700))),
+        ],
+      ),
+    );
+  }
+}
+
+class _LiveBadge extends StatelessWidget {
+  final String text;
+  const _LiveBadge({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(999),
+        color: ScoreTimeColors.blue.withValues(alpha: .13),
+        border: Border.all(color: ScoreTimeColors.cyan.withValues(alpha: .22)),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: ScoreTimeColors.cyan,
+          fontSize: 8.5,
+          letterSpacing: .6,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+  }
+}
+
+class _TeamBadge extends StatelessWidget {
+  final String name;
+  final double size;
+  const _TeamBadge({required this.name, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            ScoreTimeColors.blue.withValues(alpha: .55),
+            ScoreTimeColors.cyan.withValues(alpha: .22),
+          ],
+        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .12)),
+      ),
+      child: Center(
+        child: Text(
+          _initials(name),
+          style: TextStyle(fontSize: size * .25, fontWeight: FontWeight.w900),
+        ),
+      ),
+    );
+  }
+}
+
+String _initials(String name) {
+  final parts = name.trim().split(RegExp(r'\s+')).where((e) => e.isNotEmpty).toList();
+  if (parts.isEmpty) return 'ST';
+  if (parts.length == 1) return parts.first.substring(0, math.min(2, parts.first.length)).toUpperCase();
+  return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+}
+
+class _MiniMomentum extends StatelessWidget {
+  const _MiniMomentum();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(painter: _MomentumPainter(compact: true));
+  }
+}
+
+class _PitchPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bg = Paint()..color = const Color(0xFF0B5B34);
+    canvas.drawRect(Offset.zero & size, bg);
+    final stripe = Paint()..color = Colors.white.withValues(alpha: .035);
+    for (var i = 0; i < 8; i += 2) {
+      canvas.drawRect(Rect.fromLTWH(i * size.width / 8, 0, size.width / 8, size.height), stripe);
+    }
+    final line = Paint()
+      ..color = Colors.white.withValues(alpha: .35)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+    final inset = Rect.fromLTWH(12, 10, size.width - 24, size.height - 20);
+    canvas.drawRect(inset, line);
+    canvas.drawLine(Offset(size.width / 2, 10), Offset(size.width / 2, size.height - 10), line);
+    canvas.drawCircle(Offset(size.width / 2, size.height / 2), size.height * .16, line);
+    canvas.drawRect(Rect.fromLTWH(12, size.height * .28, size.width * .16, size.height * .44), line);
+    canvas.drawRect(Rect.fromLTWH(size.width - 12 - size.width * .16, size.height * .28, size.width * .16, size.height * .44), line);
+    final zones = [
+      (const Offset(.37, .44), .16, ScoreTimeColors.gold),
+      (const Offset(.55, .56), .20, ScoreTimeColors.red),
+      (const Offset(.70, .38), .13, ScoreTimeColors.cyan),
+    ];
+    for (final z in zones) {
+      final center = Offset(size.width * z.$1.dx, size.height * z.$1.dy);
+      final radius = size.shortestSide * z.$2;
+      final shader = RadialGradient(
+        colors: [z.$3.withValues(alpha: .58), z.$3.withValues(alpha: 0)],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+      canvas.drawCircle(center, radius, Paint()..shader = shader);
+    }
+    final dots = [const Offset(.58,.46), const Offset(.72,.62), const Offset(.81,.35), const Offset(.48,.66)];
+    for (var i = 0; i < dots.length; i++) {
+      final o = Offset(size.width * dots[i].dx, size.height * dots[i].dy);
+      canvas.drawCircle(o, 5, Paint()..color = i == 2 ? ScoreTimeColors.gold : ScoreTimeColors.cyan);
+      canvas.drawCircle(o, 7, Paint()..color = Colors.white.withValues(alpha: .65)..style = PaintingStyle.stroke..strokeWidth=1.2);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _MomentumPainter extends CustomPainter {
+  final bool compact;
+  const _MomentumPainter({this.compact = false});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final grid = Paint()..color = Colors.white.withValues(alpha: .055)..strokeWidth = 1;
+    for (var i = 1; i < 5; i++) {
+      final y = size.height * i / 5;
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
+    }
+    const values = [.22,.31,.26,.48,.40,.58,.73,.55,.49,.68,.82,.61,.88,.76,.64,.83,.72,.92,.69,.79];
+    final path = Path();
+    for (var i = 0; i < values.length; i++) {
+      final x = size.width * i / (values.length - 1);
+      final y = size.height * (1 - values[i]) * .82 + size.height * .08;
+      if (i == 0) path.moveTo(x, y); else path.lineTo(x, y);
+    }
+    final glow = Paint()
+      ..color = ScoreTimeColors.blue.withValues(alpha: .24)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = compact ? 7 : 10
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+    canvas.drawPath(path, glow);
+    canvas.drawPath(
+      path,
+      Paint()
+        ..shader = const LinearGradient(colors: [ScoreTimeColors.violet, ScoreTimeColors.cyan]).createShader(Offset.zero & size)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = compact ? 1.7 : 2.2,
+    );
+    if (!compact) {
+      final fill = Path.from(path)
+        ..lineTo(size.width, size.height)
+        ..lineTo(0, size.height)
+        ..close();
+      canvas.drawPath(
+        fill,
+        Paint()
+          ..shader = LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [ScoreTimeColors.blue.withValues(alpha: .17), Colors.transparent],
+          ).createShader(Offset.zero & size),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _RadarPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2 + 4);
+    final radius = math.min(size.width, size.height) * .38;
+    const sides = 6;
+    final grid = Paint()
+      ..color = Colors.white.withValues(alpha: .12)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    for (final factor in [.35,.65,1.0]) {
+      final path = Path();
+      for (var i=0;i<sides;i++) {
+        final angle = -math.pi/2 + i*2*math.pi/sides;
+        final point = center + Offset(math.cos(angle), math.sin(angle))*radius*factor;
+        if (i==0) path.moveTo(point.dx, point.dy); else path.lineTo(point.dx, point.dy);
+      }
+      path.close();
+      canvas.drawPath(path, grid);
+    }
+    const values=[.92,.78,.86,.70,.81,.89];
+    final area=Path();
+    for (var i=0;i<sides;i++) {
+      final angle=-math.pi/2+i*2*math.pi/sides;
+      final point=center+Offset(math.cos(angle),math.sin(angle))*radius*values[i];
+      if(i==0) area.moveTo(point.dx,point.dy); else area.lineTo(point.dx,point.dy);
+    }
+    area.close();
+    canvas.drawPath(area, Paint()..color=ScoreTimeColors.blue.withValues(alpha:.22));
+    canvas.drawPath(area, Paint()..color=ScoreTimeColors.cyan..style=PaintingStyle.stroke..strokeWidth=1.7);
+  }
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate)=>false;
 }

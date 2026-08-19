@@ -9,9 +9,18 @@ class ThemeSettings {
   final AppThemeName theme;
   final double fontScale;
   final String locale;
-  const ThemeSettings({this.theme = AppThemeName.stadium, this.fontScale = 1, this.locale = 'en'});
+  const ThemeSettings({
+    this.theme = AppThemeName.stadium,
+    this.fontScale = 1,
+    this.locale = 'en',
+  });
+
   ThemeSettings copyWith({AppThemeName? theme, double? fontScale, String? locale}) =>
-      ThemeSettings(theme: theme ?? this.theme, fontScale: fontScale ?? this.fontScale, locale: locale ?? this.locale);
+      ThemeSettings(
+        theme: theme ?? this.theme,
+        fontScale: fontScale ?? this.fontScale,
+        locale: locale ?? this.locale,
+      );
 }
 
 class ThemeController extends Notifier<ThemeSettings> {
@@ -25,7 +34,10 @@ class ThemeController extends Notifier<ThemeSettings> {
     final p = await SharedPreferences.getInstance();
     final name = p.getString('theme');
     state = ThemeSettings(
-      theme: AppThemeName.values.firstWhere((e) => e.name == name, orElse: () => AppThemeName.stadium),
+      theme: AppThemeName.values.firstWhere(
+        (e) => e.name == name,
+        orElse: () => AppThemeName.stadium,
+      ),
       fontScale: p.getDouble('font_scale') ?? 1,
       locale: p.getString('locale') ?? 'en',
     );
@@ -47,17 +59,30 @@ class ThemeController extends Notifier<ThemeSettings> {
   }
 }
 
-final themeControllerProvider = NotifierProvider<ThemeController, ThemeSettings>(ThemeController.new);
+final themeControllerProvider =
+    NotifierProvider<ThemeController, ThemeSettings>(ThemeController.new);
+
+class ScoreTimeColors {
+  static const ink = Color(0xFF020817);
+  static const ink2 = Color(0xFF051126);
+  static const panel = Color(0xFF07172D);
+  static const panel2 = Color(0xFF0B203B);
+  static const blue = Color(0xFF0A7BFF);
+  static const cyan = Color(0xFF19D8FF);
+  static const gold = Color(0xFFFFC542);
+  static const green = Color(0xFF31E6A1);
+  static const red = Color(0xFFFF4D6D);
+  static const violet = Color(0xFF8B5CF6);
+}
 
 class AppThemeFactory {
-  static const _scoreBlue = Color(0xFF0B8CFF);
-  static const _scoreCyan = Color(0xFF18D7FF);
-  static const _scoreGold = Color(0xFFF6C453);
-  static const _dark = Color(0xFF020716);
-  static const _surface = Color(0xFF08152B);
-
-  static ThemeData build(AppThemeName name, double scale, [Map<String, dynamic>? remote]) {
+  static ThemeData build(
+    AppThemeName name,
+    double scale, [
+    Map<String, dynamic>? remote,
+  ]) {
     final isLight = name == AppThemeName.light;
+
     Color parse(String key, Color fallback) {
       final v = remote?[key];
       if (v is String && RegExp(r'^#[0-9A-Fa-f]{6}$').hasMatch(v)) {
@@ -66,14 +91,34 @@ class AppThemeFactory {
       return fallback;
     }
 
-    final primary = parse('accent', name == AppThemeName.midnight ? const Color(0xFF8B5CF6) : _scoreBlue);
-    final background = parse('background', isLight ? const Color(0xFFF2F6FC) : name == AppThemeName.midnight ? const Color(0xFF050319) : _dark);
+    final primary = parse(
+      'accent',
+      name == AppThemeName.midnight ? ScoreTimeColors.violet : ScoreTimeColors.blue,
+    );
+    final secondary = parse('accent2', ScoreTimeColors.cyan);
+    final background = parse(
+      'background',
+      isLight
+          ? const Color(0xFFF4F7FC)
+          : name == AppThemeName.midnight
+              ? const Color(0xFF06031A)
+              : ScoreTimeColors.ink,
+    );
+    final surface = parse(
+      'surface',
+      isLight ? Colors.white : ScoreTimeColors.panel,
+    );
     final brightness = isLight ? Brightness.light : Brightness.dark;
-    final scheme = ColorScheme.fromSeed(seedColor: primary, brightness: brightness).copyWith(
+
+    final scheme = ColorScheme.fromSeed(
+      seedColor: primary,
+      brightness: brightness,
+    ).copyWith(
       primary: primary,
-      secondary: parse('accent2', _scoreCyan),
-      tertiary: _scoreGold,
-      surface: parse('surface', isLight ? Colors.white : _surface),
+      secondary: secondary,
+      tertiary: ScoreTimeColors.gold,
+      surface: surface,
+      error: ScoreTimeColors.red,
     );
 
     final base = ThemeData(
@@ -82,51 +127,112 @@ class AppThemeFactory {
       useMaterial3: true,
       scaffoldBackgroundColor: background,
       fontFamily: 'Roboto',
+      visualDensity: VisualDensity.standard,
     );
 
     final text = base.textTheme.apply(fontSizeFactor: scale).copyWith(
-      headlineLarge: base.textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -1.2),
-      headlineMedium: base.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -.8),
-      titleLarge: base.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -.4),
+      displayLarge: base.textTheme.displayLarge?.copyWith(
+        fontWeight: FontWeight.w900,
+        letterSpacing: -2.3,
+        height: .98,
+      ),
+      headlineLarge: base.textTheme.headlineLarge?.copyWith(
+        fontWeight: FontWeight.w900,
+        letterSpacing: -1.25,
+      ),
+      headlineMedium: base.textTheme.headlineMedium?.copyWith(
+        fontWeight: FontWeight.w900,
+        letterSpacing: -.85,
+      ),
+      titleLarge: base.textTheme.titleLarge?.copyWith(
+        fontWeight: FontWeight.w900,
+        letterSpacing: -.45,
+      ),
       titleMedium: base.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
       labelLarge: base.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800),
     );
 
+    final border = BorderSide(
+      color: isLight
+          ? const Color(0x17021B3A)
+          : Colors.white.withValues(alpha: .075),
+    );
+
     return base.copyWith(
       textTheme: text,
+      dividerColor: border.color,
       cardTheme: CardThemeData(
         elevation: 0,
-        color: scheme.surface.withValues(alpha: isLight ? 1 : .9),
+        color: surface.withValues(alpha: isLight ? .98 : .88),
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-          side: BorderSide(color: scheme.outlineVariant.withValues(alpha: .22)),
+          borderRadius: BorderRadius.circular(22),
+          side: border,
         ),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
         surfaceTintColor: Colors.transparent,
         titleTextStyle: text.titleLarge?.copyWith(color: scheme.onSurface),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        height: 72,
-        backgroundColor: isLight ? Colors.white : const Color(0xFF061127),
-        indicatorColor: primary.withValues(alpha: .17),
-        indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        labelTextStyle: WidgetStatePropertyAll(text.labelSmall?.copyWith(fontWeight: FontWeight.w800)),
+        height: 70,
+        backgroundColor: isLight ? Colors.white : const Color(0xFF041127),
+        indicatorColor: primary.withValues(alpha: .18),
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        labelTextStyle: WidgetStatePropertyAll(
+          text.labelSmall?.copyWith(fontWeight: FontWeight.w800),
+        ),
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: Colors.transparent,
+        indicatorColor: primary.withValues(alpha: .18),
+        selectedIconTheme: IconThemeData(color: secondary),
+        selectedLabelTextStyle: text.labelLarge?.copyWith(color: scheme.onSurface),
+        unselectedIconTheme: IconThemeData(color: scheme.onSurfaceVariant),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: scheme.surfaceContainerHighest.withValues(alpha: .42),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide.none),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outlineVariant.withValues(alpha: .28))),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: primary.withValues(alpha: .75), width: 1.4)),
+        fillColor: isLight
+            ? const Color(0xFFF1F5FA)
+            : const Color(0xFF0A1930).withValues(alpha: .92),
+        hintStyle: TextStyle(color: scheme.onSurfaceVariant.withValues(alpha: .72)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: border,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: primary.withValues(alpha: .8), width: 1.2),
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16)),
+        style: FilledButton.styleFrom(
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        ),
       ),
-      chipTheme: base.chipTheme.copyWith(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(99))),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          side: border,
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        ),
+      ),
+      chipTheme: base.chipTheme.copyWith(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(99)),
+        side: border,
+      ),
     );
   }
 }

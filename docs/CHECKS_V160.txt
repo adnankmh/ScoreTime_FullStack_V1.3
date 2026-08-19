@@ -1,0 +1,45 @@
+ScoreTime Global V1.6.0 — Live Global Platform
+PHP files checked: 275
+PHP syntax errors: 0
+Active workflows: 4
+Workflow YAML errors: 0
+
+Live football primary provider: API-Football / API-Sports
+Live football secondary provider: football-data.org
+Live global fixture auto-mapping: YES
+Live events synchronization: YES
+Today's global calendar synchronization: YES
+Countries / competitions / teams / players catalog sync: YES
+Standings / lineups / match stats provider support: YES
+Player match ratings provider support: YES
+Transfers / injuries / coaches provider support: YES
+Predictions / trophies / sidelined provider support: YES
+
+Global news provider: NewsAPI
+News source name/url/date attribution: YES
+Publisher full-article copying: NO
+News sync scheduler: YES
+
+UI languages: English, Arabic, French, Spanish, German, Turkish
+Arabic RTL support: retained
+Global theme selector in top bar: YES
+Global language selector in top bar: YES
+Theme persistence: YES
+Language persistence: YES
+
+API keys embedded in Flutter/Web: NO
+API keys shipped in .env: NO
+Destructive local database reset: NO
+Data freshness/status endpoint: YES
+
+Release validator:
+ScoreTime V1.6.0 validator
+PASS
+Live football providers: API-Football + football-data.org
+Live news provider: NewsAPI
+UI languages: 6
+Theme/language controls: global top bar
+
+Runtime note:
+Real-time provider data requires the user's own licensed API keys and network access.
+Flutter/Gradle/Xcode runtime builds execute in GitHub Actions.

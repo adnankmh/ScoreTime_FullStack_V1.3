@@ -1,0 +1,25 @@
+ScoreTime Global V1.5.0 Next-Gen static checks
+PHP files checked: 267
+PHP syntax errors: 0
+Active workflows: 4
+Workflow YAML errors: 0
+Dart files checked: 38
+Legacy MyApp references: 0
+Missing local Dart imports: 0
+Dart delimiter warnings: 0
+Next-gen Flutter home: YES
+Next-gen desktop shell: YES
+Next-gen Laravel web home: YES
+GitHub Pages: YES
+Android APK + AAB workflow: YES
+iOS workflow: YES
+
+Release validator:
+ScoreTime V1.5.0 validator
+PASS
+Workflows: 4
+Next-gen Flutter shell: ready
+Next-gen Laravel web home: ready
+
+Runtime note:
+Flutter/Gradle/Xcode/Composer runtime builds execute on GitHub-hosted runners or the user's machine.

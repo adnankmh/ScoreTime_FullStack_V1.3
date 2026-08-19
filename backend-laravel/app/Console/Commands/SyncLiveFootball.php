@@ -1,7 +1,23 @@
 <?php
 namespace App\Console\Commands;
-use App\Models\{DataProviderSyncLog,FootballMatch,LiveCommentary}; use App\Services\FootballProviderManager; use Illuminate\Console\Command; use Illuminate\Support\Str;
-class SyncLiveFootball extends Command {
- protected $signature='football:sync-live {--events : Also sync commentary/events for mapped fixtures}'; protected $description='Synchronize live fixtures from the configured licensed football provider.';
- public function handle(FootballProviderManager $manager):int{$started=now();$clock=microtime(true);$provider=$manager->current();$records=0;try{$fixtures=$provider->fixtures(['live'=>'all']);foreach($fixtures as $raw){$pid=data_get($raw,'fixture.id');if(!$pid)continue;$match=FootballMatch::where('provider_id',(string)$pid)->first();if(!$match)continue;$status=strtolower((string)data_get($raw,'fixture.status.short','live'));$match->update(['status'=>$status,'minute'=>data_get($raw,'fixture.status.elapsed'),'home_score'=>data_get($raw,'goals.home'),'away_score'=>data_get($raw,'goals.away'),'realtime_state'=>'active','realtime_heartbeat_at'=>now(),'last_synced_at'=>now(),'revision'=>$match->revision+1]);$records++;if($this->option('events')){$events=$provider->events($pid);foreach($events as $ev){$finger=hash('sha256',json_encode([$pid,data_get($ev,'time.elapsed'),data_get($ev,'team.id'),data_get($ev,'player.id'),data_get($ev,'type'),data_get($ev,'detail')]));LiveCommentary::firstOrCreate(['football_match_id'=>$match->id,'provider_event_id'=>$finger],['minute'=>data_get($ev,'time.elapsed'),'stoppage'=>data_get($ev,'time.extra',0)??0,'type'=>Str::slug((string)data_get($ev,'type','commentary'),'_'),'text'=>trim(implode(' — ',array_filter([data_get($ev,'type'),data_get($ev,'detail'),data_get($ev,'comments')]))),'importance'=>in_array(strtolower((string)data_get($ev,'type')),['goal','card'])?5:2,'payload'=>$ev]);}}}$ms=(int)((microtime(true)-$clock)*1000);DataProviderSyncLog::create(['provider'=>$provider->name(),'resource'=>'live','status'=>'success','records'=>$records,'duration_ms'=>$ms,'started_at'=>$started,'finished_at'=>now()]);$this->info("Synced {$records} mapped live fixtures in {$ms}ms.");return self::SUCCESS;}catch(\Throwable $e){DataProviderSyncLog::create(['provider'=>$provider->name(),'resource'=>'live','status'=>'failed','records'=>$records,'duration_ms'=>(int)((microtime(true)-$clock)*1000),'message'=>$e->getMessage(),'started_at'=>$started,'finished_at'=>now()]);$this->error($e->getMessage());return self::FAILURE;}}
+
+use App\Services\RealtimeFootballSyncService;
+use Illuminate\Console\Command;
+
+class SyncLiveFootball extends Command
+{
+    protected $signature = 'football:sync-live {--events : Also synchronize live goals/cards/substitutions}';
+    protected $description = 'Synchronize all live fixtures globally and create missing competitions/teams automatically.';
+
+    public function handle(RealtimeFootballSyncService $sync): int
+    {
+        try {
+            $result = $sync->sync(['live' => 'all'], (bool) $this->option('events'));
+            $this->info(json_encode($result, JSON_PRETTY_PRINT));
+            return self::SUCCESS;
+        } catch (\Throwable $e) {
+            $this->error($e->getMessage());
+            return self::FAILURE;
+        }
+    }
 }

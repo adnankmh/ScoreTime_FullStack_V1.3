@@ -24,3 +24,11 @@ if (env('FOOTBALL_CATALOG_SCHEDULER', false)) {
     Schedule::command('football:sync-global catalog --season='.(int)env('FOOTBALL_CATALOG_SEASON', date('Y')))
         ->dailyAt('03:10')->withoutOverlapping()->onOneServer();
 }
+
+if (env('FOOTBALL_TODAY_SCHEDULER', false)) {
+    Schedule::command('football:sync-today')->everyTenMinutes()->withoutOverlapping()->onOneServer();
+}
+
+if (env('NEWS_SYNC_SCHEDULER', false)) {
+    Schedule::command('news:sync-global')->everyFifteenMinutes()->withoutOverlapping()->onOneServer();
+}

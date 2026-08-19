@@ -1,35 +1,23 @@
-# ScoreTime Global V1.4
+# ScoreTime Global V1.6.0 — Live Global Platform
 
-نسخة موحدة جديدة للموقع والتطبيق بهوية **ScoreTime** المعتمدة وشعار **Every Moment Counts**.
+نسخة Full-Stack:
+- Laravel 12 Backend / Website / Admin / API
+- Flutter Web / Android / iOS
+- GitHub Pages workflow
+- Android APK + AAB workflow
+- iOS workflow
+- مزامنة كرة قدم عالمية حقيقية عبر مزود مرخص
+- مزامنة أخبار مع المصدر والرابط
+- 6 لغات + RTL
+- Theme + Language controls في أعلى الواجهة
+- Match Center / World Football / Transfers / News / Fan / Predictions / Admin / Experience Studio
 
-## المجلدات الرئيسية
-- `backend-laravel/` — الموقع + REST API + Adnan Control Room.
-- `mobile-flutter/` — تطبيق Flutter.
-- `branding/` — الشعار والأيقونة المعتمدان.
-- `docs/` — وثائق الإصدار الحالي فقط.
-- `archive/legacy-releases/` — كل ملفات وWorkflows ووثائق الإصدارات القديمة في مكان واحد.
-- `.github/workflows/` — Workflowان فقط للإصدار الحالي.
+## تشغيل الموقع
+`START_SCORETIME_WINDOWS.bat`
 
-## أهم الإصلاحات في هذا الإصدار
-- `intl ^0.20.3` متوافق مع Flutter localization الحالي.
-- إلغاء الاعتماد على `php artisan test` في CI واستخدام `vendor/bin/phpunit`.
-- Workflow واحد للجودة وWorkflow واحد لبناء Android APK/AAB.
-- إذا كان `android/` غير موجود، GitHub Actions ينشئه تلقائيًا ثم يطبق أيقونة ScoreTime.
-- إضافة `public/index.php` وملفات Laravel runtime المطلوبة.
-- Local `.env.example`: English افتراضيًا + file sessions/cache + sync queue لتشغيل أسهل.
-- Migrations الزمنية الحساسة معدلة لتوافق MariaDB/XAMPP.
-- Seeders أصبحت idempotent لتقليل أخطاء Duplicate key.
-- ترجمة الواجهة للموقع والتطبيق: English / العربية / Français / Español / Deutsch / Türkçe.
+## تفعيل البيانات الحقيقية
+`CONFIGURE_LIVE_DATA_WINDOWS.bat`
 
-## التشغيل
 راجع:
-- `docs/LOCAL_RUN_AR.md`
-- `docs/GITHUB_DESKTOP_APK_AR.md`
-
-## ملاحظة الأمان
-حساب Bootstrap للإدارة `Adnan / Adnan123` مخصص لأول تشغيل فقط. غيّر كلمة المرور وفعّل 2FA قبل النشر الحقيقي.
-
-
-## GitHub Pages
-الرابط المستهدف: `https://adnankmh.github.io/ScoreTime/`
-راجع `docs/GITHUB_PAGES_V147_AR.md`.
+- `docs/LIVE_GLOBAL_DATA_AR.md`
+- `docs/COMPETITIVE_PRODUCT_SCOPE_AR.md`

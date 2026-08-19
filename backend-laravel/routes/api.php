@@ -32,3 +32,5 @@ Route::get('/v1/players/{player}/radar', [\App\Http\Controllers\Api\V1\ReleaseCa
 Route::get('/v1/matches/{match}/story', [\App\Http\Controllers\Api\V1\ReleaseCandidateController::class, 'matchStory']);
 Route::get('/v1/onboarding', [\App\Http\Controllers\Api\V1\ReleaseCandidateController::class, 'onboarding']);
 Route::get('/v1/deep-links', [\App\Http\Controllers\Api\V1\ReleaseCandidateController::class, 'deepLinkManifest']);
+
+Route::get('/v1/data-status', \App\Http\Controllers\Api\V1\DataStatusController::class)->middleware('throttle:60,1');
