@@ -1,0 +1,106 @@
+name: "ScoreTime • Laravel"
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "backend-laravel/**"
+      - ".github/workflows/01-laravel.yml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "backend-laravel/**"
+      - ".github/workflows/01-laravel.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scoretime-laravel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Laravel • MySQL • PHPUnit
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: scoretime_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    defaults:
+      run:
+        working-directory: backend-laravel
+
+    env:
+      APP_ENV: testing
+      APP_DEBUG: "false"
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: scoretime_test
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      CACHE_STORE: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+      COMPOSER_NO_INTERACTION: 1
+      COMPOSER_NO_AUDIT: 1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo_mysql, mysql
+          coverage: none
+
+      - name: Validate Composer
+        run: composer validate --no-check-publish --no-check-lock
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Verify Tests autoload
+        shell: bash
+        run: |
+          composer dump-autoload
+          php -r "require 'vendor/autoload.php'; if (!class_exists('Tests\\\\TestCase')) { fwrite(STDERR, 'Tests\\\\TestCase autoload failed'.PHP_EOL); exit(1); } echo 'Tests\\\\TestCase autoload OK'.PHP_EOL;"
+
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: PHP syntax scan
+        shell: bash
+        run: |
+          find app bootstrap config database routes tests -name '*.php' -print0 \
+            | xargs -0 -n1 php -l
+
+      - name: Database migrations and seed
+        run: |
+          php artisan migrate:fresh --force
+          php artisan db:seed --force
+
+      - name: Laravel boot and routes
+        run: |
+          php artisan about
+          php artisan route:list
+
+      - name: PHPUnit
+        run: vendor/bin/phpunit

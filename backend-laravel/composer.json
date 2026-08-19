@@ -3,6 +3,7 @@
   "name": "scoretime/platform",
   "type": "project",
   "description": "ScoreTime global football live scores, news, analytics and fan platform.",
+  "license": "proprietary",
   "require": {
     "php": "^8.2",
     "laravel/framework": "^12.0",
@@ -21,6 +22,11 @@
       "Database\\Seeders\\": "database/seeders/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "scripts": {
     "post-autoload-dump": [
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -31,6 +37,5 @@
     "optimize-autoloader": true,
     "preferred-install": "dist",
     "sort-packages": true
-  },
-  "license": "proprietary"
+  }
 }

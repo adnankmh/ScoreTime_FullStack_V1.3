@@ -1,0 +1,21 @@
+ScoreTime Global V1.4.3 static checks
+PHP files checked: 267
+PHP syntax errors: 0
+Active workflows: 4
+Workflow YAML errors: 0
+Legacy workflow YAML files: 0
+Dart files checked: 35
+Missing local Dart imports: 0
+Dart delimiter warnings: 0
+Composer Tests autoload-dev: {'psr-4': {'Tests\\': 'tests/'}}
+iOS AppIcon files: 18
+Release validator:
+ScoreTime V1.4.3 validator
+PASS
+Active workflows: 4
+Laravel Tests autoload: configured
+
+Runtime note:
+This artifact environment does not contain Composer or Flutter SDK.
+GitHub Actions performs the real Composer install/autoload check, MySQL migrations,
+PHPUnit, Flutter analyze/test, Android builds, and iOS unsigned release build.
