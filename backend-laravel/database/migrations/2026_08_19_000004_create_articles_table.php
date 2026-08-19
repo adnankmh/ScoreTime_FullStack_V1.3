@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration{public function up(){Schema::create('articles',function(Blueprint $t){$t->id();$t->string('title');$t->string('slug')->unique();$t->text('excerpt')->nullable();$t->longText('body');$t->string('image_url')->nullable();$t->string('category')->index();$t->string('author_name')->nullable();$t->timestamp('published_at')->nullable()->index();$t->boolean('is_breaking')->default(false);$t->boolean('is_featured')->default(false);$t->unsignedBigInteger('views')->default(0);$t->timestamps();});}public function down(){Schema::dropIfExists('articles');}};

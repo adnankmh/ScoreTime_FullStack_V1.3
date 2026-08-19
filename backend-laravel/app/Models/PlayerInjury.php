@@ -1,0 +1,2 @@
+<?php
+namespace App\Models; use Illuminate\Database\Eloquent\Model; class PlayerInjury extends Model {protected $fillable=['player_id','team_id','type','status','started_at','expected_return_at','note']; protected function casts():array{return ['started_at'=>'date','expected_return_at'=>'date'];} public function player(){return $this->belongsTo(Player::class);} public function team(){return $this->belongsTo(Team::class);}}

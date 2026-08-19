@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title',$competition->name_ar) @section('content')<div class="glass rounded-3xl p-8"><h1 class="text-3xl font-extrabold">{{$competition->name_ar}}</h1><p class="text-slate-400 mt-2">{{$competition->season}} · {{$competition->country}}</p></div>@endsection

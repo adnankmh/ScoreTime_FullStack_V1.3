@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Offline') @section('content')<div class="hero"><span class="eyebrow">OFFLINE MODE</span><h1>You are offline</h1><p>Previously cached pages may still be available. Reconnect to refresh live scores.</p></div>@endsection

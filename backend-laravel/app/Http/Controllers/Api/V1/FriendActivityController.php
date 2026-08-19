@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Controllers\Api\V1; use App\Http\Controllers\Controller; use App\Models\{FriendActivity,Friendship}; use Illuminate\Http\Request;
+class FriendActivityController extends Controller { public function index(Request $r){$uid=$r->user()->id;$friendIds=Friendship::where('status','accepted')->where(fn($q)=>$q->where('requester_id',$uid)->orWhere('addressee_id',$uid))->get()->map(fn($f)=>$f->requester_id===$uid?$f->addressee_id:$f->requester_id);return response()->json(['data'=>FriendActivity::with('user:id,name,username,avatar_url')->whereIn('user_id',$friendIds)->latest()->limit(80)->get()]);} }

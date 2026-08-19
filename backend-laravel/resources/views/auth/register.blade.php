@@ -1,0 +1,3 @@
+@extends('layouts.app') @section('content')
+<div class="auth-wrap"><form method="post" class="panel auth-card">@csrf<h1>{{__('ui.create_account')}}</h1><label>{{__('ui.name')}}</label><input name="name" value="{{old('name')}}" required><label>{{__('ui.username')}}</label><input name="username" value="{{old('username')}}" required><label>{{__('ui.email')}}</label><input name="email" type="email" value="{{old('email')}}" required><label>{{__('ui.password')}}</label><input name="password" type="password" required><label>{{__('ui.password_confirm')}}</label><input name="password_confirmation" type="password" required>@if($errors->any())<div class="error">{{$errors->first()}}</div>@endif<button class="btn primary">{{__('ui.register')}}</button></form></div>
+@endsection

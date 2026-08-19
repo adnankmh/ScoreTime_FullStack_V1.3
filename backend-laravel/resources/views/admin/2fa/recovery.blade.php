@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('content')<div class="auth-card"><h1>Recovery Codes</h1><p>احفظ هذه الرموز في مكان آمن. كل رمز يستخدم مرة واحدة.</p><div class="code-grid">@foreach($codes as $code)<code>{{ $code }}</code>@endforeach</div><a class="btn-primary" href="{{ route('admin.dashboard') }}">دخول لوحة الإدارة</a></div>@endsection

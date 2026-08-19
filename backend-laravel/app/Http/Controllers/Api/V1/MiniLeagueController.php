@@ -1,0 +1,9 @@
+<?php
+namespace App\Http\Controllers\Api\V1;
+use App\Http\Controllers\Controller;use App\Models\{FriendActivity,MiniLeague};use Illuminate\Http\Request;use Illuminate\Support\Str;
+class MiniLeagueController extends Controller {
+ public function index(Request $r){return $r->user()->belongsToMany(MiniLeague::class,'mini_league_members')->with('owner:id,name,username')->withCount('members')->get();}
+ public function store(Request $r){$d=$r->validate(['name'=>'required|string|max:120','is_public'=>'boolean','season'=>'nullable|string|max:20']);$league=MiniLeague::create(['owner_id'=>$r->user()->id,'name'=>$d['name'],'is_public'=>$d['is_public']??false,'season'=>$d['season']??null,'join_code'=>strtoupper(Str::random(8))]);$league->members()->attach($r->user()->id,['points'=>0]);FriendActivity::create(['user_id'=>$r->user()->id,'type'=>'mini_league_created','subject_type'=>MiniLeague::class,'subject_id'=>$league->id,'meta'=>['name'=>$league->name]]);return response()->json($league,201);}
+ public function join(Request $r){$d=$r->validate(['code'=>'required|string|max:12']);$league=MiniLeague::where('join_code',strtoupper($d['code']))->firstOrFail();$league->members()->syncWithoutDetaching([$r->user()->id=>['points'=>0]]);FriendActivity::create(['user_id'=>$r->user()->id,'type'=>'mini_league_joined','subject_type'=>MiniLeague::class,'subject_id'=>$league->id,'meta'=>['name'=>$league->name]]);return $league->load(['members'=>fn($q)=>$q->select('users.id','users.name','users.username')]);}
+ public function show(Request $r,MiniLeague $miniLeague){abort_unless($miniLeague->is_public||$miniLeague->members()->where('users.id',$r->user()->id)->exists(),403);return $miniLeague->load(['owner:id,name,username','members'=>fn($q)=>$q->select('users.id','users.name','users.username')->limit(100)]);}
+}

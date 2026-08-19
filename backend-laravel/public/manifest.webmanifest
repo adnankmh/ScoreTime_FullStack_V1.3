@@ -1,0 +1,9 @@
+{
+  "name": "Football Global",
+  "short_name": "Football",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07120e",
+  "theme_color": "#14d990",
+  "icons": []
+}

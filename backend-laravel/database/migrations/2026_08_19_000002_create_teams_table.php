@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration{public function up(){Schema::create('teams',function(Blueprint $t){$t->id();$t->string('name_ar');$t->string('name_en');$t->string('slug')->unique();$t->string('short_name')->nullable();$t->string('country')->nullable();$t->string('logo_url')->nullable();$t->string('stadium')->nullable();$t->unsignedSmallInteger('founded_year')->nullable();$t->string('primary_color',20)->nullable();$t->timestamps();});}public function down(){Schema::dropIfExists('teams');}};

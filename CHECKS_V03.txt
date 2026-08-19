@@ -1,0 +1,6 @@
+V0.3 validation
+PHP syntax errors: 0
+Dart local import issues: 0
+All referenced local Dart imports resolve to files.
+Flutter SDK unavailable in this runtime, so flutter analyze/build was not executed locally.
+GitHub Actions workflow is included for analyze/test/release APK.

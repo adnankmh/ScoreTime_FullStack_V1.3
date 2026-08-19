@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Controllers\Api\V1; use App\Http\Controllers\Controller; use App\Models\{PredictionSeason,PredictionSeasonScore};
+class PredictionSeasonController extends Controller { public function index(){return response()->json(['data'=>PredictionSeason::where('is_active',true)->orderByDesc('starts_at')->get()]);} public function leaderboard(PredictionSeason $predictionSeason){return response()->json(['data'=>PredictionSeasonScore::with('user:id,name,username,avatar_url')->where('prediction_season_id',$predictionSeason->id)->orderByDesc('points')->orderByDesc('exact_scores')->limit(100)->get()]);} }

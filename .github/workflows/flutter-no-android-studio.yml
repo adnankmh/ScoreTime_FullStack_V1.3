@@ -1,0 +1,24 @@
+name: Flutter APK - No Android Studio
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ 'mobile-flutter/**', '.github/workflows/flutter-no-android-studio.yml' ]
+permissions: { contents: read }
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: mobile-flutter } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build apk --release --dart-define=API_BASE_URL=https://example.com/api/v1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scoretime-apk
+          path: mobile-flutter/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error

@@ -1,0 +1,23 @@
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+return new class extends Migration {
+ public function up(): void {
+  Schema::create('player_injuries', function(Blueprint $t){$t->id();$t->foreignId('player_id')->constrained()->cascadeOnDelete();$t->foreignId('team_id')->nullable()->constrained()->nullOnDelete();$t->string('type',120);$t->string('status',30)->default('out')->index();$t->date('started_at')->nullable();$t->date('expected_return_at')->nullable();$t->text('note')->nullable();$t->timestamps();});
+  Schema::create('match_lineup_entries', function(Blueprint $t){$t->id();$t->foreignId('football_match_id')->constrained('football_matches')->cascadeOnDelete();$t->foreignId('team_id')->constrained()->cascadeOnDelete();$t->foreignId('player_id')->nullable()->constrained()->nullOnDelete();$t->string('player_name',120)->nullable();$t->unsignedSmallInteger('shirt_number')->nullable();$t->string('position',20)->nullable();$t->decimal('x',5,2)->nullable();$t->decimal('y',5,2)->nullable();$t->boolean('is_starting')->default(true)->index();$t->boolean('is_captain')->default(false);$t->decimal('rating',4,2)->nullable();$t->timestamps();$t->index(['football_match_id','team_id']);});
+  Schema::create('match_subscriptions', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->foreignId('football_match_id')->constrained('football_matches')->cascadeOnDelete();$t->boolean('goal')->default(true);$t->boolean('lineup')->default(true);$t->boolean('red_card')->default(true);$t->boolean('kickoff')->default(true);$t->boolean('full_time')->default(true);$t->timestamps();$t->unique(['user_id','football_match_id']);});
+  Schema::create('team_follows', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->foreignId('team_id')->constrained()->cascadeOnDelete();$t->boolean('news')->default(true);$t->boolean('matches')->default(true);$t->boolean('transfers')->default(true);$t->timestamps();$t->unique(['user_id','team_id']);});
+  Schema::create('friendships', function(Blueprint $t){$t->id();$t->foreignId('requester_id')->constrained('users')->cascadeOnDelete();$t->foreignId('addressee_id')->constrained('users')->cascadeOnDelete();$t->string('status',20)->default('pending')->index();$t->timestamp('accepted_at')->nullable();$t->timestamps();$t->unique(['requester_id','addressee_id']);});
+  Schema::create('achievements', function(Blueprint $t){$t->id();$t->string('key',80)->unique();$t->string('name_ar',120);$t->string('name_en',120);$t->text('description_ar')->nullable();$t->text('description_en')->nullable();$t->string('icon',80)->default('emoji_events');$t->unsignedInteger('points')->default(0);$t->string('tier',20)->default('bronze');$t->boolean('is_active')->default(true);$t->timestamps();});
+  Schema::create('user_achievements', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->foreignId('achievement_id')->constrained()->cascadeOnDelete();$t->timestamp('earned_at')->useCurrent();$t->json('meta')->nullable();$t->unique(['user_id','achievement_id']);});
+  Schema::create('search_histories', function(Blueprint $t){$t->id();$t->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();$t->string('query',180)->index();$t->string('type',30)->nullable();$t->unsignedInteger('hits')->default(0);$t->timestamps();});
+  Schema::table('football_matches', function(Blueprint $t){$t->decimal('home_xg',6,2)->nullable();$t->decimal('away_xg',6,2)->nullable();$t->json('shot_map')->nullable();$t->json('momentum')->nullable();$t->string('referee',120)->nullable();$t->unsignedInteger('attendance')->nullable();});
+  Schema::table('users', function(Blueprint $t){$t->string('bio',280)->nullable();$t->string('cover_url')->nullable();$t->string('favorite_team_ids',1000)->nullable();$t->boolean('profile_public')->default(true)->index();});
+ }
+ public function down(): void {
+  Schema::table('users', fn(Blueprint $t)=>$t->dropColumn(['bio','cover_url','favorite_team_ids','profile_public']));
+  Schema::table('football_matches', fn(Blueprint $t)=>$t->dropColumn(['home_xg','away_xg','shot_map','momentum','referee','attendance']));
+  foreach(['search_histories','user_achievements','achievements','friendships','team_follows','match_subscriptions','match_lineup_entries','player_injuries'] as $table) Schema::dropIfExists($table);
+ }
+};

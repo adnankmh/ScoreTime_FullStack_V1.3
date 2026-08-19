@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('content')<div class="auth-card"><h1>تحقق أمني</h1><p>أدخل رمز Authenticator أو أحد Recovery Codes للدخول إلى Control Room.</p><form method="POST" action="{{ route('admin.2fa.verify') }}">@csrf<input name="code" autocomplete="one-time-code" required><button class="btn-primary">تحقق</button></form></div>@endsection

@@ -1,0 +1,15 @@
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+return new class extends Migration {
+ public function up(): void {
+  Schema::create('custom_pages', function(Blueprint $t){$t->id();$t->string('slug',120)->unique();$t->json('title');$t->string('surface',20)->default('both')->index();$t->json('blocks');$t->json('seo')->nullable();$t->boolean('is_published')->default(false)->index();$t->timestamp('published_at')->nullable();$t->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();$t->timestamps();});
+  Schema::create('design_schedules', function(Blueprint $t){$t->id();$t->foreignId('design_profile_id')->constrained()->cascadeOnDelete();$t->string('name',120);$t->timestamp('starts_at')->index();$t->timestamp('ends_at')->nullable()->index();$t->boolean('enabled')->default(true)->index();$t->json('overrides')->nullable();$t->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();$t->timestamps();});
+  Schema::create('design_experiments', function(Blueprint $t){$t->id();$t->string('key',80)->unique();$t->string('name',120);$t->string('surface',20)->default('both')->index();$t->unsignedTinyInteger('traffic_percent')->default(50);$t->json('variant_a');$t->json('variant_b');$t->boolean('enabled')->default(false)->index();$t->timestamp('starts_at')->nullable();$t->timestamp('ends_at')->nullable();$t->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();$t->timestamps();});
+  Schema::create('notification_campaigns', function(Blueprint $t){$t->id();$t->string('name',120);$t->json('title');$t->json('body');$t->string('audience',40)->default('all')->index();$t->json('audience_rules')->nullable();$t->json('data')->nullable();$t->string('status',20)->default('draft')->index();$t->timestamp('scheduled_at')->nullable()->index();$t->timestamp('sent_at')->nullable();$t->unsignedBigInteger('sent_count')->default(0);$t->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();$t->timestamps();});
+  Schema::create('white_label_profiles', function(Blueprint $t){$t->id();$t->string('key',80)->unique();$t->string('name',120);$t->string('host')->nullable()->index();$t->json('branding');$t->json('tokens')->nullable();$t->json('features')->nullable();$t->boolean('enabled')->default(false)->index();$t->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();$t->timestamps();});
+  Schema::create('menu_nodes', function(Blueprint $t){$t->id();$t->string('surface',20)->index();$t->string('location',40)->index();$t->foreignId('parent_id')->nullable()->constrained('menu_nodes')->cascadeOnDelete();$t->string('key',80);$t->json('label');$t->string('icon',60)->nullable();$t->string('target',255);$t->unsignedInteger('sort_order')->default(0);$t->boolean('enabled')->default(true)->index();$t->json('visibility')->nullable();$t->timestamps();});
+ }
+ public function down(): void { foreach(['menu_nodes','white_label_profiles','notification_campaigns','design_experiments','design_schedules','custom_pages'] as $x) Schema::dropIfExists($x); }
+};

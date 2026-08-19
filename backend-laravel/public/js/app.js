@@ -1,0 +1,1 @@
+document.addEventListener('click',e=>{const trigger=e.target.closest('[data-popover]');document.querySelectorAll('.popover.open').forEach(p=>{if(!trigger||p.id!==trigger.dataset.popover)p.classList.remove('open')});if(trigger){e.preventDefault();document.getElementById(trigger.dataset.popover)?.classList.toggle('open')}});

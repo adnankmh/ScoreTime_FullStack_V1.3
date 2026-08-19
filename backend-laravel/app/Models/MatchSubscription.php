@@ -1,0 +1,2 @@
+<?php
+namespace App\Models; use Illuminate\Database\Eloquent\Model; class MatchSubscription extends Model {protected $fillable=['user_id','football_match_id','goal','lineup','red_card','kickoff','full_time']; protected function casts():array{return ['goal'=>'boolean','lineup'=>'boolean','red_card'=>'boolean','kickoff'=>'boolean','full_time'=>'boolean'];} public function match(){return $this->belongsTo(FootballMatch::class,'football_match_id');}}

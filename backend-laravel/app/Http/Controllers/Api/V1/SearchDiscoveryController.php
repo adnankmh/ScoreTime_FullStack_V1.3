@@ -1,0 +1,7 @@
+<?php
+namespace App\Http\Controllers\Api\V1;
+use App\Http\Controllers\Controller;use App\Models\{Article,Competition,Player,SearchHistory,SearchTrend,Team};use Illuminate\Http\Request;
+class SearchDiscoveryController extends Controller{
+ public function suggestions(Request $r){$q=trim((string)$r->query('q'));if(mb_strlen($q)<1)return response()->json(['data'=>[]]);$like='%'.str_replace(['%','_'],['\\%','\\_'],$q).'%';$data=['teams'=>Team::where(fn($x)=>$x->where('name_ar','like',$like)->orWhere('name_en','like',$like))->limit(5)->get(['id','name_ar','name_en','slug','logo_url']),'players'=>Player::where('name','like',$like)->limit(5)->get(['id','name','slug','photo_url','team_id']),'competitions'=>Competition::where(fn($x)=>$x->where('name_ar','like',$like)->orWhere('name_en','like',$like))->limit(5)->get(['id','name_ar','name_en','slug','logo_url']),'news'=>Article::whereNotNull('published_at')->where('title','like',$like)->latest('published_at')->limit(5)->get(['id','title','slug'])];$hits=collect($data)->sum(fn($x)=>$x->count());$trend=SearchTrend::firstOrCreate(['query'=>mb_strtolower($q)],['score'=>0]);$trend->increment('score');$trend->update(['last_searched_at'=>now()]);if($r->user())SearchHistory::create(['user_id'=>$r->user()->id,'query'=>$q,'hits'=>$hits]);return response()->json(['data'=>$data]);}
+ public function trending(){return response()->json(['data'=>SearchTrend::orderByDesc('score')->orderByDesc('last_searched_at')->limit(20)->get(['query','score'])]);}
+}

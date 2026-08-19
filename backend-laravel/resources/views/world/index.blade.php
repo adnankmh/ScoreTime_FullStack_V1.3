@@ -1,0 +1,9 @@
+@extends('layouts.app')
+@section('content')
+<div class="container py-4"><div class="mb-4"><span class="badge bg-primary mb-2">GLOBAL FOOTBALL</span><h1 class="display-6 fw-bold">World Football Directory</h1><p class="text-muted">Countries, leagues, cups, clubs and national teams synchronized from the configured licensed data provider.</p></div>
+<div class="row g-3 mb-4">@foreach($counts as $label=>$value)<div class="col-6 col-lg-3"><div class="card p-3 h-100"><small class="text-muted text-uppercase">{{$label}}</small><div class="fs-2 fw-bold">{{number_format($value)}}</div></div></div>@endforeach</div>
+<form class="mb-4"><div class="input-group input-group-lg"><input class="form-control" name="q" value="{{$q}}" placeholder="Search competitions"><button class="btn btn-primary">Search</button></div></form>
+<div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h4 mb-0">Competitions</h2><a href="{{route('world.players')}}" class="btn btn-outline-primary">Browse players</a></div>
+<div class="row g-3">@forelse($competitions as $c)<div class="col-md-6 col-xl-4"><a class="card p-3 h-100 text-decoration-none text-reset" href="{{route('competition.show',['competition'=>$c->slug])}}"><div class="d-flex gap-3 align-items-center">@if($c->logo_url)<img src="{{$c->logo_url}}" alt="" width="52" height="52" style="object-fit:contain">@endif<div><div class="fw-bold">{{$c->name_en}}</div><div class="small text-muted">{{$c->country ?? 'International'}} • {{ucfirst($c->type ?? 'league')}}</div></div></div></a></div>@empty<div class="col-12"><div class="alert alert-info">No synchronized competitions yet. Configure the provider and run Global Football Data sync from the admin panel.</div></div>@endforelse</div>
+<div class="mt-4">{{$competitions->links()}}</div></div>
+@endsection

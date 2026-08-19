@@ -1,0 +1,2 @@
+import 'package:flutter/material.dart';
+class AppTheme{static const bg=Color(0xFF07111F);static const surface=Color(0xFF0F1D2F);static const accent=Color(0xFF34D399);static ThemeData get dark=>ThemeData(brightness:Brightness.dark,scaffoldBackgroundColor:bg,colorScheme:ColorScheme.fromSeed(seedColor:accent,brightness:Brightness.dark,surface:surface),useMaterial3:true,cardTheme:const CardThemeData(color:surface,margin:EdgeInsets.zero),navigationBarTheme:const NavigationBarThemeData(backgroundColor:Color(0xFF0A1625),indicatorColor:Color(0x3334D399)));}
