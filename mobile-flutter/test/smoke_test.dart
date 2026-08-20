@@ -8,6 +8,6 @@ void main() {
   });
 
   test('preview data is opt-in rather than a live fallback', () {
-    expect(AppConfig.webDemoMode, isFalse);
+    expect(AppConfig.previewMode, isFalse);
   });
 }

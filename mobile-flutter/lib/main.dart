@@ -34,7 +34,7 @@ class _ScoreTimeAppState extends ConsumerState<ScoreTimeApp> {
   @override
   void initState() {
     super.initState();
-    configured = AppConfig.isApiConfigured || AppConfig.webDemoMode;
+    configured = AppConfig.isApiConfigured || AppConfig.previewMode;
   }
 
   @override

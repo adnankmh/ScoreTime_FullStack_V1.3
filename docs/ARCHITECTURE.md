@@ -1,4 +1,4 @@
-# ScoreTime V1.7.2 Architecture
+# ScoreTime V1.7.3 Architecture
 
 ScoreTime is a unified football platform with a Laravel 12 web/API/admin backend and Flutter clients for Android, iOS and Web.
 

@@ -9,7 +9,7 @@ class FootballRepository {
 
   final Dio _dio;
 
-  bool get _demo => AppConfig.webDemoMode;
+  bool get _demo => AppConfig.previewMode;
 
   Future<List<dynamic>> matches([String? date]) async {
     if (_demo) return List<dynamic>.from(DemoData.matches);

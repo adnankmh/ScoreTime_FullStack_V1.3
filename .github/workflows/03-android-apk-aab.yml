@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       api_base_url:
-        description: "Optional real HTTPS Laravel API ending in /api/v1; leave blank for first-launch setup"
+        description: "Optional public HTTPS Laravel API ending in /api/v1; leave blank for easy first-launch choices"
         required: false
         type: string
 
@@ -73,6 +73,9 @@ jobs:
           if ! grep -q 'android.permission.INTERNET' android/app/src/main/AndroidManifest.xml; then
             sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET" />' android/app/src/main/AndroidManifest.xml
           fi
+          if ! grep -q 'usesCleartextTraffic' android/app/src/main/AndroidManifest.xml; then
+            sed -i 's/<application/<application android:usesCleartextTraffic="true"/' android/app/src/main/AndroidManifest.xml
+          fi
 
       - name: Dependencies
         run: flutter pub get
@@ -101,7 +104,7 @@ jobs:
       - name: Upload Android
         uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.7.2-Android
+          name: ScoreTime-V1.7.3-Android
           retention-days: 14
           if-no-files-found: error
           path: |

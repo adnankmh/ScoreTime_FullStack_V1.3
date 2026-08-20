@@ -5,8 +5,67 @@ class AppStrings {
 
   static String Function(String) of(BuildContext context) {
     final lang = Localizations.localeOf(context).languageCode;
-    return (key) => _extra[lang]?[key] ?? _data[lang]?[key] ?? _data['en']![key] ?? key;
+    return (key) => _setup[lang]?[key] ??
+        _extra[lang]?[key] ??
+        _data[lang]?[key] ??
+        _data['en']![key] ??
+        key;
   }
+
+  static const _setup = <String, Map<String, String>>{
+    'en': {
+      'setup_title': 'How do you want to start ScoreTime?',
+      'setup_intro': 'Preview it now, or connect your real data.',
+      'preview_title': 'Preview the app now',
+      'preview_desc': 'Open instantly with clearly marked sample data. Connect live data later from Settings.',
+      'preview_button': 'Open preview',
+      'connect_title': 'Connect a computer or internet server',
+      'connect_title_web': 'Connect real data',
+      'connect_desc': 'On your PC run START_SCORETIME_WINDOWS.ps1, keep both devices on the same Wi-Fi, then enter the address it displays.',
+      'connect_desc_web': 'The published website needs a Laravel HTTPS URL. GitHub Pages cannot run PHP or MySQL.',
+      'test_save': 'Test connection and save',
+      'security_note': 'Security: the API-Football key stays in Laravel. HTTP is accepted only for private local-network addresses.',
+      'invalid_url': 'Use a published HTTPS URL, or a private computer address such as:',
+      'invalid_url_web': 'Use a real published HTTPS URL ending in /api/v1:',
+      'checking_server': 'Checking the ScoreTime connection…',
+      'connection_saved': 'Connection tested and saved.',
+      'cannot_reach': 'Laravel cannot be reached. Keep it open and use the same Wi-Fi on both devices.',
+      'invalid_response': 'The server did not return a valid ScoreTime response.',
+      'preview_subtitle': 'Preview mode — sample data, not live',
+    },
+    'ar': {
+      'setup_title': 'كيف تريد تشغيل ScoreTime؟',
+      'setup_intro': 'ابدأ بالمعاينة الآن، أو اربطه ببياناتك الحقيقية.',
+      'preview_title': 'معاينة التطبيق الآن',
+      'preview_desc': 'دخول فوري ببيانات توضيحية معلّمة. يمكنك ربط البيانات الحقيقية لاحقاً من الإعدادات.',
+      'preview_button': 'دخول إلى المعاينة',
+      'connect_title': 'ربط بالكمبيوتر أو خادم الإنترنت',
+      'connect_title_web': 'ربط البيانات الحقيقية',
+      'connect_desc': 'شغّل START_SCORETIME_WINDOWS.ps1 على الكمبيوتر، واجعل الجهازين على Wi‑Fi نفسه، ثم أدخل العنوان الظاهر.',
+      'connect_desc_web': 'الموقع المنشور يحتاج رابط Laravel HTTPS. GitHub Pages لا يشغّل PHP أو MySQL.',
+      'test_save': 'اختبار الاتصال وحفظه',
+      'security_note': 'الأمان: مفتاح API‑Football يبقى داخل Laravel. يُقبل HTTP فقط لعناوين الشبكة المحلية الخاصة.',
+      'invalid_url': 'استخدم رابط HTTPS منشوراً، أو عنوان الكمبيوتر المحلي مثل:',
+      'invalid_url_web': 'استخدم رابط HTTPS حقيقياً ومنشوراً ينتهي بـ /api/v1:',
+      'checking_server': 'جارٍ فحص اتصال ScoreTime…',
+      'connection_saved': 'تم الاتصال وحفظ العنوان بنجاح.',
+      'cannot_reach': 'تعذر الوصول إلى Laravel. اتركه مفتوحاً واستخدم Wi‑Fi نفسه على الجهازين.',
+      'invalid_response': 'الخادم لم يرجع استجابة ScoreTime صالحة.',
+      'preview_subtitle': 'وضع المعاينة — بيانات توضيحية وليست مباشرة',
+    },
+    'fr': {
+      'setup_title': 'Comment démarrer ScoreTime ?', 'setup_intro': 'Prévisualisez maintenant ou connectez vos données réelles.', 'preview_title': 'Prévisualiser l’application', 'preview_desc': 'Ouverture immédiate avec des données d’exemple clairement signalées.', 'preview_button': 'Ouvrir l’aperçu', 'connect_title': 'Connecter un PC ou un serveur', 'connect_title_web': 'Connecter les données réelles', 'connect_desc': 'Lancez START_SCORETIME_WINDOWS.ps1 et utilisez le même Wi-Fi sur les deux appareils.', 'connect_desc_web': 'Le site publié exige une URL Laravel HTTPS. GitHub Pages ne lance ni PHP ni MySQL.', 'test_save': 'Tester et enregistrer', 'security_note': 'Sécurité : la clé API-Football reste dans Laravel. HTTP est limité au réseau privé.', 'invalid_url': 'Utilisez HTTPS ou une adresse privée telle que :', 'invalid_url_web': 'Utilisez une vraie URL HTTPS finissant par /api/v1 :', 'checking_server': 'Vérification de ScoreTime…', 'connection_saved': 'Connexion enregistrée.', 'cannot_reach': 'Laravel est inaccessible. Vérifiez le Wi-Fi et laissez le serveur ouvert.', 'invalid_response': 'Réponse ScoreTime invalide.', 'preview_subtitle': 'Aperçu — données d’exemple, non directes',
+    },
+    'es': {
+      'setup_title': '¿Cómo quieres iniciar ScoreTime?', 'setup_intro': 'Ábrelo en vista previa o conecta datos reales.', 'preview_title': 'Vista previa ahora', 'preview_desc': 'Acceso inmediato con datos de ejemplo claramente indicados.', 'preview_button': 'Abrir vista previa', 'connect_title': 'Conectar PC o servidor', 'connect_title_web': 'Conectar datos reales', 'connect_desc': 'Ejecuta START_SCORETIME_WINDOWS.ps1 y usa el mismo Wi-Fi en ambos dispositivos.', 'connect_desc_web': 'La web publicada necesita una URL HTTPS de Laravel. GitHub Pages no ejecuta PHP ni MySQL.', 'test_save': 'Probar y guardar', 'security_note': 'Seguridad: la clave API-Football queda en Laravel. HTTP se limita a redes privadas.', 'invalid_url': 'Usa HTTPS o una dirección privada como:', 'invalid_url_web': 'Usa una URL HTTPS real terminada en /api/v1:', 'checking_server': 'Comprobando ScoreTime…', 'connection_saved': 'Conexión guardada.', 'cannot_reach': 'No se puede acceder a Laravel. Revisa el Wi-Fi y deja abierto el servidor.', 'invalid_response': 'Respuesta de ScoreTime no válida.', 'preview_subtitle': 'Vista previa — datos de ejemplo, no en vivo',
+    },
+    'de': {
+      'setup_title': 'Wie möchtest du ScoreTime starten?', 'setup_intro': 'Vorschau öffnen oder echte Daten verbinden.', 'preview_title': 'App jetzt ansehen', 'preview_desc': 'Sofortiger Einstieg mit klar gekennzeichneten Beispieldaten.', 'preview_button': 'Vorschau öffnen', 'connect_title': 'PC oder Server verbinden', 'connect_title_web': 'Echte Daten verbinden', 'connect_desc': 'START_SCORETIME_WINDOWS.ps1 starten und beide Geräte im selben WLAN nutzen.', 'connect_desc_web': 'Die veröffentlichte Website benötigt eine Laravel-HTTPS-URL. GitHub Pages führt weder PHP noch MySQL aus.', 'test_save': 'Testen und speichern', 'security_note': 'Sicherheit: Der API-Football-Schlüssel bleibt in Laravel. HTTP gilt nur im privaten Netzwerk.', 'invalid_url': 'HTTPS oder eine private Adresse verwenden, z. B.:', 'invalid_url_web': 'Eine echte HTTPS-URL mit /api/v1 verwenden:', 'checking_server': 'ScoreTime-Verbindung wird geprüft…', 'connection_saved': 'Verbindung gespeichert.', 'cannot_reach': 'Laravel ist nicht erreichbar. WLAN prüfen und Server geöffnet lassen.', 'invalid_response': 'Ungültige ScoreTime-Antwort.', 'preview_subtitle': 'Vorschau — Beispieldaten, nicht live',
+    },
+    'tr': {
+      'setup_title': 'ScoreTime nasıl başlatılsın?', 'setup_intro': 'Önizlemeyi açın veya gerçek verileri bağlayın.', 'preview_title': 'Uygulamayı şimdi önizle', 'preview_desc': 'Açıkça işaretlenmiş örnek verilerle hemen açılır.', 'preview_button': 'Önizlemeyi aç', 'connect_title': 'Bilgisayar veya sunucu bağla', 'connect_title_web': 'Gerçek verileri bağla', 'connect_desc': 'START_SCORETIME_WINDOWS.ps1 çalıştırın ve iki cihazı aynı Wi-Fi ağına bağlayın.', 'connect_desc_web': 'Yayınlanan site bir Laravel HTTPS adresi ister. GitHub Pages PHP veya MySQL çalıştırmaz.', 'test_save': 'Test et ve kaydet', 'security_note': 'Güvenlik: API-Football anahtarı Laravel içinde kalır. HTTP yalnızca özel ağda kabul edilir.', 'invalid_url': 'HTTPS veya şu tür özel bir adres kullanın:', 'invalid_url_web': '/api/v1 ile biten gerçek bir HTTPS adresi kullanın:', 'checking_server': 'ScoreTime bağlantısı kontrol ediliyor…', 'connection_saved': 'Bağlantı kaydedildi.', 'cannot_reach': 'Laravel erişilemiyor. Wi-Fi ağını kontrol edin ve sunucuyu açık tutun.', 'invalid_response': 'Geçersiz ScoreTime yanıtı.', 'preview_subtitle': 'Önizleme — örnek veri, canlı değil',
+    },
+  };
 
   static const _extra = <String, Map<String, String>>{
     'fr': {'all':'Tous','verified_live_center':'Centre de matchs vérifié en direct','retry':'Réessayer','live_data_unavailable':'Les données en direct sont temporairement indisponibles. Aucun score de démonstration ne les remplace.','no_matches':'Aucun match synchronisé dans cette vue.','venue_tba':'Stade à confirmer','away':'Extérieur','draw':'Nul','model_probability_notice':'Estimation ScoreTime fondée sur la forme récente, non officielle.','insufficient_analytics':'Données vérifiées insuffisantes pour ce calcul.','no_lineups':'Compositions vérifiées indisponibles.','no_shot_data':'Données de tirs vérifiées indisponibles.','no_momentum_data':'Données de dynamique vérifiées indisponibles.','no_events':'Les événements apparaîtront après synchronisation.','match_intelligence':'Analyse du match','referee':'Arbitre','venue':'Stade','attendance':'Affluence','open_live_center':'Ouvrir le direct','alerts_enabled':'Alertes du match activées.','login_for_alerts':'Connectez-vous pour activer vos alertes.'},

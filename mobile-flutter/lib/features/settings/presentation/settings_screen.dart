@@ -30,7 +30,9 @@ class SettingsScreen extends ConsumerWidget {
             _HubTile(
               icon: Icons.cloud_sync_rounded,
               title: 'Laravel API',
-              subtitle: AppConfig.apiBaseUrl,
+              subtitle: AppConfig.previewMode
+                  ? t('preview_subtitle')
+                  : AppConfig.apiBaseUrl,
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(

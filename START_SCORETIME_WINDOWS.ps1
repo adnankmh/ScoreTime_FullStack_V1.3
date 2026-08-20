@@ -142,7 +142,7 @@ if (-not (Test-Path $Backend)) {
 $php = Resolve-PHP
 $composer = Resolve-Composer
 
-Log "ScoreTime V1.7.2 local setup started."
+Log "ScoreTime V1.7.3 local setup started."
 Log "PHP: $php"
 
 Push-Location $Backend
@@ -283,14 +283,33 @@ No database was erased or reset.
 
     & $php artisan optimize:clear
 
-    Log "Starting ScoreTime at http://127.0.0.1:8000"
+    $lanIp = $null
+    try {
+        $defaultRoute = Get-NetRoute -AddressFamily IPv4 -DestinationPrefix "0.0.0.0/0" -ErrorAction Stop |
+            Where-Object { $_.NextHop -ne "0.0.0.0" } |
+            Sort-Object RouteMetric, InterfaceMetric |
+            Select-Object -First 1
+        $lanIp = Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $defaultRoute.InterfaceIndex -ErrorAction Stop |
+            Where-Object {
+                $_.IPAddress -ne "127.0.0.1" -and
+                $_.IPAddress -notlike "169.254.*" -and
+                ($_.IPAddress -like "10.*" -or
+                 $_.IPAddress -like "192.168.*" -or
+                 $_.IPAddress -match '^172\.(1[6-9]|2[0-9]|3[01])\.')
+            } |
+            Select-Object -First 1 -ExpandProperty IPAddress
+    } catch {
+        Log "Could not detect the private LAN address automatically."
+    }
+
+    Log "Starting ScoreTime Laravel on the computer and private network."
     $escapedBackend = $Backend.Replace("'", "''")
     $escapedPhp = $php.Replace("'", "''")
     Start-Process powershell.exe -ArgumentList @(
         "-NoExit",
         "-ExecutionPolicy", "Bypass",
         "-Command",
-        "Set-Location '$escapedBackend'; & '$escapedPhp' artisan serve --host=127.0.0.1 --port=8000"
+        "Set-Location '$escapedBackend'; & '$escapedPhp' artisan serve --host=0.0.0.0 --port=8000"
     )
 
     $schedulerRunning = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
@@ -314,6 +333,15 @@ No database was erased or reset.
         Start-Process "http://127.0.0.1:8000"
     }
 
+    Log "Browser URL: http://127.0.0.1:8000"
+    if ($lanIp) {
+        Log "Android app URL: http://${lanIp}:8000/api/v1"
+        Write-Host ""
+        Write-Host "Enter this address in the ScoreTime app:" -ForegroundColor Cyan
+        Write-Host "http://${lanIp}:8000/api/v1" -ForegroundColor Green
+        Write-Host "Keep this window open and use the same Wi-Fi on both devices." -ForegroundColor Cyan
+        Write-Host "If Windows Firewall asks, allow access on Private networks only." -ForegroundColor Yellow
+    }
     Log "Done. ScoreTime should now be open in your browser."
     if ($generatedAdminPassword) {
         Write-Host ""
