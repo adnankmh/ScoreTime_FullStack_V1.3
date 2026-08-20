@@ -17,7 +17,7 @@ class FootballDataOrgProvider implements FootballDataProvider
             'headers' => [
                 'X-Auth-Token' => (string) config('football.secondary_key'),
                 'Accept' => 'application/json',
-                'User-Agent' => 'ScoreTime/1.7.0',
+                'User-Agent' => 'ScoreTime/1.7.1',
             ],
         ]);
     }

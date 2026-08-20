@@ -1451,8 +1451,7 @@ class _PitchPainter extends CustomPainter {
 }
 
 class _MomentumPainter extends CustomPainter {
-  final bool compact;
-  const _MomentumPainter({this.compact = false});
+  const _MomentumPainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1466,12 +1465,16 @@ class _MomentumPainter extends CustomPainter {
     for (var i = 0; i < values.length; i++) {
       final x = size.width * i / (values.length - 1);
       final y = size.height * (1 - values[i]) * .82 + size.height * .08;
-      if (i == 0) path.moveTo(x, y); else path.lineTo(x, y);
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
     }
     final glow = Paint()
       ..color = ScoreTimeColors.blue.withValues(alpha: .24)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = compact ? 7 : 10
+      ..strokeWidth = 10
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     canvas.drawPath(path, glow);
     canvas.drawPath(
@@ -1479,23 +1482,21 @@ class _MomentumPainter extends CustomPainter {
       Paint()
         ..shader = const LinearGradient(colors: [ScoreTimeColors.violet, ScoreTimeColors.cyan]).createShader(Offset.zero & size)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = compact ? 1.7 : 2.2,
+        ..strokeWidth = 2.2,
     );
-    if (!compact) {
-      final fill = Path.from(path)
-        ..lineTo(size.width, size.height)
-        ..lineTo(0, size.height)
-        ..close();
-      canvas.drawPath(
-        fill,
-        Paint()
-          ..shader = LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [ScoreTimeColors.blue.withValues(alpha: .17), Colors.transparent],
-          ).createShader(Offset.zero & size),
-      );
-    }
+    final fill = Path.from(path)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    canvas.drawPath(
+      fill,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [ScoreTimeColors.blue.withValues(alpha: .17), Colors.transparent],
+        ).createShader(Offset.zero & size),
+    );
   }
 
   @override
@@ -1517,7 +1518,11 @@ class _RadarPainter extends CustomPainter {
       for (var i=0;i<sides;i++) {
         final angle = -math.pi/2 + i*2*math.pi/sides;
         final point = center + Offset(math.cos(angle), math.sin(angle))*radius*factor;
-        if (i==0) path.moveTo(point.dx, point.dy); else path.lineTo(point.dx, point.dy);
+        if (i == 0) {
+          path.moveTo(point.dx, point.dy);
+        } else {
+          path.lineTo(point.dx, point.dy);
+        }
       }
       path.close();
       canvas.drawPath(path, grid);
@@ -1527,7 +1532,11 @@ class _RadarPainter extends CustomPainter {
     for (var i=0;i<sides;i++) {
       final angle=-math.pi/2+i*2*math.pi/sides;
       final point=center+Offset(math.cos(angle),math.sin(angle))*radius*values[i];
-      if(i==0) area.moveTo(point.dx,point.dy); else area.lineTo(point.dx,point.dy);
+      if (i == 0) {
+        area.moveTo(point.dx, point.dy);
+      } else {
+        area.lineTo(point.dx, point.dy);
+      }
     }
     area.close();
     canvas.drawPath(area, Paint()..color=ScoreTimeColors.blue.withValues(alpha:.22));

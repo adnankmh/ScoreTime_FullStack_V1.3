@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "RELEASE_MANIFEST_V170.json"
+OUTPUT = ROOT / "RELEASE_MANIFEST_V171.json"
 EXCLUDED_PARTS = {
     ".git",
     "vendor",
@@ -38,8 +38,8 @@ for path in sorted(item for item in ROOT.rglob("*") if item.is_file() and includ
 
 manifest = {
     "product": "ScoreTime Global",
-    "version": "1.7.0",
-    "flutter_build": "40",
+    "version": "1.7.1",
+    "flutter_build": "41",
     "generated_at_utc": datetime.now(timezone.utc).isoformat(),
     "truthfulness_mode": "real-data-by-default; preview-explicit-only",
     "counts": {

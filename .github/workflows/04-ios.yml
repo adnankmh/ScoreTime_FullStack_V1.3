@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       api_base_url:
-        description: "Public ScoreTime Laravel API ending in /api/v1"
-        required: true
-        default: "https://example.com/api/v1"
+        description: "Optional real HTTPS Laravel API ending in /api/v1; leave blank for first-launch setup"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -31,15 +31,24 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Validate public API URL
+      - name: Resolve live API or safe first-launch setup
+        id: api
         shell: bash
         env:
-          SCORETIME_BUILD_API_URL: ${{ inputs.api_base_url }}
+          SCORETIME_INPUT_API_URL: ${{ inputs.api_base_url }}
+          SCORETIME_REPOSITORY_API_URL: ${{ vars.SCORETIME_API_BASE_URL }}
         run: |
-          if [[ ! "$SCORETIME_BUILD_API_URL" =~ ^https://.+/api/v1/?$ ]] || [[ "$SCORETIME_BUILD_API_URL" == *"example.com"* ]]; then
-            echo "api_base_url must be your real HTTPS Laravel endpoint ending in /api/v1"
-            exit 1
+          RAW_URL="$SCORETIME_INPUT_API_URL"
+          if [ -z "$RAW_URL" ]; then RAW_URL="$SCORETIME_REPOSITORY_API_URL"; fi
+          if API_URL="$(bash ../tools/resolve_public_api_url.sh "$RAW_URL")"; then
+            SETUP_MODE="false"
+          else
+            API_URL=""
+            SETUP_MODE="true"
+            echo "No real API URL supplied. The app will request it on first launch."
           fi
+          echo "api_url=$API_URL" >> "$GITHUB_OUTPUT"
+          echo "setup_mode=$SETUP_MODE" >> "$GITHUB_OUTPUT"
 
       - name: Generate iOS platform when missing
         run: |
@@ -66,7 +75,7 @@ jobs:
 
       - name: Build iOS unsigned
         env:
-          SCORETIME_BUILD_API_URL: ${{ inputs.api_base_url }}
+          SCORETIME_BUILD_API_URL: ${{ steps.api.outputs.api_url }}
         run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL="$SCORETIME_BUILD_API_URL"
 
       - name: Package
@@ -77,7 +86,7 @@ jobs:
       - name: Upload iOS
         uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.7.0-iOS-Unsigned
+          name: ScoreTime-V1.7.1-iOS-Unsigned
           retention-days: 14
           if-no-files-found: error
           path: mobile-flutter/build/ios/iphoneos/ScoreTime-iOS-Unsigned.zip

@@ -1,12 +1,15 @@
 import '../../worldclass/presentation/v07_hub_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scoretime/core/config/app_config.dart';
+import 'package:scoretime/core/design/remote_design.dart';
 import 'package:scoretime/core/i18n/app_strings.dart';
 import 'package:scoretime/core/theme/theme_controller.dart';
 import 'package:scoretime/features/auth/presentation/login_screen.dart';
 import 'package:scoretime/features/worldclass/presentation/world_class_screen.dart';
 import 'package:scoretime/features/social/presentation/social_hub_screen.dart';
 import 'package:scoretime/features/world/presentation/global_football_screen.dart';
+import 'api_setup_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -24,6 +27,22 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: 22),
             _SectionLabel(t('account')),
             _HubTile(icon: Icons.person_rounded, title: t('login'), subtitle: 'Account, security and synced preferences', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen()))),
+            _HubTile(
+              icon: Icons.cloud_sync_rounded,
+              title: 'Laravel API',
+              subtitle: AppConfig.apiBaseUrl,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ApiSetupScreen(
+                    onConfigured: () {
+                      ref.invalidate(remoteDesignProvider);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             _SectionLabel('Football Hub'),
             _HubTile(icon: Icons.public_rounded, title: t('world'), subtitle: 'Countries • competitions • clubs • players', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GlobalFootballScreen()))),

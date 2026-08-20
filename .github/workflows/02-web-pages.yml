@@ -62,7 +62,7 @@ jobs:
       - name: Tests
         run: flutter test
 
-      - name: Select live backend or preview mode
+      - name: Select live backend, explicit preview, or first-launch setup
         id: mode
         shell: bash
         env:
@@ -70,25 +70,24 @@ jobs:
           SCORETIME_REPOSITORY_API_URL: ${{ vars.SCORETIME_API_BASE_URL }}
           SCORETIME_ALLOW_DEMO: ${{ inputs.allow_demo_mode }}
         run: |
-          API_URL="$SCORETIME_INPUT_API_URL"
-          if [ -z "$API_URL" ]; then API_URL="$SCORETIME_REPOSITORY_API_URL"; fi
-          if [ -z "$API_URL" ]; then
-            if [ "$SCORETIME_ALLOW_DEMO" = "true" ]; then
-              API_URL="https://scoretime-preview.invalid/api/v1"
-              DEMO_MODE="true"
-            else
-              echo "Configure SCORETIME_API_BASE_URL or enter api_base_url. ScoreTime will not silently publish demo scores."
-              exit 1
-            fi
-          else
-            if [[ ! "$API_URL" =~ ^https://.+/api/v1/?$ ]] || [[ "$API_URL" == *"example.com"* ]]; then
-              echo "The live API URL must use HTTPS and end in /api/v1"
-              exit 1
-            fi
+          RAW_URL="$SCORETIME_INPUT_API_URL"
+          if [ -z "$RAW_URL" ]; then RAW_URL="$SCORETIME_REPOSITORY_API_URL"; fi
+          if API_URL="$(bash ../tools/resolve_public_api_url.sh "$RAW_URL")"; then
             DEMO_MODE="false"
+            SETUP_MODE="false"
+          elif [ "$SCORETIME_ALLOW_DEMO" = "true" ]; then
+            API_URL="https://scoretime-preview.invalid/api/v1"
+            DEMO_MODE="true"
+            SETUP_MODE="false"
+          else
+            API_URL=""
+            DEMO_MODE="false"
+            SETUP_MODE="true"
+            echo "No real API URL supplied. Pages will open the server setup screen instead of fake scores."
           fi
           echo "api_url=$API_URL" >> "$GITHUB_OUTPUT"
           echo "demo_mode=$DEMO_MODE" >> "$GITHUB_OUTPUT"
+          echo "setup_mode=$SETUP_MODE" >> "$GITHUB_OUTPUT"
 
       - name: Build web
         shell: bash

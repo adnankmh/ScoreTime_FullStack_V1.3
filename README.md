@@ -1,8 +1,8 @@
-# ScoreTime Global V1.7.0 — REAL DATA SAFE
+# ScoreTime Global V1.7.1 — RESILIENT BUILD
 
 منصة كرة قدم Full‑Stack أصلية باسم وشعار **ScoreTime**: موقع وREST API ولوحة إدارة بـLaravel 12، وتطبيق Android/iOS/Web بـFlutter 3.47 وRiverpod، مع ست لغات ودعم RTL.
 
-ابدأ من [دليل التشغيل العربي](docs/START_HERE_V170_AR.md). لا تحتاج Android Studio؛ تبني GitHub Actions ملفات APK وAAB بعد إدخال رابط Laravel API حقيقي وآمن.
+ابدأ من [دليل التشغيل العربي](docs/START_HERE_V171_AR.md). لا تحتاج Android Studio؛ تبني GitHub Actions ملفات APK وAAB سواء أدخلت رابط Laravel الحقيقي أثناء البناء أو تركته فارغاً لإعداده بأمان عند أول تشغيل.
 
 ## المكونات
 
@@ -14,4 +14,4 @@
 
 يحفظ Laravel بيانات المزود في MySQL/Cache ويقدمها لكل المستخدمين من خادم ScoreTime. لا تدخل مفاتيح مزود كرة القدم إلى APK أو JavaScript، ولا تستبدل أخطاء الشبكة بنتائج تجريبية صامتة.
 
-راجع أيضاً [معمارية البيانات والرصيد](docs/ARCHITECTURE_V170_AR.md) و[ملاحظات V1.7.0](docs/RELEASE_V170_AR.md).
+راجع أيضاً [معمارية البيانات والرصيد](docs/ARCHITECTURE_V171_AR.md) و[ملاحظات V1.7.1](docs/RELEASE_V171_AR.md).

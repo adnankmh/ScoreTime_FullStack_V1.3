@@ -1,4 +1,4 @@
-# ScoreTime Global V1.7.0 — REAL DATA SAFE
+# ScoreTime Global V1.7.1 — RESILIENT BUILD
 
 حزمة أصلية Full‑Stack لمنصة كرة قدم عالمية تحمل اسم وشعار **ScoreTime**:
 
@@ -16,7 +16,9 @@
 3. شغّل `SETUP_FREE_API_WINDOWS.bat` مرة واحدة والصق مفتاح API‑Football المجاني.
 4. افتح `http://127.0.0.1:8000`.
 
-ابدأ من [دليل التشغيل الكامل](docs/START_HERE_V170_AR.md)، ثم راجع [ملاحظات الإصدار](docs/RELEASE_V170_AR.md) و[معمارية البيانات والرصيد](docs/ARCHITECTURE_V170_AR.md).
+ابدأ من [دليل التشغيل الكامل](docs/START_HERE_V171_AR.md)، ثم راجع [ملاحظات الإصدار](docs/RELEASE_V171_AR.md) و[معمارية البيانات والرصيد](docs/ARCHITECTURE_V171_AR.md).
+
+يمكن ترك رابط Laravel فارغاً عند تشغيل GitHub Actions؛ سيُبنى التطبيق في وضع إعداد آمن ويطلب نطاق HTTPS الحقيقي عند أول تشغيل. كما يقبل الرابط المنسوخ عادياً أو بصيغة Markdown ويزيل التنسيق تلقائياً.
 
 ## مبدأ البيانات الحقيقية
 

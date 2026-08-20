@@ -7,6 +7,7 @@ class ApiClient {
   ApiClient() {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
+        options.baseUrl = AppConfig.apiBaseUrl;
         final token = await _storage.read(key: 'auth_token');
         final preferences = await SharedPreferences.getInstance();
         if (token != null && token.isNotEmpty) {

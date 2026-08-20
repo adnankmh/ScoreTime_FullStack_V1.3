@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/config/app_config.dart';
 import 'core/i18n/app_strings.dart';
 import 'core/design/remote_design.dart';
 import 'core/theme/theme_controller.dart';
@@ -10,19 +11,38 @@ import 'features/matches/presentation/matches_screen.dart';
 import 'features/news/presentation/news_screen.dart';
 import 'features/explore/presentation/explore_screen.dart';
 import 'features/settings/presentation/settings_screen.dart';
+import 'features/settings/presentation/api_setup_screen.dart';
 import 'features/custom_pages/presentation/dynamic_page_screen.dart';
 import 'features/world/presentation/global_football_screen.dart';
 
-void main() => runApp(const ProviderScope(child: ScoreTimeApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppConfig.initialize();
+  runApp(const ProviderScope(child: ScoreTimeApp()));
+}
 
-class ScoreTimeApp extends ConsumerWidget {
+class ScoreTimeApp extends ConsumerStatefulWidget {
   const ScoreTimeApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ScoreTimeApp> createState() => _ScoreTimeAppState();
+}
+
+class _ScoreTimeAppState extends ConsumerState<ScoreTimeApp> {
+  late bool configured;
+
+  @override
+  void initState() {
+    super.initState();
+    configured = AppConfig.isApiConfigured || AppConfig.webDemoMode;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settings = ref.watch(themeControllerProvider);
-    final remote =
-        ref.watch(remoteDesignProvider).asData?.value ?? RemoteDesign.fallback();
+    final remote = configured
+        ? ref.watch(remoteDesignProvider).asData?.value ?? RemoteDesign.fallback()
+        : RemoteDesign.fallback();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -39,7 +59,11 @@ class ScoreTimeApp extends ConsumerWidget {
         settings.fontScale,
         remote.tokens,
       ),
-      home: const AppShell(),
+      home: configured
+          ? const AppShell()
+          : ApiSetupScreen(
+              onConfigured: () => setState(() => configured = true),
+            ),
     );
   }
 }
