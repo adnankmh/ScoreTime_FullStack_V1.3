@@ -4,5 +4,5 @@
 - `backend-laravel/` — Laravel website, API and Adnan Control Room.
 - `mobile-flutter/` — Flutter application source.
 - `branding/` — approved ScoreTime master logo and emblem.
-- `docs/` — current V1.7.1 setup, architecture, security and feature documentation.
+- `docs/` — current V1.7.2 setup, architecture, security and feature documentation.
 - `tools/` — validation/developer utilities.

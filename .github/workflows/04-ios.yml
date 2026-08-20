@@ -86,7 +86,7 @@ jobs:
       - name: Upload iOS
         uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.7.1-iOS-Unsigned
+          name: ScoreTime-V1.7.2-iOS-Unsigned
           retention-days: 14
           if-no-files-found: error
           path: mobile-flutter/build/ios/iphoneos/ScoreTime-iOS-Unsigned.zip

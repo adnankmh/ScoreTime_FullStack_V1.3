@@ -1,4 +1,4 @@
-# ScoreTime V1.7.1 Architecture
+# ScoreTime V1.7.2 Architecture
 
 ScoreTime is a unified football platform with a Laravel 12 web/API/admin backend and Flutter clients for Android, iOS and Web.
 
@@ -14,4 +14,4 @@ ScoreTime is a unified football platform with a Laravel 12 web/API/admin backend
 
 Provider → quota guard → scheduled sync → MySQL/Cache → Laravel API → Flutter/Web.
 
-Provider secrets stay in server environment variables. Public health endpoints are passive and do not spend provider quota. The public Laravel URL may be compiled in or configured securely on first launch. Details are in [the V1.7.1 data architecture](ARCHITECTURE_V171_AR.md).
+Provider secrets stay in server environment variables. Public health endpoints are passive and do not spend provider quota. The public Laravel URL may be compiled in or configured securely on first launch. The Web workflow repairs platform metadata before building. Details are in [the V1.7.2 data architecture](ARCHITECTURE_V172_AR.md).

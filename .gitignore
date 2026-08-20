@@ -28,7 +28,8 @@ mobile-flutter/ios/
 mobile-flutter/macos/
 mobile-flutter/linux/
 mobile-flutter/windows/
-mobile-flutter/web/
+# The customized Web shell is source code and must be committed.
+# GitHub Pages cannot build when mobile-flutter/web is ignored.
 
 # IDE / OS
 .idea/

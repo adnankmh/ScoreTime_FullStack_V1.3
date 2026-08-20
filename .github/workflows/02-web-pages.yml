@@ -53,6 +53,35 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Ensure Flutter Web platform
+        shell: bash
+        run: |
+          BRAND_BACKUP="$RUNNER_TEMP/scoretime-web-brand"
+          mkdir -p "$BRAND_BACKUP"
+          if [ -d web ]; then
+            cp -a web/. "$BRAND_BACKUP/"
+          fi
+
+          flutter create . \
+            --platforms=web \
+            --org com.scoretime \
+            --project-name scoretime \
+            --no-pub
+
+          if [ -f "$BRAND_BACKUP/index.html" ]; then
+            cp -a "$BRAND_BACKUP/." web/
+          fi
+
+          if ! grep -q '<title>ScoreTime' web/index.html; then
+            sed -i 's#<title>.*</title>#<title>ScoreTime — Every moment counts</title>#' web/index.html
+          fi
+          sed -i 's/"name": "scoretime"/"name": "ScoreTime"/g' web/manifest.json
+          sed -i 's/"short_name": "scoretime"/"short_name": "ScoreTime"/g' web/manifest.json
+
+          test -f web/index.html
+          test -f web/manifest.json
+          grep -q 'ScoreTime' web/index.html
+
       - name: Dependencies
         run: flutter pub get
 

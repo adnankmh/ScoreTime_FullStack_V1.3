@@ -120,7 +120,8 @@ android_workflow = (ROOT / ".github/workflows/03-android-apk-aab.yml").read_text
 web_workflow = (ROOT / ".github/workflows/02-web-pages.yml").read_text(encoding="utf-8")
 ios_workflow = (ROOT / ".github/workflows/04-ios.yml").read_text(encoding="utf-8")
 resolver = (ROOT / "tools/resolve_public_api_url.sh").read_text(encoding="utf-8")
-check("ScoreTime-V1.7.1-Android" in android_workflow, "Android artifact version is stale")
+root_gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+check("ScoreTime-V1.7.2-Android" in android_workflow, "Android artifact version is stale")
 check("android.permission.INTERNET" in android_workflow, "release Android INTERNET permission guard missing")
 check("steps.api.outputs.api_url" in android_workflow, "Android build bypasses the resolved API URL")
 check("first launch" in android_workflow.lower(), "Android first-launch setup fallback missing")
@@ -128,6 +129,12 @@ check("resolve_public_api_url.sh" in android_workflow, "Android Markdown URL res
 check("resolve_public_api_url.sh" in ios_workflow, "iOS Markdown URL resolver missing")
 check("setup screen instead of fake scores" in web_workflow, "Web setup fallback or truthfulness guard missing")
 check("example.com" in resolver and ".invalid" in resolver, "placeholder API hosts are not rejected")
+check("mobile-flutter/web/" not in root_gitignore, "Flutter Web source is still ignored by Git")
+check("flutter create ." in web_workflow and "--platforms=web" in web_workflow, "Web platform self-healing step missing")
+check("BRAND_BACKUP" in web_workflow and "cp -a \"$BRAND_BACKUP/.\" web/" in web_workflow, "ScoreTime Web branding is not preserved")
+check("test -f web/index.html" in web_workflow and "test -f web/manifest.json" in web_workflow, "Web platform file gates missing")
+check((ROOT / "mobile-flutter/web/index.html").exists(), "tracked Flutter Web index is missing")
+check((ROOT / "mobile-flutter/web/manifest.json").exists(), "tracked Flutter Web manifest is missing")
 for path in workflow_files:
     body = path.read_text(encoding="utf-8")
     check("actions/checkout@v6" in body, f"{path.name} does not use checkout v6")
@@ -205,11 +212,11 @@ check((ROOT / "mobile-flutter/lib/features/settings/presentation/api_setup_scree
 
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 pubspec = (ROOT / "mobile-flutter/pubspec.yaml").read_text(encoding="utf-8")
-check(version == "1.7.1", "root VERSION is not 1.7.1")
-check("version: 1.7.1+41" in pubspec, "Flutter build version is not 1.7.1+41")
+check(version == "1.7.2", "root VERSION is not 1.7.2")
+check("version: 1.7.2+42" in pubspec, "Flutter build version is not 1.7.2+42")
 
 
-print("ScoreTime V1.7.1 release validator")
+print("ScoreTime V1.7.2 release validator")
 print(f"PHP structures scanned: {len(php_paths)}")
 print(f"Dart structures scanned: {len(dart_paths)}")
 print(f"Workflows parsed: {len(workflow_files)}")
@@ -220,4 +227,4 @@ if ERRORS:
     sys.exit(1)
 
 print("PASS")
-print("Analyzer fixes, runtime API setup, real-data truthfulness, quota gates, six locales and workflows passed.")
+print("Web self-healing, analyzer fixes, runtime API setup, truthfulness, quota gates, six locales and workflows passed.")

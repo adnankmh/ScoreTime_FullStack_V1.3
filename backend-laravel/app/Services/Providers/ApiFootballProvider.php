@@ -19,7 +19,7 @@ class ApiFootballProvider implements FootballDataProvider
             'headers' => [
                 'x-apisports-key' => (string) config('football.key'),
                 'Accept' => 'application/json',
-                'User-Agent' => 'ScoreTime/1.7.1',
+                'User-Agent' => 'ScoreTime/1.7.2',
             ],
         ]);
     }

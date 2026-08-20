@@ -101,7 +101,7 @@ jobs:
       - name: Upload Android
         uses: actions/upload-artifact@v6
         with:
-          name: ScoreTime-V1.7.1-Android
+          name: ScoreTime-V1.7.2-Android
           retention-days: 14
           if-no-files-found: error
           path: |

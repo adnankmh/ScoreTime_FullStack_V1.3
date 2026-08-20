@@ -15,7 +15,7 @@ class NewsApiService
             'headers' => [
                 'X-Api-Key' => (string) config('news.key'),
                 'Accept' => 'application/json',
-                'User-Agent' => 'ScoreTime/1.7.1',
+                'User-Agent' => 'ScoreTime/1.7.2',
             ],
         ]);
     }
